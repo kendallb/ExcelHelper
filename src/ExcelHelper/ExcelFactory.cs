@@ -25,15 +25,7 @@ namespace ExcelHelper
         public virtual IExcelReader CreateReader(
             Stream stream)
         {
-#if BIFF8_SUPPORT
-            try {
-                return new ExcelReader(stream);
-            } catch (FileFormatException) {
-                return new ExcelReaderBiff8(stream);
-            }
-#else
             return new ExcelReader(stream);
-#endif
         }
 
         /// <summary>
@@ -46,15 +38,7 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
-#if BIFF8_SUPPORT
-            try {
-                return new ExcelReader(stream, configuration);
-            } catch (FileFormatException) {
-                return new ExcelReaderBiff8(stream, configuration);
-            }
-#else
             return new ExcelReader(stream, configuration);
-#endif
         }
 
         /// <summary>

@@ -30,11 +30,6 @@ namespace ExcelHelper
         int TotalColumns { get; }
 
         /// <summary>
-        /// Returns the total number of rows
-        /// </summary>
-        int TotalRows { get; }
-
-        /// <summary>
         /// Returns the total number of sheets in the Excel file
         /// </summary>
         int TotalSheets { get; }
@@ -61,15 +56,19 @@ namespace ExcelHelper
             int count);
 
         /// <summary>
-        /// Reads a cell from the Excel file.
+        /// Moves to the next row in the Excel file when using the GetCell() function
+        /// </summary>
+        /// <returns>True if there is another row, false if not</returns>
+        bool ReadRow();
+
+        /// <summary>
+        /// Reads a cell from the Excel file at the current row
         /// </summary>
         /// <typeparam name="T">The type of the field.</typeparam>
-        /// <param name="row">Row to write the field to.</param>
-        /// <param name="col">Column to write the field to.</param>
+        /// <param name="index">Column to write the field to.</param>
         /// <returns>The value from the cell converted to the specific type</returns>
-        T GetCell<T>(
-            int row,
-            int col);
+        T GetColumn<T>(
+            int index);
 
         /// <summary>
         /// Gets all the records in the Excel file and converts each to <see cref="Type"/> T.

@@ -43,24 +43,6 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\ExcelHelper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug C1|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug C1\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;BIFF8_SUPPORT</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release C1|AnyCPU'">
-    <OutputPath>bin\Release C1\</OutputPath>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>BIFF8_SUPPORT</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.89.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.89.0\lib\net452\ClosedXML.dll</HintPath>
@@ -94,9 +76,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelReaderBiff8ConstructorTests.cs" />
-    <Compile Include="ExcelReaderBiff8ReferenceMappingTests.cs" />
-    <Compile Include="ExcelReaderBiff8Tests.cs" />
     <Compile Include="ExcelReaderConstructorTests.cs" />
     <Compile Include="ExcelReaderReferenceMappingTests.cs" />
     <Compile Include="ExcelWriterReferenceMappingTests.cs" />
@@ -136,22 +115,6 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(Configuration)' == 'Debug C1'">
-      <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Version=4.1.20141.316, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Configuration)' == 'Release C1'">
-      <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Version=4.1.20141.316, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
   <ItemGroup>
     <ProjectReference Include="..\ExcelHelper\ExcelHelper.csproj">
       <Project>{968a4e7c-b1e9-457e-b1f9-a774e68926c6}</Project>

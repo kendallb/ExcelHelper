@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2004-2017 AMain.com, Inc.
+ * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
  * 
@@ -15,26 +15,22 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Linq.Expressions;
-using ClosedXML.Excel;
+using ExcelDataReader;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 
 namespace ExcelHelper
 {
-    // TODO: Change numbering so it works nicely with 1+ not 0+
-
     /// <summary>
-    /// Used to read Excel files.
+    /// Used to read Excel files using ExcelDataReader
     /// </summary>
     public class ExcelReader : IExcelReader
     {
         private bool _disposed;
-        private XLWorkbook _book;
-        private IXLWorksheet _sheet;
-        private int _columnCount;
-        private int _rowCount;
+        private IExcelDataReader _reader;
         private int _row;
         private int _currentIndex = -1;
+        private int _columnCount;
         private readonly Dictionary<string, List<int>> _namedIndexes = new Dictionary<string, List<int>>();
         private readonly List<PropertyInfo> _importedColumns = new List<PropertyInfo>();
         private readonly Dictionary<Type, Delegate> _recordFuncs = new Dictionary<Type, Delegate>();
@@ -72,29 +68,29 @@ namespace ExcelHelper
                 throw new ArgumentNullException(nameof(configuration));
             }
             _configuration = configuration;
-            _book = new XLWorkbook(stream, XLEventTracking.Disabled);
+            _reader = ExcelReaderFactory.CreateReader(stream);
             ChangeSheet(0);
         }
 
         /// <summary>
         /// Returns the total number of columns
         /// </summary>
-        public int TotalColumns => _columnCount;
+        public int TotalColumns => _reader.FieldCount;
 
         /// <summary>
         /// Returns the total number of rows
         /// </summary>
-        public int TotalRows => _rowCount;
+        public int TotalRows { get { throw new NotSupportedException(); } } // TODO!?
 
         /// <summary>
         /// Returns the total number of sheets in the Excel file
         /// </summary>
-        public int TotalSheets => _book.Worksheets.Count;
+        public int TotalSheets => _reader.ResultsCount;
 
         /// <summary>
         /// Returns the name of the current sheet
         /// </summary>
-        public string SheetName => _sheet?.Name;
+        public string SheetName => _reader.Name;
 
         /// <summary>
         /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the 
@@ -105,26 +101,14 @@ namespace ExcelHelper
         public bool ChangeSheet(
             int sheet)
         {
-            // Make sure the sheet is within range
-            var worksheets = _book.Worksheets;
-            if (sheet < 0 || sheet >= worksheets.Count) {
+            if (sheet >= _reader.ResultsCount) {
                 return false;
             }
-
-            // Dispose of the old sheet and get the new one
-            _sheet?.Dispose();
-            _sheet = worksheets.Worksheet(sheet + 1);
-            _row = 0;
-
-            // Measure the used cells in the file
-            var cell = _sheet.LastCellUsed();
-            if (cell != null) {
-                var address = cell.Address;
-                _columnCount = address.ColumnNumber;
-                _rowCount = address.RowNumber;
-            } else {
-                _columnCount = _rowCount = 0;
+            _reader.Reset();
+            for (var i = 0; i < sheet; i++) {
+                _reader.NextResult();
             }
+            _row = 0;
             return true;
         }
 
@@ -135,27 +119,37 @@ namespace ExcelHelper
         public void SkipRows(
             int count)
         {
-            _row += count;
-            if (_row > TotalRows) {
-                _row = TotalRows;
+            for (var i = 0; i < count; i++) {
+                if (!_reader.Read()) {
+                    break;
+                }
+                _row++;
             }
+        }
+
+        /// <summary>
+        /// Reads the next row in the Excel file to you can get the cell values using the GetCell() function
+        /// </summary>
+        /// <returns>True if there is another row, false if not</returns>
+        public bool ReadRow()
+        {
+            return _reader.Read();
         }
 
         /// <summary>
         /// Reads a cell from the Excel file.
         /// </summary>
         /// <typeparam name="T">The type of the field.</typeparam>
-        /// <param name="row">Row to write the field to.</param>
-        /// <param name="col">Column to write the field to.</param>
-        /// <returns>The value from the cell converted to the specific type</returns>
-        public T GetCell<T>(
-            int row,
-            int col)
+        /// <param name="index">Column index to reead the value from.</param>
+        /// <returns>The value from the column converted to the specific type</returns>
+        public T GetColumn<T>(
+            int index)
         {
             var type = typeof(T);
             var converter = TypeConverterFactory.GetConverter(type);
             var typeConverterOptions = TypeConverterOptionsFactory.GetOptions(type, _configuration.CultureInfo);
-            return (T)converter.ConvertFromExcel(typeConverterOptions, _sheet.Cell(row + 1, col + 1).Value);
+            var value = _reader.GetValue(index);
+            return (T)converter.ConvertFromExcel(typeConverterOptions, value);
         }
 
         /// <summary>
@@ -170,7 +164,7 @@ namespace ExcelHelper
             _currentIndex = index;
 
             // Get the field value from the Excel file
-            var field = _sheet.Cell(_row + 1, index + 1).Value;
+            var field = _reader.GetValue(index);
 
             // Trim string fields if the option is set
             if (_configuration.TrimFields && field.GetType() == typeof(string)) {
@@ -184,15 +178,18 @@ namespace ExcelHelper
         /// </summary>
         private void ParseHeaderRecord()
         {
+            // We assume all columns contain headers by default
+            _columnCount = _reader.FieldCount;
+
             // First make sure we have a header record
-            if (IsEmptyRecord()) {
+            if (!_reader.Read()) {
                 throw new ExcelReaderException("No header record was found.");
             }
 
             // Process each column in the header row
             for (var i = 0; i < _columnCount; i++) {
                 // Get the header name
-                var name = _sheet.Cell(_row + 1, i + 1).GetString();
+                var name = _reader.GetString(i);
                 if (string.IsNullOrEmpty(name)) {
                     // Header is null or empty, so we are done. This can happen if the file has more total columns 
                     // in it than header rows, which can happen if some white space ends up in a right column 
@@ -214,29 +211,6 @@ namespace ExcelHelper
 
             // Move to the next row
             _row++;
-        }
-
-        /// <summary>
-        /// Determines if the record at the current line is empty or not
-        /// </summary>
-        /// <returns>True if record is empty, false if not</returns>
-        private bool IsEmptyRecord()
-        {
-            for (var i = 0; i < _columnCount; i++) {
-                var o = _sheet.Cell(_row + 1, i + 1).Value;
-                if (o != null) {
-                    if (o.GetType() == typeof(string)) {
-                        // Make sure string fields are not empty strings
-                        if (!string.IsNullOrEmpty((string)o)) {
-                            return false;
-                        }
-                    } else {
-                        // Non-null, non-string fields are not empty
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
 
         /// <summary>
@@ -267,7 +241,7 @@ namespace ExcelHelper
             }
 
             // Read each record one at a time and yield it
-            while (!IsEmptyRecord()) {
+            while (_reader.Read()) {
                 T record;
                 try {
                     _currentIndex = -1;
@@ -282,7 +256,7 @@ namespace ExcelHelper
                                      from index in pair.Value
                                      where index == _currentIndex
                                      select pair.Key).SingleOrDefault(),
-                        FieldValue = _sheet.Cell(_row + 1, _currentIndex + 1).Value,
+                        FieldValue = _reader.GetValue(_currentIndex),
                     };
 
                     // Add the details to the exception
@@ -306,8 +280,11 @@ namespace ExcelHelper
         /// <returns>An enumeration of dictionaries.</returns>
         public IEnumerable<Dictionary<string, string>> GetRecordsAsDictionary()
         {
+            // We assume all columns contain headers by default
+            _columnCount = _reader.FieldCount;
+
             // First make sure we have a header record
-            if (IsEmptyRecord()) {
+            if (!_reader.Read()) {
                 throw new ExcelReaderException("No header record was found.");
             }
 
@@ -315,7 +292,7 @@ namespace ExcelHelper
             var headers = new List<string>();
             for (var i = 0; i < _columnCount; i++) {
                 // Get the header name
-                var name = _sheet.Cell(_row + 1, i + 1).GetString();
+                var name = _reader.GetString(i);
                 if (string.IsNullOrEmpty(name)) {
                     // Header is null or empty, so we are done. This can happen if the file has more total columns 
                     // in it than header rows, which can happen if some white space ends up in a right column 
@@ -335,29 +312,35 @@ namespace ExcelHelper
             _row++;
 
             // Read each record one at a time and yield it
-            while (!IsEmptyRecord()) {
+            while (_reader.Read()) {
                 var record = new Dictionary<string, string>();
                 for (var i = 0; i < _columnCount; i++) {
                     try {
-                        var cell = _sheet.Cell(_row + 1, i + 1);
-                        string text;
-                        if (cell.DataType == XLCellValues.Boolean) {
-                            // For compatibility with old PHP code, format TRUE and FALSE for boolean values
-                            text = cell.GetValue<bool>() ? "TRUE" : "FALSE";
-                        } else if (cell.DataType == XLCellValues.DateTime) {
-                            // For compatibility with old PHP code, format DateTime values as OADate (doubles basically)
-                            text = cell.GetValue<DateTime>().ToOADate().ToString();
+                        var value = _reader.GetValue(i);
+                        if (value != null) {
+                            string text;
+                            var type = _reader.GetFieldType(i);
+                            if (type == typeof(bool)) {
+                                // For compatibility with old PHP code, format TRUE and FALSE for boolean values
+                                text = (bool)value ? "TRUE" : "FALSE";
+                            } else if (type == typeof(DateTime)) {
+                                // For compatibility with old PHP code, format DateTime values as OADate (doubles basically)
+                                text = ((DateTime)value).ToOADate().ToString();
+                            } else {
+                                text = value.ToString();
+                            }
+                            record.Add(headers[i], text);
                         } else {
-                            text = cell.GetFormattedString();
+                            // Always return empty strings, not nulls
+                            record.Add(headers[i], "");
                         }
-                        record.Add(headers[i], text);
                     } catch (Exception ex) {
                         // Build the details about the error so it can be logged
                         var details = new ExcelReadErrorDetails {
                             Row = _row + 1,
                             Column = i + 1,
                             FieldName = headers[i],
-                            FieldValue = _sheet.Cell(_row + 1, i + 1).Value,
+                            FieldValue = _reader.GetValue(i),
                         };
 
                         // Add the details to the exception
@@ -408,10 +391,8 @@ namespace ExcelHelper
                 return;
             }
             if (disposing) {
-                _sheet?.Dispose();
-                _book?.Dispose();
-                _book = null;
-                _sheet = null;
+                _reader?.Dispose();
+                _reader = null;
             }
             _disposed = true;
         }
@@ -578,8 +559,10 @@ namespace ExcelHelper
                     // Creating an expression to hold the local field variable
                     var field = Expression.Parameter(typeof(object), "field");
 
-                    // ClosedXML only reads/wrotes empty cells as blank strings so we can just check for an empty string
-                    Expression checkFieldEmptyExpression = Expression.Equal(field, Expression.Constant(string.Empty));
+                    // Handle strings differently, so we can compare strings to the empty string as well as null
+                    Expression checkFieldEmptyExpression = propertyType == typeof(string) ?
+                        checkFieldEmptyExpression = Expression.Call(typeof(string), "IsNullOrEmpty", null, Expression.Convert(field, typeof(string))) :
+                        checkFieldEmptyExpression = Expression.Equal(field, Expression.Constant(null));
 
                     // Expression to assign the default value
                     var defaultValueExpression = Expression.Assign(field, Expression.Convert(Expression.Constant(data.Default), typeof(object)));

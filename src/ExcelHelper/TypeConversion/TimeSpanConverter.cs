@@ -36,8 +36,13 @@ namespace ExcelHelper.TypeConversion
         {
             if (excelValue != null) {
                 // ClosedXML can store time spans natively in Excel
-                if (excelValue.GetType() == typeof(TimeSpan)) {
+                var type = excelValue.GetType();
+                if (type == typeof(TimeSpan)) {
                     return excelValue;
+                } else if (type == typeof(DateTime)) {
+                    // ExcelDataReader reads TimeSpans as DateTime values
+                    var dt = (DateTime)excelValue;
+                    return new TimeSpan(dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.Millisecond);
                 }
 
                 // Try to parse the timespan as a string if it comes in that way

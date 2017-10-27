@@ -324,8 +324,8 @@ namespace ExcelHelper
                                 // For compatibility with old PHP code, format TRUE and FALSE for boolean values
                                 text = (bool)value ? "TRUE" : "FALSE";
                             } else if (type == typeof(DateTime)) {
-                                // For compatibility with old PHP code, format DateTime values as OADate (doubles basically)
-                                text = ((DateTime)value).ToOADate().ToString();
+                                // To ensure DateTime values make sense in any culture, we render them in ISO 8601 format
+                                text = ((DateTime)value).ToString("o");
                             } else {
                                 text = value.ToString();
                             }

@@ -1087,7 +1087,8 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                var date = DateTime.Today;
+                var now = DateTime.Now;
+                var date = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, DateTimeKind.Unspecified);
                 var guid = Guid.NewGuid();
                 using (var book = new XLWorkbook()) {
                     var sheet = book.AddWorksheet("Sheet 1");
@@ -1137,7 +1138,7 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual(guid.ToString(), record["GuidColumn"]);
                 Assert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
                 Assert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
-                Assert.AreEqual(date.AddDays(i).ToOADate().ToString(), record["DateTimeColumn"]);
+                Assert.AreEqual(date.AddDays(i).ToString("o"), record["DateTimeColumn"]);
                 Assert.AreEqual("", record["NullStringColumn"]);
             }
         }

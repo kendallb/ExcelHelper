@@ -2,22 +2,23 @@
 
 A library for reading and writing Excel files. Extremely fast, flexible, and easy to use. Supports reading and writing of custom class objects.
 
-This library is based on the awesome library CsvHelper for reading and writing CSV files by Josh Close, combined with the equally awesome
-library for reading and writing native OpenXML based Excel files ClosedXML. This library is re-write of the CsvHelper library to support Excel
-file reading and writing so it has diverged somewhat from the original CsvHelper API in order to support the features we need with better support
-for Excel file reading and writing. 
+This library is based on the awesome library CsvHelper for reading and writing CSV files by Josh Close. We use the awesome
+library for reading Excel files in all formats (including the binary BIFF8 and earlier formats as well as the modern OpenXML formats), 
+ExcelDataReader. Lastly we use the awesome library for writing native OpenXML based Excel files ClosedXML, which is layered on top of
+the Microsoft OpenXML libraries. Since we rely on OpenXML for writing Excel files, this library can only write Excel files in the modern
+OpenXML (.xlsx) formats. But it can read them in any format.
 
-You can find these two awesome Open Source libraries here:
+This library is re-write of the CsvHelper library to support Excel file reading and writing so it has diverged somewhat from the original 
+CsvHelper API in order to support the features we need with better support for Excel file reading and writing. You can find the awesome
+CsvHelper library for processing CSV files here:
 
 https://github.com/JoshClose/CsvHelper
 
+You can find the awesome Open Source libraries we rely upon for Excel reading and writing here:
+
+https://github.com/ExcelDataReader/ExcelDataReader
+
 https://github.com/ClosedXML/ClosedXML
-
-This library also has support for reading Excel files in the older BIFF8 format using the commercial library C1.Excel by ComponentOne (now a 
-division of Grape City). You can find this library here. If you wish to use this commercial library you will need to compile the code yourself
-and include your own license file for the library. The version on NuGet will only support the ClosedXML library.
-
-https://www.grapecity.com/en/controls/winforms/excel
 
 ## Install
 

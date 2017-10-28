@@ -7,30 +7,22 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
-#if !USE_C1_EXCEL
 using System.IO;
-using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#if USE_C1_EXCEL
 namespace ExcelHelper.Tests
 {
     [TestClass]
-    public class ExcelReaderConstructorTests
+    public class ExcelWriterC1ConstructorTests
     {
         [TestMethod]
-        public void EnsureInternalsAreSetupWhenPasingReaderAndConfigTest()
+        public void EnsureInternalsAreSetupWhenPasingWriterAndConfigTest()
         {
             using (var stream = new MemoryStream()) {
-                // Make sure the stream is a valid Excel file
-                using (var book = new XLWorkbook()) {
-                    book.AddWorksheet("Sheet 1");
-                    book.SaveAs(stream);
-                }
-
-                stream.Position = 0;
                 var config = new ExcelConfiguration();
-                using (var excel = new ExcelReader(stream, config)) {
+                using (var excel = new ExcelWriterC1(stream, config)) {
                     Assert.AreSame(config, excel.Configuration);
                 }
             }

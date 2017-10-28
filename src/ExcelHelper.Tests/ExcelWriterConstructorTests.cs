@@ -7,6 +7,7 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
+#if !USE_C1_EXCEL
 using System.IO;
 using ExcelHelper.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,3 +29,4 @@ namespace ExcelHelper.Tests
         }
     }
 }
+#endif

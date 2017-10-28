@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2004-2017 AMain.com, Inc.
+ * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
  * 
@@ -7,12 +7,12 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
-#if !USE_C1_EXCEL
+#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.IO;
+using C1.C1Excel;
 using System.Linq;
-using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,21 +21,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable ClassNeverInstantiated.Local
 // ReSharper disable UnusedMember.Local
 
-// TODO: Use the C1 libraries for unit testing to convert from OpenXML test file data to BIFF8 in memory ...    
-
 namespace ExcelHelper.Tests
 {
     [TestClass]
-    public class ExcelReaderTests
+    public class ExcelReaderC1Tests
     {
-        private ExcelFactory _factory;
-
-        [TestInitialize]
-        public void SetUp()
-        {
-            _factory = new ExcelFactory();
-        }
-
         [TestMethod]
         public void ReadCellTest()
         {
@@ -47,36 +37,36 @@ namespace ExcelHelper.Tests
                 var d = DateTime.Today;
                 const char c = 'c';
                 var guid = Guid.NewGuid();
-                var ts = new TimeSpan(45, 2, 3, 4, 5);
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
-                    sheet.Cell(1, 1).SetValue(n);
-                    sheet.Cell(1, 2).SetValue(nsi.ToString());
-                    sheet.Cell(1, 3).SetValue(ns.ToString());
-                    sheet.Cell(1, 4).SetValue(d);
-                    sheet.Cell(1, 5).SetValue(d.ToString());
-                    sheet.Cell(1, 6).SetValue(true);
-                    sheet.Cell(1, 7).SetValue("true");
-                    sheet.Cell(1, 8).SetValue("yes");
-                    sheet.Cell(1, 9).SetValue(c);
-                    sheet.Cell(1, 10).SetValue((object)null);
-                    sheet.Cell(1, 11).SetValue(guid.ToString());
-                    sheet.Cell(1, 12).SetValue(ts);
-                    sheet.Cell(1, 13).SetValue(ts.ToString());
-                    sheet.Cell(1, 14).SetValue(ts.ToString());
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
-                    sheet.Cell(1, 1).SetValue("third sheet");
-                    book.SaveAs(stream);
+                var ts = new TimeSpan(1, 2, 3, 4, 5);
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
+                    sheet[0, 0].Value = n;
+                    sheet[0, 1].Value = nsi.ToString();
+                    sheet[0, 2].Value = ns.ToString();
+                    sheet[0, 3].Value = d;
+                    sheet[0, 4].Value = d.ToString();
+                    sheet[0, 5].Value = true;
+                    sheet[0, 6].Value = "true";
+                    sheet[0, 7].Value = "yes";
+                    sheet[0, 8].Value = c;
+                    sheet[0, 9].Value = null;
+                    sheet[0, 10].Value = guid.ToString();
+                    sheet[0, 11].Value = ts;
+                    sheet[0, 12].Value = ts.ToString();
+                    sheet[0, 13].Value = ts.ToString();
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
+                    sheet[0, 0].Value = "third sheet";
+                    book.Save(stream, FileFormat.Biff8);
                 }
 
                 // Now parse the Excel file as all available types
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     // Check the column and row counts are correct
                     Assert.AreEqual(14, excel.TotalColumns);
+                    Assert.AreEqual(1, excel.TotalRows);
 
-                    // Test all number conversions
                     if (!excel.ReadRow()) {
                         throw new ArgumentException();
                     }
@@ -135,8 +125,7 @@ namespace ExcelHelper.Tests
 
                     // Test TimeSpan
                     Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(11));
-                    // TODO: This won't work until ExcelDataReader is changed to natively parse TimeSpans
-                    //Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(11));
+                    Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(11));
                     Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(12));
                     Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(12));
                     Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(13));
@@ -155,31 +144,24 @@ namespace ExcelHelper.Tests
         }
 
         [TestMethod]
-        public void LargeFileTest()
+        public void ReadBiff8Test()
         {
             using (var stream = new MemoryStream()) {
-                // Write out 66K rows
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
-                    for (var i = 0; i < 66000; i++) {
-                        sheet.Cell(i + 1, 1).SetValue(i);
-                    }
-                    book.SaveAs(stream);
+                // Create some test data to parse
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
+                    sheet[0, 0].Value = "one";
+                    book.Save(stream, FileFormat.Biff8);
                 }
 
-                // Now read it back
+                // Now parse the Excel file as all available types
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
-                    // Check the column and row counts are correct
-                    Assert.AreEqual(1, excel.TotalColumns);
-
-                    // Verify 66K rows
-                    for (var i = 0; i < 66000; i++) {
-                        if (!excel.ReadRow()) {
-                            throw new ArgumentException();
-                        }
-                        Assert.AreEqual(i, excel.GetColumn<int>(0));
+                using (var excel = new ExcelReaderC1(stream)) {
+                    // Test all number conversions
+                    if (!excel.ReadRow()) {
+                        throw new ArgumentException();
                     }
+                    Assert.AreEqual("one", excel.GetColumn<string>(0));
                 }
             }
         }
@@ -189,15 +171,15 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create an empty book with only one field
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
-                    sheet.Cell(1, 1).SetValue("FirstColumn");
-                    book.SaveAs(stream);
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
+                    sheet[0, 0].Value = "FirstColumn";
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     try {
                         excel.GetRecords<TestRecord>().ToList();
@@ -216,20 +198,20 @@ namespace ExcelHelper.Tests
                 // Create some test data to parse
                 var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     WriteRecords(sheet, guid, date);
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     WriteRecords(sheet, guid, date);
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
                     Assert.AreEqual(3, excel.TotalSheets);
@@ -247,20 +229,20 @@ namespace ExcelHelper.Tests
                 // Create some test data to parse
                 var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     WriteRecords(sheet, guid, date, null, 2);
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     WriteRecords(sheet, guid, date);
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.SkipRows(2);
                     ValidateRecords(excel, guid, date);
@@ -279,22 +261,22 @@ namespace ExcelHelper.Tests
                 // Create some test data to parse
                 var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     sheet.Name = "Test Sheet 1";
                     WriteRecords(sheet, guid, date);
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     sheet.Name = "Test Sheet 2";
                     WriteRecords(sheet, guid, date);
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
                     Assert.AreEqual(excel.SheetName, "Test Sheet 1");
@@ -314,20 +296,20 @@ namespace ExcelHelper.Tests
                 // Create some test data to parse
                 var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     WriteRecords(sheet, guid, date, "optional");
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     WriteRecords(sheet, guid, date, "optional");
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date, "optional");
                     Assert.AreEqual(3, excel.TotalSheets);
@@ -345,20 +327,20 @@ namespace ExcelHelper.Tests
                 // Create some test data to parse
                 var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     WriteRecords(sheet, guid, date);
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     WriteRecords(sheet, guid, date);
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.RegisterClassMap<TestRecordMapMissingField>();
                     ValidateRecords(excel, guid, date);
@@ -379,57 +361,57 @@ namespace ExcelHelper.Tests
         /// <param name="optionalReadValue">Value to put into the optional read column, null to not include it</param>
         /// <param name="firstRow">The first row number</param>
         private static void WriteRecords(
-            IXLWorksheet sheet,
+            XLSheet sheet,
             Guid guid,
             DateTime date,
             string optionalReadValue = null,
             int firstRow = 0)
         {
             // Write the header fields
-            sheet.Cell(firstRow + 1, 1).SetValue("FirstColumn");
-            sheet.Cell(firstRow + 1, 2).SetValue("TypeConvertedColumn");
-            sheet.Cell(firstRow + 1, 3).SetValue("IntColumn");
-            sheet.Cell(firstRow + 1, 4).SetValue("String Column");
-            sheet.Cell(firstRow + 1, 5).SetValue("GuidColumn");
-            sheet.Cell(firstRow + 1, 6).SetValue("BoolColumn");
-            sheet.Cell(firstRow + 1, 7).SetValue("DoubleColumn");
-            sheet.Cell(firstRow + 1, 8).SetValue("DateTimeColumn");
-            sheet.Cell(firstRow + 1, 9).SetValue("NullStringColumn");
+            sheet[firstRow, 0].Value = "FirstColumn";
+            sheet[firstRow, 1].Value = "TypeConvertedColumn";
+            sheet[firstRow, 2].Value = "IntColumn";
+            sheet[firstRow, 3].Value = "String Column";
+            sheet[firstRow, 4].Value = "GuidColumn";
+            sheet[firstRow, 5].Value = "BoolColumn";
+            sheet[firstRow, 6].Value = "DoubleColumn";
+            sheet[firstRow, 7].Value = "DateTimeColumn";
+            sheet[firstRow, 8].Value = "NullStringColumn";
             if (optionalReadValue != null) {
-                sheet.Cell(firstRow + 1, 10).SetValue("OptionalReadColumn");
+                sheet[firstRow, 9].Value = "OptionalReadColumn";
             }
 
             // Write the first record
-            sheet.Cell(firstRow + 2, 1).SetValue(1);
-            sheet.Cell(firstRow + 2, 2).SetValue("converts to test");
-            sheet.Cell(firstRow + 2, 3).SetValue(1 * 2);
-            sheet.Cell(firstRow + 2, 4).SetValue("string column 1");
-            sheet.Cell(firstRow + 2, 5).SetValue(guid.ToString());
-            sheet.Cell(firstRow + 2, 6).SetValue(true);
-            sheet.Cell(firstRow + 2, 7).SetValue(1 * 3.0);
-            sheet.Cell(firstRow + 2, 8).SetValue(date.AddDays(1));
-            sheet.Cell(firstRow + 2, 9).SetValue((object)null);
+            sheet[firstRow + 1, 0].Value = 1;
+            sheet[firstRow + 1, 1].Value = "converts to test";
+            sheet[firstRow + 1, 2].Value = 1 * 2;
+            sheet[firstRow + 1, 3].Value = "string column 1";
+            sheet[firstRow + 1, 4].Value = guid.ToString();
+            sheet[firstRow + 1, 5].Value = true;
+            sheet[firstRow + 1, 6].Value = 1 * 3.0;
+            sheet[firstRow + 1, 7].Value = date.AddDays(1);
+            sheet[firstRow + 1, 8].Value = null;
             if (optionalReadValue != null) {
-                sheet.Cell(firstRow + 2, 10).SetValue(optionalReadValue);
+                sheet[firstRow + 1, 9].Value = optionalReadValue;
             }
 
             // Write the second record
-            sheet.Cell(firstRow + 3, 1).SetValue(2);
-            sheet.Cell(firstRow + 3, 2).SetValue("converts to test");
-            sheet.Cell(firstRow + 3, 3).SetValue(2 * 2);
-            sheet.Cell(firstRow + 3, 4).SetValue("string column 2");
-            sheet.Cell(firstRow + 3, 5).SetValue(guid.ToString());
-            sheet.Cell(firstRow + 3, 6).SetValue(false);
-            sheet.Cell(firstRow + 3, 7).SetValue(2 * 3.0);
-            sheet.Cell(firstRow + 3, 8).SetValue(date.AddDays(2));
-            sheet.Cell(firstRow + 3, 9).SetValue((object)null);
+            sheet[firstRow + 2, 0].Value = 2;
+            sheet[firstRow + 2, 1].Value = "converts to test";
+            sheet[firstRow + 2, 2].Value = 2 * 2;
+            sheet[firstRow + 2, 3].Value = "string column 2";
+            sheet[firstRow + 2, 4].Value = guid.ToString();
+            sheet[firstRow + 2, 5].Value = false;
+            sheet[firstRow + 2, 6].Value = 2 * 3.0;
+            sheet[firstRow + 2, 7].Value = date.AddDays(2);
+            sheet[firstRow + 2, 8].Value = null;
             if (optionalReadValue != null) {
-                sheet.Cell(firstRow + 3, 10).SetValue(optionalReadValue);
+                sheet[firstRow + 2, 9].Value = optionalReadValue;
             }
 
             // Write a blank field outside of the header count. To make sure we only
             // process the columns up to the header count width
-            sheet.Cell(2, optionalReadValue == null ? 10 : 11).SetValue("");
+            sheet[1, optionalReadValue == null ? 9 : 10].Value = "";
         }
 
         /// <summary>
@@ -490,40 +472,40 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("FirstName");
-                    sheet.Cell(1, 2).SetValue("LastName");
-                    sheet.Cell(1, 3).SetValue("HomeStreet");
-                    sheet.Cell(1, 4).SetValue("HomeCity");
-                    sheet.Cell(1, 5).SetValue("HomeState");
-                    sheet.Cell(1, 6).SetValue("HomeZip");
-                    sheet.Cell(1, 7).SetValue("WorkStreet");
-                    sheet.Cell(1, 8).SetValue("WorkCity");
-                    sheet.Cell(1, 9).SetValue("WorkState");
-                    sheet.Cell(1, 10).SetValue("WorkZip");
+                    sheet[0, 0].Value = "FirstName";
+                    sheet[0, 1].Value = "LastName";
+                    sheet[0, 2].Value = "HomeStreet";
+                    sheet[0, 3].Value = "HomeCity";
+                    sheet[0, 4].Value = "HomeState";
+                    sheet[0, 5].Value = "HomeZip";
+                    sheet[0, 6].Value = "WorkStreet";
+                    sheet[0, 7].Value = "WorkCity";
+                    sheet[0, 8].Value = "WorkState";
+                    sheet[0, 9].Value = "WorkZip";
 
                     // Write out a record
-                    sheet.Cell(2, 1).SetValue("First Name");
-                    sheet.Cell(2, 2).SetValue("Last Name");
-                    sheet.Cell(2, 3).SetValue("Home Street");
-                    sheet.Cell(2, 4).SetValue("Home City");
-                    sheet.Cell(2, 5).SetValue("Home State");
-                    sheet.Cell(2, 6).SetValue("Home Zip");
-                    sheet.Cell(2, 7).SetValue("Work Street");
-                    sheet.Cell(2, 8).SetValue("Work City");
-                    sheet.Cell(2, 9).SetValue("Work State");
-                    sheet.Cell(2, 10).SetValue("Work Zip");
+                    sheet[1, 0].Value = "First Name";
+                    sheet[1, 1].Value = "Last Name";
+                    sheet[1, 2].Value = "Home Street";
+                    sheet[1, 3].Value = "Home City";
+                    sheet[1, 4].Value = "Home State";
+                    sheet[1, 5].Value = "Home Zip";
+                    sheet[1, 6].Value = "Work Street";
+                    sheet[1, 7].Value = "Work City";
+                    sheet[1, 8].Value = "Work State";
+                    sheet[1, 9].Value = "Work Zip";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<PersonMap>();
                     var records = excel.GetRecords<Person>().ToList();
 
@@ -549,21 +531,21 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("FirstColumn");
-                    sheet.Cell(2, 1).SetValue(1);
-                    sheet.Cell(3, 1).SetValue(2);
+                    sheet[0, 0].Value = "FirstColumn";
+                    sheet[1, 0].Value = 1;
+                    sheet[2, 0].Value = 2;
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     try {
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
@@ -579,26 +561,26 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("Column");
-                    sheet.Cell(1, 2).SetValue("Column");
-                    sheet.Cell(1, 3).SetValue("Column");
+                    sheet[0, 0].Value = "Column";
+                    sheet[0, 1].Value = "Column";
+                    sheet[0, 2].Value = "Column";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue("one");
-                    sheet.Cell(2, 2).SetValue("two");
-                    sheet.Cell(2, 3).SetValue("three");
+                    sheet[1, 0].Value = "one";
+                    sheet[1, 1].Value = "two";
+                    sheet[1, 2].Value = "three";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file 
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordDuplicateHeaderNamesMap>();
                     var records = excel.GetRecords<TestRecordDuplicateHeaderNames>().ToList();
 
@@ -617,28 +599,28 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("int2");
-                    sheet.Cell(1, 2).SetValue("string3");
+                    sheet[0, 0].Value = "int2";
+                    sheet[0, 1].Value = "string3";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue(1);
-                    sheet.Cell(2, 2).SetValue("one");
+                    sheet[1, 0].Value = 1;
+                    sheet[1, 1].Value = "one";
 
                     // Write the second record
-                    sheet.Cell(3, 1).SetValue(2);
-                    sheet.Cell(3, 2).SetValue("two");
+                    sheet[2, 0].Value = 2;
+                    sheet[2, 1].Value = "two";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file 
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<MultipleNamesClassMap>();
                     var records = excel.GetRecords<MultipleNamesClass>().ToList();
 
@@ -657,14 +639,13 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    book.AddWorksheet("Sheet 1");
-                    book.SaveAs(stream);
+                using (var book = new C1XLBook()) {
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file 
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     try {
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
@@ -681,33 +662,31 @@ namespace ExcelHelper.Tests
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("StringColumn");
-                    sheet.Cell(1, 2).SetValue("IntColumn");
-                    sheet.Cell(1, 3).SetValue("GuidColumn");
+                    sheet[0, 0].Value = "StringColumn";
+                    sheet[0, 1].Value = "IntColumn";
+                    sheet[0, 2].Value = "GuidColumn";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue("string");
-                    sheet.Cell(2, 2).SetValue((object)null);
-                    sheet.Cell(2, 3).SetValue((object)null);
+                    sheet[1, 0].Value = "string";
+                    sheet[1, 1].Value = null;
+                    sheet[1, 2].Value = null;
 
                     // Write the second record
-                    sheet.Cell(3, 1).SetValue((object)null);
-                    sheet.Cell(3, 2).SetValue(2);
-                    sheet.Cell(3, 3).SetValue(guid);
+                    sheet[2, 0].Value = null;
+                    sheet[2, 1].Value = 2;
+                    sheet[2, 2].Value = guid.ToString();
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
-                // Now parse the Excel file. Note that we are unable to write NULL strings with ClosedXML so they are always blank.
-                // If we wish to test this we should create some real Excel files with null's in them using the C1 library and save
-                // them to disk to use directly rather than building them on the fly here with ClosedXML.
+                // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     var records = excel.GetRecords<TestNullable>().ToList();
 
                     // Make sure we got two records
@@ -732,24 +711,24 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("stringcolumn");
-                    sheet.Cell(1, 2).SetValue("intcolumn");
+                    sheet[0, 0].Value = "stringcolumn";
+                    sheet[0, 1].Value = "intcolumn";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue("string");
-                    sheet.Cell(2, 2).SetValue(1);
+                    sheet[1, 0].Value = "string";
+                    sheet[1, 1].Value = 1;
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IsHeaderCaseSensitive = false;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -768,24 +747,24 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue(" String Column ");
-                    sheet.Cell(1, 2).SetValue(" Int Column ");
+                    sheet[0, 0].Value = " String Column ";
+                    sheet[0, 1].Value = " Int Column ";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue("string");
-                    sheet.Cell(2, 2).SetValue(1);
+                    sheet[1, 0].Value = "string";
+                    sheet[1, 1].Value = 1;
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IgnoreHeaderWhiteSpace = true;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -804,24 +783,24 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue(" IntColumn ");
-                    sheet.Cell(1, 2).SetValue(" String Column ");
+                    sheet[0, 0].Value = " IntColumn ";
+                    sheet[0, 1].Value = " String Column ";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue(1);
-                    sheet.Cell(2, 2).SetValue("string");
+                    sheet[1, 0].Value = 1;
+                    sheet[1, 1].Value = "string";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.TrimHeaders = true;
                     excel.Configuration.RegisterClassMap<TestRecordMapMissingField>();
@@ -841,28 +820,28 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("IntColumn");
-                    sheet.Cell(1, 2).SetValue("StringColumn");
+                    sheet[0, 0].Value = "IntColumn";
+                    sheet[0, 1].Value = "StringColumn";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue((object)null);
-                    sheet.Cell(2, 2).SetValue("some string");
+                    sheet[1, 0].Value = null;
+                    sheet[1, 1].Value = "some string";
 
                     // Write the second record
-                    sheet.Cell(3, 1).SetValue(1);
-                    sheet.Cell(3, 2).SetValue((object)null);
+                    sheet[2, 0].Value = 1;
+                    sheet[2, 1].Value = null;
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.RegisterClassMap<TestDefaultValuesMap>();
                     var records = excel.GetRecords<TestDefaultValues>().ToList();
 
@@ -883,31 +862,31 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("BoolColumn");
+                    sheet[0, 0].Value = "BoolColumn";
 
                     // Write the test records
-                    sheet.Cell(2, 1).SetValue(true);
-                    sheet.Cell(3, 1).SetValue("true");
-                    sheet.Cell(4, 1).SetValue("True");
-                    sheet.Cell(5, 1).SetValue("yes");
-                    sheet.Cell(6, 1).SetValue("y");
-                    sheet.Cell(7, 1).SetValue(false);
-                    sheet.Cell(8, 1).SetValue("false");
-                    sheet.Cell(9, 1).SetValue("False");
-                    sheet.Cell(10, 1).SetValue("no");
-                    sheet.Cell(11, 1).SetValue("n");
+                    sheet[1, 0].Value = true;
+                    sheet[2, 0].Value = "true";
+                    sheet[3, 0].Value = "True";
+                    sheet[4, 0].Value = "yes";
+                    sheet[5, 0].Value = "y";
+                    sheet[6, 0].Value = false;
+                    sheet[7, 0].Value = "false";
+                    sheet[8, 0].Value = "False";
+                    sheet[9, 0].Value = "no";
+                    sheet[10, 0].Value = "n";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     var records = excel.GetRecords<TestBoolean>().ToList();
 
                     // Verify the records are what we expect
@@ -928,40 +907,40 @@ namespace ExcelHelper.Tests
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
                 var date = DateTime.Today;
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("StringColumn");
-                    sheet.Cell(1, 2).SetValue("IntColumn");
-                    sheet.Cell(1, 3).SetValue("BoolColumn");
-                    sheet.Cell(1, 4).SetValue("DateTimeColumn");
+                    sheet[0, 0].Value = "StringColumn";
+                    sheet[0, 1].Value = "IntColumn";
+                    sheet[0, 2].Value = "BoolColumn";
+                    sheet[0, 3].Value = "DateTimeColumn";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue("string");
-                    sheet.Cell(2, 2).SetValue(1);
-                    sheet.Cell(2, 3).SetValue("bullshit");
-                    sheet.Cell(2, 4).SetValue("bullshit");
+                    sheet[1, 0].Value = "string";
+                    sheet[1, 1].Value = 1;
+                    sheet[1, 2].Value = "bullshit";
+                    sheet[1, 3].Value = "bullshit";
 
                     // Write the second record
-                    sheet.Cell(3, 1).SetValue("string");
-                    sheet.Cell(3, 2).SetValue(1);
-                    sheet.Cell(3, 3).SetValue(true);
-                    sheet.Cell(3, 4).SetValue("bullshit");
+                    sheet[2, 0].Value = "string";
+                    sheet[2, 1].Value = 1;
+                    sheet[2, 2].Value = true;
+                    sheet[2, 3].Value = "bullshit";
 
                     // Write the third record
-                    sheet.Cell(4, 1).SetValue("string");
-                    sheet.Cell(4, 2).SetValue(1);
-                    sheet.Cell(4, 3).SetValue(true);
-                    sheet.Cell(4, 4).SetValue(date);
+                    sheet[3, 0].Value = "string";
+                    sheet[3, 1].Value = 1;
+                    sheet[3, 2].Value = true;
+                    sheet[3, 3].Value = date;
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IgnoreReadingExceptions = true;
                     var allDetails = new List<ExcelReadErrorDetails>();
@@ -996,14 +975,14 @@ namespace ExcelHelper.Tests
                     // Check the exception details are what we expect
                     Assert.AreEqual(2, exceptions.Count);
                     var message =
-                        @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
+                        @"Type: 'ExcelHelper.Tests.ExcelReaderC1Tests+TestRecord'" + "\r\n" +
                         @"Row: '2' (1 based)" + "\r\n" +
                         @"Column: '3' (1 based)" + "\r\n" +
                         @"Field Name: 'BoolColumn'" + "\r\n" +
                         @"Field Value: 'bullshit'" + "\r\n";
                     Assert.AreEqual(message, exceptions[0].Data["ExcelHelper"]);
                     message =
-                        @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
+                        @"Type: 'ExcelHelper.Tests.ExcelReaderC1Tests+TestRecord'" + "\r\n" +
                         @"Row: '3' (1 based)" + "\r\n" +
                         @"Column: '4' (1 based)" + "\r\n" +
                         @"Field Name: 'DateTimeColumn'" + "\r\n" +
@@ -1018,24 +997,24 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("ID");
-                    sheet.Cell(1, 2).SetValue("Name");
+                    sheet[0, 0].Value = "ID";
+                    sheet[0, 1].Value = "Name";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue(1);
-                    sheet.Cell(2, 2).SetValue("a name");
+                    sheet[1, 0].Value = 1;
+                    sheet[1, 1].Value = "a name";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     var records = excel.GetRecords<TestStruct>().ToList();
 
                     // Verify the records are what we expect
@@ -1052,24 +1031,24 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("IntColumn");
-                    sheet.Cell(1, 2).SetValue("StringColumn");
+                    sheet[0, 0].Value = "IntColumn";
+                    sheet[0, 1].Value = "StringColumn";
 
                     // Write the first record
-                    sheet.Cell(2, 1).SetValue(1);
-                    sheet.Cell(2, 2).SetValue(" string ");
+                    sheet[1, 0].Value = 1;
+                    sheet[1, 1].Value = " string ";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.TrimFields = true;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -1088,23 +1067,22 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                var now = DateTime.Now;
-                var date = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, DateTimeKind.Unspecified);
+                var date = DateTime.Today;
                 var guid = Guid.NewGuid();
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
                     WriteRecords(sheet, guid, date);
-                    book.AddWorksheet("Sheet 2");
-                    sheet = book.AddWorksheet("Sheet 3");
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
                     WriteRecords(sheet, guid, date);
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream, FileFormat.OpenXml);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = new ExcelReaderC1(stream)) {
                     ValidateRecordsAsDictionary(excel, guid, date);
                     Assert.AreEqual(3, excel.TotalSheets);
                     Assert.IsTrue(excel.ChangeSheet(2));
@@ -1139,7 +1117,7 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual(guid.ToString(), record["GuidColumn"]);
                 Assert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
                 Assert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
-                Assert.AreEqual(date.AddDays(i).ToString("o"), record["DateTimeColumn"]);
+                Assert.AreEqual(date.AddDays(i).ToOADate().ToString(), record["DateTimeColumn"]);
                 Assert.AreEqual("", record["NullStringColumn"]);
             }
         }

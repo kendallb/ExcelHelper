@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2004-2017 AMain.com, Inc.
+ * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
  * 
@@ -7,10 +7,10 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
-#if !USE_C1_EXCEL
+#if USE_C1_EXCEL
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel;
+using C1.C1Excel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ExcelHelper.Configuration;
 // ReSharper disable ClassNeverInstantiated.Local
@@ -19,7 +19,7 @@ using ExcelHelper.Configuration;
 namespace ExcelHelper.Tests
 {
     [TestClass]
-    public class ExcelReaderReferenceMappingTests
+    public class ExcelReaderC1ReferenceMappingTests
     {
         private ExcelFactory _factory;
 
@@ -34,34 +34,34 @@ namespace ExcelHelper.Tests
         {
             using (var stream = new MemoryStream()) {
                 // Create some test data to parse
-                using (var book = new XLWorkbook()) {
-                    var sheet = book.AddWorksheet("Sheet 1");
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
 
                     // Write the header fields
-                    sheet.Cell(1, 1).SetValue("AId");
-                    sheet.Cell(1, 2).SetValue("BId");
-                    sheet.Cell(1, 3).SetValue("CId");
-                    sheet.Cell(1, 4).SetValue("DId");
+                    sheet[0, 0].Value = "AId";
+                    sheet[0, 1].Value = "BId";
+                    sheet[0, 2].Value = "CId";
+                    sheet[0, 3].Value = "DId";
 
                     // Write out the first record
-                    sheet.Cell(2, 1).SetValue("a1");
-                    sheet.Cell(2, 2).SetValue("b1");
-                    sheet.Cell(2, 3).SetValue("c1");
-                    sheet.Cell(2, 4).SetValue("d1");
+                    sheet[1, 0].Value = "a1";
+                    sheet[1, 1].Value = "b1";
+                    sheet[1, 2].Value = "c1";
+                    sheet[1, 3].Value = "d1";
 
                     // Write out the second record
-                    sheet.Cell(3, 1).SetValue("a2");
-                    sheet.Cell(3, 2).SetValue("b2");
-                    sheet.Cell(3, 3).SetValue("c2");
-                    sheet.Cell(3, 4).SetValue("d2");
+                    sheet[2, 0].Value = "a2";
+                    sheet[2, 1].Value = "b2";
+                    sheet[2, 2].Value = "c2";
+                    sheet[2, 3].Value = "d2";
 
                     // Save it to the stream
-                    book.SaveAs(stream);
+                    book.Save(stream);
                 }
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReader(stream)) {
+                using (var excel = _factory.CreateReader(stream)) {
                     excel.Configuration.RegisterClassMap<AMap>();
                     var records = excel.GetRecords<A>().ToList();
 

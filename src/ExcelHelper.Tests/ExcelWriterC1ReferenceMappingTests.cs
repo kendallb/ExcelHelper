@@ -7,7 +7,7 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
-#if !USE_C1_EXCEL
+#if USE_C1_EXCEL
 using System.Collections.Generic;
 using System.IO;
 using ClosedXML.Excel;
@@ -18,7 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ExcelHelper.Tests
 {
     [TestClass]
-    public class ExcelWriterReferenceMappingTests
+    public class ExcelWriterC1ReferenceMappingTests
     {
         [TestMethod]
         public void NestedReferencesTest()
@@ -42,7 +42,7 @@ namespace ExcelHelper.Tests
             }
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriter(stream)) {
+                using (var excel = new ExcelWriterC1(stream)) {
                     excel.Configuration.RegisterClassMap<AMap>();
                     excel.WriteRecords(records);
                     excel.Close();
@@ -83,7 +83,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriter(stream)) {
+                using (var excel = new ExcelWriterC1(stream)) {
                     excel.Configuration.RegisterClassMap<AMap>();
                     excel.WriteRecords(records);
                     excel.Close();

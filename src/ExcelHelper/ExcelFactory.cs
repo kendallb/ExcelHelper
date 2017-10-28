@@ -25,7 +25,11 @@ namespace ExcelHelper
         public virtual IExcelReader CreateReader(
             Stream stream)
         {
+#if USE_C1_EXCEL
+            return new ExcelReaderC1(stream);
+#else
             return new ExcelReader(stream);
+#endif
         }
 
         /// <summary>
@@ -38,7 +42,11 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
+#if USE_C1_EXCEL
+            return new ExcelReaderC1(stream, configuration);
+#else
             return new ExcelReader(stream, configuration);
+#endif
         }
 
         /// <summary>
@@ -49,7 +57,11 @@ namespace ExcelHelper
         public virtual IExcelWriter CreateWriter(
             Stream stream)
         {
+#if USE_C1_EXCEL
+            return new ExcelWriterC1(stream);
+#else
             return new ExcelWriter(stream);
+#endif
         }
 
         /// <summary>
@@ -62,7 +74,11 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
+#if USE_C1_EXCEL
+            return new ExcelWriterC1(stream, configuration);
+#else
             return new ExcelWriter(stream, configuration);
+#endif
         }
     }
 }

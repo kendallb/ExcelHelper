@@ -21,7 +21,7 @@ namespace ExcelHelper
         /// Adds ExcelHelper specific information to <see cref="Exception.Data"/>.
         /// </summary>
         /// <param name="exception">The exception to add the info to.</param>
-        /// <param name="type">The type of object that was being created in the <see cref="ExcelReader"/>.</param>
+        /// <param name="type">The type of object that was being created in the ExcelReader.</param>
         /// <param name="details">The details of the parsing error.</param>
         public static void AddExceptionDataMessage(
             Exception exception,
@@ -45,7 +45,7 @@ namespace ExcelHelper
         /// <summary>
         /// Gets ExcelHelper information to be added to an exception.
         /// </summary>
-        /// <param name="type">The type of object that was being created in the <see cref="ExcelReader"/>.</param>
+        /// <param name="type">The type of object that was being created in the ExcelReader.</param>
         /// <param name="details">The details of the parsing error.</param>
         /// <returns>The ExcelHelper information.</returns>
         public static string GetErrorMessage(

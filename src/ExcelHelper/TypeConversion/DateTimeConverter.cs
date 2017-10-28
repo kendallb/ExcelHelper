@@ -9,6 +9,9 @@
 
 using System;
 using System.Globalization;
+#if USE_C1_EXCEL
+using C1.C1Excel;
+#endif
 
 namespace ExcelHelper.TypeConversion
 {
@@ -64,5 +67,19 @@ namespace ExcelHelper.TypeConversion
             // Return DateTime.MinValue if the entry is null
             return DateTime.MinValue;
         }
+
+#if USE_C1_EXCEL
+        /// <summary>
+        /// Return the Excel type formatting string for the current options (null if not defined)
+        /// </summary>
+        /// <param name="options">The options to use when converting.</param>
+        /// <returns>The Excel formatting string for the object, null to use default formatting.</returns>
+        public override string ExcelFormatString(
+            TypeConverterOptions options)
+        {
+            // Always use the general date format for storing dates in Excel, so they don't look like doubles to the user
+            return XLStyle.FormatDotNetToXL(options.DateFormat ?? "G", typeof(DateTime), options.CultureInfo);
+        }
+#endif
     }
 }

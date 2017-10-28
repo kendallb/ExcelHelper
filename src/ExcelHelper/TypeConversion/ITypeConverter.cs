@@ -52,5 +52,15 @@ namespace ExcelHelper.TypeConversion
         object ConvertFromExcel(
             TypeConverterOptions options,
             object excelValue);
+
+#if USE_C1_EXCEL
+        /// <summary>
+        /// Return the Excel type formatting string for the current options (null if not defined)
+        /// </summary>
+        /// <param name="options">The options to use when converting.</param>
+        /// <returns>The Excel formatting string for the object, null to use default formatting.</returns>
+        string ExcelFormatString(
+            TypeConverterOptions options);
+#endif
     }
 }

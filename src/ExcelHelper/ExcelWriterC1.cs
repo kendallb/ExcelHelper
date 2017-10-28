@@ -1,21 +1,22 @@
 ﻿/*
- * Copyright (C) 2004-2017 AMain.com, Inc.
+ * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
  * 
- * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
+ * This file is a part of ExcelHelper and is licensed under the MS-PL
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html
  */
 
-#if !USE_C1_EXCEL
+#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using ClosedXML.Excel;
+using C1.C1Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 
@@ -24,15 +25,16 @@ namespace ExcelHelper
     /// <summary>
     /// Used to write Excel files.
     /// </summary>
-    public class ExcelWriter : IExcelWriter
+    public class ExcelWriterC1 : IExcelWriter
     {
         private bool _disposed;
         private readonly Stream _stream;
-        private XLWorkbook _book;
-        private IXLWorksheet _sheet;
-        private Font _defaultFont;
+        private C1XLBook _book;
+        private XLSheet _sheet;
+        private Graphics _graphics;
         private int _row;
         private int _col;
+        private float[] _colWidths;
         private readonly Dictionary<Type, Delegate> _typeActions = new Dictionary<Type, Delegate>();
         private readonly ExcelConfiguration _configuration;
 
@@ -46,7 +48,7 @@ namespace ExcelHelper
         /// a default <see cref="ExcelConfiguration"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> used to write the Excel file.</param>
-        public ExcelWriter(
+        public ExcelWriterC1(
             Stream stream)
             : this(stream, new ExcelConfiguration())
         {
@@ -57,7 +59,7 @@ namespace ExcelHelper
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> used to write the Excel file.</param>
         /// <param name="configuration">The configuration.</param>
-        public ExcelWriter(
+        public ExcelWriterC1(
             Stream stream,
             ExcelConfiguration configuration)
         {
@@ -69,8 +71,12 @@ namespace ExcelHelper
             }
             _configuration = configuration;
             _stream = stream;
-            _book = new XLWorkbook();
+            _book = new C1XLBook();
+            _book.CompatibilityMode = CompatibilityMode.Excel2007;
             ChangeSheet(0);
+            if (_configuration.AutoSizeColumns) {
+                _graphics = Graphics.FromHwnd(IntPtr.Zero);
+            }
 
             // Set the default font to Calibri 11, which is the default in newer versions of office
             DefaultFont = new Font("Calibri", 11, FontStyle.Regular);
@@ -79,58 +85,45 @@ namespace ExcelHelper
         /// <summary>
         /// Gets or sets the default font for the Excel file
         /// </summary>
-        public Font DefaultFont
+        public Font DefaultFont 
         {
-            get { return _defaultFont; }
-            set
-            {
-                var font = _book.Style.Font;
-                font.Bold = value.Bold;
-                font.Italic = value.Italic;
-                font.Underline = value.Underline ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
-                font.Strikethrough = value.Strikeout;
-                font.FontSize = value.SizeInPoints;
-                font.FontName = value.Name;
-                _defaultFont = value;
-            }
+            get { return _book.DefaultFont; }
+            set { _book.DefaultFont = value; }
         }
 
         /// <summary>
         /// Update an Excel cell style with the passed in attributes
         /// </summary>
-        /// <param name="cellStyle">IXLStyle to update</param>
-        /// <param name="numberFormat">Optional number formatting string for the cell</param>
-        /// <param name="dateFormat">Optional DateTime formatting string for the cell</param>
+        /// <param name="cellStyle">Place to store the cell style</param>
+        /// <param name="format">Optional formatting string for the cell</param>
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
         private void UpdateStyle(
-            IXLStyle cellStyle,
-            string numberFormat = null,
-            string dateFormat = null,
+            ref XLStyle cellStyle,
+            string format = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null)
         {
             // Set up native formatting if provided
-            if (!string.IsNullOrEmpty(numberFormat)) {
-                cellStyle.NumberFormat.SetFormat(numberFormat);
-            }
-            if (!string.IsNullOrEmpty(dateFormat)) {
-                cellStyle.DateFormat.SetFormat(dateFormat);
+            if (!string.IsNullOrEmpty(format)) {
+                if (cellStyle == null) {
+                    cellStyle = new XLStyle(_book);
+                }
+                cellStyle.Format = format;
             }
 
             // Apply font styling if defined
             if (fontStyle != null || fontSize != null || fontName != null) {
-                var defaultFont = _defaultFont;
+                if (cellStyle == null) {
+                    cellStyle = new XLStyle(_book);
+                }
+                var defaultFont = _book.DefaultFont;
+                var name = fontName ?? defaultFont.Name;
+                var size = fontSize ?? defaultFont.SizeInPoints;
                 var style = fontStyle ?? defaultFont.Style;
-                var font = cellStyle.Font;
-                font.Bold = (style & FontStyle.Bold) != 0;
-                font.Italic = (style & FontStyle.Italic) != 0;
-                font.Underline = (style & FontStyle.Underline) != 0 ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
-                font.Strikethrough = (style & FontStyle.Strikeout) != 0;
-                font.FontSize = fontSize ?? defaultFont.SizeInPoints;
-                font.FontName = fontName ?? defaultFont.Name;
+                cellStyle.Font = new Font(name, size, style);
             }
         }
 
@@ -146,17 +139,14 @@ namespace ExcelHelper
             PerformColumnResize();
 
             // Insert all the sheets up to the index we need if the count is less
-            var sheets = _book.Worksheets;
+            var sheets = _book.Sheets;
             if (sheet >= sheets.Count) {
                 for (var i = sheets.Count; i <= sheet; i++) {
-                    sheets.Add($"Sheet{i+1}");
+                    sheets.Insert(i);
                 }
             }
-
-            // Dispose of the old sheet and reference the new one
-            _sheet?.Dispose();
-            _sheet = sheets.Worksheet(sheet + 1);
-            _row = _col = 1;
+            _sheet = sheets[sheet];
+            _row = _col = 0;
         }
 
         /// <summary>
@@ -181,40 +171,59 @@ namespace ExcelHelper
             float? fontSize = null,
             string fontName = null)
         {
-            // Clear the cell if the field is null
-            var cell = _sheet.Cell(row + 1, col + 1);
-            if (field == null) {
-                cell.SetValue((object)null);
-                return;
-            }
-
             // Find the type conversion options
             var type = typeof(T);
             var converter = TypeConverterFactory.GetConverter(type);
             var options = TypeConverterOptions.Merge(TypeConverterOptionsFactory.GetOptions(type, _configuration.CultureInfo));
 
             // Set the formatting options to override the defaults
-            numberFormat = numberFormat ?? options.NumberFormat;
-            dateFormat = dateFormat ?? options.DateFormat;
+            var format = numberFormat ?? dateFormat;
+            if (converter.AcceptsNativeType) {
+                // Convert the options to Excel format
+                if (format != null) {
+                    format = XLStyle.FormatDotNetToXL(format, converter.ConvertedType, options.CultureInfo);
+                } else {
+                    // If no formatting is provided, see if the native type requires it (mostly for DateTime)
+                    format = converter.ExcelFormatString(options);
+                }
+            } else {
+                // Override the formatting for the formatter, and do not format the Excel cell
+                if (numberFormat != null) {
+                    options.NumberFormat = format;
+                } else if (dateFormat != null) {
+                    options.DateFormat = format;
+                }
+                format = null;
+            }
+
+            // Find the default style to use for this cell based on the row and column styles
+            var cellStyle = _sheet.Rows[row].Style ?? _sheet.Columns[col].Style;
+
+            // Clone the style so it does not modify the entire row or column
+            cellStyle = cellStyle?.Clone();
+
+            // Set up cell formatting for this cell
+            UpdateStyle(ref cellStyle, format, fontStyle, fontSize, fontName);
 
             // Apply the style to this cell if defined
-            if (numberFormat != null || dateFormat != null || fontStyle != null || fontSize != null || fontName != null) {
-                UpdateStyle(cell.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
+            if (cellStyle != null) {
+                _sheet[row, col].Style = cellStyle;
             }
 
             // Now write the cell contents
-            if (field.GetType() == typeof(string)) {
-                var s = (string)(object)field;
-                if (s != null && s.StartsWith("=")) {
-                    // Write as a formula if it starts with an equals sign
-                    cell.FormulaA1 = s;
-                } else {
-                    cell.SetValue(s);
-                }
-            } else if (converter.AcceptsNativeType) {
-                cell.SetValue(field);
+            object value;
+            if (converter.AcceptsNativeType) {
+                value = field;
             } else {
-                cell.SetValue(converter.ConvertToExcel(options, field));
+                value = converter.ConvertToExcel(options, field);
+            }
+            var s = value as string;
+            if (s != null && s.StartsWith("=")) {
+                // Write as a formula if it starts with an equals sign
+                _sheet[row, col].Value = "";
+                _sheet[row, col].Formula = s;
+            } else {
+                _sheet[row, col].Value = value;
             }
         }
 
@@ -236,9 +245,10 @@ namespace ExcelHelper
             float? fontSize = null,
             string fontName = null)
         {
-            using (var xlColumn = _sheet.Column(col + 1)) {
-                UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
-            }
+            var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
+            XLStyle style = null;
+            UpdateStyle(ref style, format, fontStyle, fontSize, fontName);
+            _sheet.Columns[col].Style = style;
         }
 
         /// <summary>
@@ -259,8 +269,69 @@ namespace ExcelHelper
             float? fontSize = null,
             string fontName = null)
         {
-            using (var xlRow = _sheet.Row(row + 1)) {
-                UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
+            var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
+            XLStyle style = null;
+            UpdateStyle(ref style, format, fontStyle, fontSize, fontName);
+            _sheet.Rows[row].Style = style;
+        }
+
+        /// <summary>
+        /// Auto size the columns based on a specific row. If any columns in this row
+        /// are wider than the current maximum, the column sizes are increased.
+        /// </summary>
+        /// <param name="row">Row to auto size the columns for</param>
+        /// <param name="maxWidth">Maximum allowed width</param>
+        private void AutoSizeColumnsForRow(
+            int row,
+            float maxWidth)
+        {
+            // Allocate or resize the column sizes based on the column count
+            var count = _sheet.Columns.Count;
+            if (_colWidths == null) {
+                _colWidths = new float[count];
+            } else if (_colWidths.Length < count) {
+                Array.Resize(ref _colWidths, count);
+            }
+
+            // Now process each column in turn and measure it
+            for (var i = 0; i < count; i++) {
+                var cell = _sheet[row, i];
+                var value = cell.Value;
+                if (value != null) {
+                    // Format value if cell has a style with format set
+                    string text;
+                    var style = cell.Style ?? (_sheet.Rows[row].Style ?? _sheet.Columns[i].Style);
+
+                    if (value.GetType() == typeof(bool)) {
+                        // By default Excel formats boolean as uppercase
+                        if ((bool)value) {
+                            text = "TRUE";
+                        } else {
+                            text = "FALSE";
+                        }
+                    } else {
+                        if (style != null && style.Format.Length > 0 && value is IFormattable) {
+                            var fmt = XLStyle.FormatXLToDotNet(style.Format);
+                            text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
+                        } else {
+                            text = value.ToString();
+                        }
+                    }
+
+                    // Get font (default or style)
+                    var font = _book.DefaultFont;
+                    if (style?.Font != null) {
+                        font = style.Font;
+                    }
+
+                    // Measure string (with a little tolerance)
+                    var size = _graphics.MeasureString(text + ".", font);
+
+                    // Keep widest so far, capped to the maximum
+                    if (size.Width > _colWidths[i]) {
+                        _colWidths[i] = Math.Min(size.Width, maxWidth);
+                    }
+                }
             }
         }
 
@@ -273,8 +344,8 @@ namespace ExcelHelper
             double minWidth,
             double maxWidth)
         {
-            using (var columns = _sheet.Columns()) {
-                columns.AdjustToContents(minWidth, maxWidth);
+            for (var i = 0; i <= _row; i++) {
+                AutoSizeColumnsForRow(_row, (float)maxWidth);
             }
         }
 
@@ -287,9 +358,7 @@ namespace ExcelHelper
             double minHeight,
             double maxHeight)
         {
-            using (var rows = _sheet.Rows()) {
-                rows.AdjustToContents(minHeight, maxHeight);
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -301,8 +370,10 @@ namespace ExcelHelper
             int col,
             double width)
         {
-            using (var xlColumn = _sheet.Column(col + 1)) {
-                xlColumn.Width = width;
+            if (_configuration.AutoSizeColumns && _colWidths != null && col < _colWidths.Length) {
+                _colWidths[col] = C1XLBook.TwipsToPixels(width);
+            } else {
+                _sheet.Columns[col].Width = (int)width;
             }
         }
 
@@ -315,9 +386,7 @@ namespace ExcelHelper
             int row,
             double height)
         {
-            using (var xlRow = _sheet.Row(row + 1)) {
-                xlRow.Height = height;
-            }
+            _sheet.Rows[row].Height = (int)height;
         }
 
         /// <summary>
@@ -327,7 +396,7 @@ namespace ExcelHelper
         protected void WriteFieldNative(
             object field)
         {
-            _sheet.Cell(_row, _col++).SetValue(field);
+            _sheet[_row, _col++].Value = field;
         }
 
         /// <summary>
@@ -341,7 +410,7 @@ namespace ExcelHelper
             ITypeConverter converter,
             TypeConverterOptions typeConverterOptions)
         {
-            _sheet.Cell(_row, _col++).SetValue(converter.ConvertToExcel(typeConverterOptions, field));
+            _sheet[_row, _col++].Value = converter.ConvertToExcel(typeConverterOptions, field);
         }
 
         /// <summary>
@@ -352,16 +421,12 @@ namespace ExcelHelper
         protected void WriteFieldFormula(
             object field)
         {
-            var cell = _sheet.Cell(_row, _col++);
-            if (field.GetType() == typeof(string)) {
-                var s = (string)field;
-                if (s != null && s.StartsWith("=")) {
-                    cell.FormulaA1 = s;
-                } else {
-                    cell.SetValue(field);
-                }
+            var s = field as string;
+            if (s != null && s.StartsWith("=")) {
+                _sheet[_row, _col].Value = "";
+                _sheet[_row, _col++].Formula = s;
             } else {
-                cell.SetValue(field);
+                _sheet[_row, _col++].Value = field;
             }
         }
 
@@ -371,7 +436,10 @@ namespace ExcelHelper
         /// </summary>
         private void NextRecord()
         {
-            _col = 1;
+            if (_configuration.AutoSizeColumns) {
+                AutoSizeColumnsForRow(_row, (float)_configuration.MaxColumnWidth);
+            }
+            _col = 0;
             _row++;
         }
 
@@ -385,15 +453,15 @@ namespace ExcelHelper
             // Write the header fields
             foreach (var property in properties) {
                 if (CanWrite(property)) {
-                    _sheet.Cell(_row, _col++).SetValue(property.Data.Names.FirstOrDefault());
+                    _sheet[_row, _col++].Value = property.Data.Names.FirstOrDefault();
                 }
             }
 
             // Set the style for the header to bold if desired
             if (_configuration.HeaderIsBold) {
-                using (var xlRow = _sheet.Row(_row)) {
-                    xlRow.Style.Font.SetBold(true);
-                }
+                _sheet.Rows[_row].Style = new XLStyle(_book) {
+                    Font = new Font(_book.DefaultFont, FontStyle.Bold),
+                };
             }
 
             // Move to the next record
@@ -422,16 +490,11 @@ namespace ExcelHelper
                     data.TypeConverterOptions);
 
                 // Write the cell formatting style if defined for this type
-                var isDate = data.TypeConverter.ConvertedType == typeof(DateTime);
-                var format = isDate ? typeConverterOptions.DateFormat : typeConverterOptions.NumberFormat;
+                var format = data.TypeConverter.ExcelFormatString(typeConverterOptions);
                 if (format != null) {
-                    using (var xlColumn = _sheet.Column(col + 1)) {
-                        if (isDate) {
-                            xlColumn.Style.DateFormat.Format = format;
-                        } else {
-                            xlColumn.Style.NumberFormat.Format = format;
-                        }
-                    }
+                    _sheet.Columns[col].Style = new XLStyle(_book) {
+                        Format = format,
+                    };
                 }
             }
         }
@@ -492,14 +555,14 @@ namespace ExcelHelper
                 PerformColumnResize();
 
                 // Now save the Excel file to the output stream
-                _book.SaveAs(_stream);
+                _book.Save(_stream, FileFormat.OpenXml);
 
                 // Clean up and dispose of everything
                 _book?.Dispose();
-                _sheet?.Dispose();
-                _defaultFont?.Dispose();
+                _graphics?.Dispose();
                 _sheet = null;
                 _book = null;
+                _graphics = null;
             }
         }
 
@@ -508,12 +571,12 @@ namespace ExcelHelper
         /// </summary>
         private void PerformColumnResize()
         {
-            // ReSharper disable once UseNullPropagationWhenPossible
-            if (_configuration.AutoSizeColumns && _sheet != null) {
-                using (var columns = _sheet.Columns()) {
-                    columns.AdjustToContents(0, _configuration.MaxColumnWidth);
+            if (_configuration.AutoSizeColumns && _colWidths != null) {
+                for (var i = 0; i < _colWidths.Length; i++) {
+                    _sheet.Columns[i].Width = C1XLBook.PixelsToTwips(_colWidths[i]);
                 }
             }
+            _colWidths = null;
         }
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace ExcelHelper
             }
             _configuration = configuration;
             _stream = stream;
-            _book = new XLWorkbook();
+            _book = new XLWorkbook(XLEventTracking.Disabled);
             ChangeSheet(0);
 
             // Set the default font to Calibri 11, which is the default in newer versions of office

@@ -126,6 +126,12 @@ namespace ExcelHelper.Configuration
         public bool IgnoreReadingExceptions { get; set; }
 
         /// <summary>
+        /// True to ignore empty rows and move to the next record. False to finish reading when an empty
+        /// row is reached. False is the default.
+        /// </summary>
+        public bool IgnoreEmptyRows { get; set; }
+
+        /// <summary>
         /// Gets or sets the callback that is called when a reading exception occurs. This will only happen when
         /// <see cref="IgnoreReadingExceptions"/> is true, and when calling <see cref="IExcelReader.GetRecords{T}"/>.
         /// </summary>

@@ -90,7 +90,7 @@ namespace ExcelHelper.Tests
 
                         // Check some automatically sizes column widths
                         Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(2232, sheet.Columns[4].Width);
+                        Assert.AreEqual(2347, sheet.Columns[4].Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet[0, 0].Value);

@@ -270,7 +270,19 @@ namespace ExcelHelper
             }
 
             // Read each record one at a time and yield it
-            while (!IsEmptyRecord()) {
+            var ignoreEmptyRows = Configuration.IgnoreEmptyRows;
+            while (_row < TotalRows) {
+                // If we are not ignoring empty records, bail when we reach one. Otherwise we process all rows in the file.
+                if (IsEmptyRecord()) {
+                    if (ignoreEmptyRows) {
+                        _row++;
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+
+                // Now process the record
                 T record;
                 try {
                     _currentIndex = -1;

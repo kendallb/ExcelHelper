@@ -222,6 +222,37 @@ namespace ExcelHelper.Tests
         }
 
         [TestMethod]
+        public void GetRecordsWithEmptyRowTest()
+        {
+            using (var stream = new MemoryStream()) {
+                // Create some test data to parse
+                var date = DateTime.Today;
+                var guid = Guid.NewGuid();
+                using (var book = new C1XLBook()) {
+                    var sheet = book.Sheets[0];
+                    WriteRecords(sheet, guid, date, includeBlankRow: true);
+                    book.Sheets.Insert(1);
+                    sheet = book.Sheets.Insert(2);
+                    WriteRecords(sheet, guid, date, includeBlankRow: true);
+
+                    // Save it to the stream
+                    book.Save(stream, FileFormat.OpenXml);
+                }
+
+                // Now parse the Excel file
+                stream.Position = 0;
+                using (var excel = new ExcelReaderC1(stream)) {
+                    excel.Configuration.RegisterClassMap<TestRecordMap>();
+                    ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
+                    Assert.AreEqual(3, excel.TotalSheets);
+                    Assert.IsTrue(excel.ChangeSheet(2));
+                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
+                }
+            }
+        }
+
+        [TestMethod]
         public void SkipRowsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -359,58 +390,70 @@ namespace ExcelHelper.Tests
         /// <param name="date">Date for the test</param>
         /// <param name="optionalReadValue">Value to put into the optional read column, null to not include it</param>
         /// <param name="firstRow">The first row number</param>
+        /// <param name="includeBlankRow">True to include a blank row</param>
         private static void WriteRecords(
             XLSheet sheet,
             Guid guid,
             DateTime date,
             string optionalReadValue = null,
-            int firstRow = 0)
+            int firstRow = 0,
+            bool includeBlankRow = false)
         {
             // Write the header fields
-            sheet[firstRow, 0].Value = "FirstColumn";
-            sheet[firstRow, 1].Value = "TypeConvertedColumn";
-            sheet[firstRow, 2].Value = "IntColumn";
-            sheet[firstRow, 3].Value = "String Column";
-            sheet[firstRow, 4].Value = "GuidColumn";
-            sheet[firstRow, 5].Value = "BoolColumn";
-            sheet[firstRow, 6].Value = "DoubleColumn";
-            sheet[firstRow, 7].Value = "DateTimeColumn";
-            sheet[firstRow, 8].Value = "NullStringColumn";
+            var row = firstRow;
+            sheet[row, 0].Value = "FirstColumn";
+            sheet[row, 1].Value = "TypeConvertedColumn";
+            sheet[row, 2].Value = "IntColumn";
+            sheet[row, 3].Value = "String Column";
+            sheet[row, 4].Value = "GuidColumn";
+            sheet[row, 5].Value = "BoolColumn";
+            sheet[row, 6].Value = "DoubleColumn";
+            sheet[row, 7].Value = "DateTimeColumn";
+            sheet[row, 8].Value = "NullStringColumn";
             if (optionalReadValue != null) {
-                sheet[firstRow, 9].Value = "OptionalReadColumn";
+                sheet[row, 9].Value = "OptionalReadColumn";
             }
 
             // Write the first record
-            sheet[firstRow + 1, 0].Value = 1;
-            sheet[firstRow + 1, 1].Value = "converts to test";
-            sheet[firstRow + 1, 2].Value = 1 * 2;
-            sheet[firstRow + 1, 3].Value = "string column 1";
-            sheet[firstRow + 1, 4].Value = guid.ToString();
-            sheet[firstRow + 1, 5].Value = true;
-            sheet[firstRow + 1, 6].Value = 1 * 3.0;
-            sheet[firstRow + 1, 7].Value = date.AddDays(1);
-            sheet[firstRow + 1, 8].Value = null;
+            row++;
+            sheet[row, 0].Value = 1;
+            sheet[row, 1].Value = "converts to test";
+            sheet[row, 2].Value = 1 * 2;
+            sheet[row, 3].Value = "string column 1";
+            sheet[row, 4].Value = guid.ToString();
+            sheet[row, 5].Value = true;
+            sheet[row, 6].Value = 1 * 3.0;
+            sheet[row, 7].Value = date.AddDays(1);
+            sheet[row, 8].Value = null;
             if (optionalReadValue != null) {
-                sheet[firstRow + 1, 9].Value = optionalReadValue;
+                sheet[row, 9].Value = optionalReadValue;
+            }
+
+            // Include a blank row in the middle
+            if (includeBlankRow) {
+                row++;
             }
 
             // Write the second record
-            sheet[firstRow + 2, 0].Value = 2;
-            sheet[firstRow + 2, 1].Value = "converts to test";
-            sheet[firstRow + 2, 2].Value = 2 * 2;
-            sheet[firstRow + 2, 3].Value = "string column 2";
-            sheet[firstRow + 2, 4].Value = guid.ToString();
-            sheet[firstRow + 2, 5].Value = false;
-            sheet[firstRow + 2, 6].Value = 2 * 3.0;
-            sheet[firstRow + 2, 7].Value = date.AddDays(2);
-            sheet[firstRow + 2, 8].Value = null;
+            row++;
+            sheet[row, 0].Value = 2;
+            sheet[row, 1].Value = "converts to test";
+            sheet[row, 2].Value = 2 * 2;
+            sheet[row, 3].Value = "string column 2";
+            sheet[row, 4].Value = guid.ToString();
+            sheet[row, 5].Value = false;
+            sheet[row, 6].Value = 2 * 3.0;
+            sheet[row, 7].Value = date.AddDays(2);
+            sheet[row, 8].Value = null;
             if (optionalReadValue != null) {
-                sheet[firstRow + 2, 9].Value = optionalReadValue;
+                sheet[row, 9].Value = optionalReadValue;
             }
 
             // Write a blank field outside of the header count. To make sure we only
             // process the columns up to the header count width
-            sheet[1, optionalReadValue == null ? 9 : 10].Value = "";
+            if (!includeBlankRow) {
+                sheet[1, optionalReadValue == null ? 9 : 10].Value = "";
+            }
         }
 
         /// <summary>
@@ -420,12 +463,17 @@ namespace ExcelHelper.Tests
         /// <param name="guid">GUID for the test</param>
         /// <param name="date">Date for the test</param>
         /// <param name="optionalReadValue">Value to expect in the optional read column</param>
+        /// <param name="ignoreEmptyRows">True to ignore empty rows</param>
         private static void ValidateRecords(
             IExcelReader excel,
             Guid guid,
             DateTime date,
-            string optionalReadValue = null)
+            string optionalReadValue = null,
+            bool ignoreEmptyRows = false)
         {
+            // Set the ignore empty rows field
+            excel.Configuration.IgnoreEmptyRows = ignoreEmptyRows;
+
             // Make sure we got two records
             var records = excel.GetRecords<TestRecord>().ToList();
             Assert.AreEqual(2, records.Count);

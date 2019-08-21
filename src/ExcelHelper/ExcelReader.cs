@@ -212,6 +212,29 @@ namespace ExcelHelper
             // Move to the next row
             _row++;
         }
+        
+        /// <summary>
+        /// Determines if the record at the current line is empty or not
+        /// </summary>
+        /// <returns>True if record is empty, false if not</returns>
+        private bool IsEmptyRecord()
+        {
+            for (var i = 0; i < _columnCount; i++) {
+                var o = _reader.GetValue(i);
+                if (o != null) {
+                    if (o.GetType() == typeof(string)) {
+                        // Make sure string fields are not empty strings
+                        if (!string.IsNullOrEmpty((string)o)) {
+                            return false;
+                        }
+                    } else {
+                        // Non-null, non-string fields are not empty
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
         /// <summary>
         /// Gets all the records in the Excel file and converts each to <see cref="Type"/> T.
@@ -244,8 +267,13 @@ namespace ExcelHelper
             var ignoreEmptyRows = Configuration.IgnoreEmptyRows;
             while (_reader.Read()) {
                 // If we are not ignoring empty records, bail when we reach one. Otherwise we process all rows in the file.
-                if (_reader.FieldCount == 0 && ignoreEmptyRows) {
-                    continue;
+                if (IsEmptyRecord()) {
+                    if (ignoreEmptyRows) {
+                        _row++;
+                        continue;
+                    } else {
+                        break;
+                    }
                 }
 
                 T record;

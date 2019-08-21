@@ -152,8 +152,7 @@ namespace ExcelHelper
                 }
             }
 
-            // Dispose of the old sheet and reference the new one
-            _sheet?.Dispose();
+            // Toss the old sheet and reference the new one
             _sheet = sheets.Worksheet(sheet + 1);
             _row = _col = 1;
         }
@@ -235,9 +234,8 @@ namespace ExcelHelper
             float? fontSize = null,
             string fontName = null)
         {
-            using (var xlColumn = _sheet.Column(col + 1)) {
-                UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
-            }
+            var xlColumn = _sheet.Column(col + 1);
+            UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
         }
 
         /// <summary>
@@ -258,9 +256,8 @@ namespace ExcelHelper
             float? fontSize = null,
             string fontName = null)
         {
-            using (var xlRow = _sheet.Row(row + 1)) {
-                UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
-            }
+            var xlRow = _sheet.Row(row + 1);
+            UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
         }
 
         /// <summary>
@@ -272,9 +269,8 @@ namespace ExcelHelper
             double minWidth,
             double maxWidth)
         {
-            using (var columns = _sheet.Columns()) {
-                columns.AdjustToContents(minWidth, maxWidth);
-            }
+            var columns = _sheet.Columns();
+            columns.AdjustToContents(minWidth, maxWidth);
         }
 
         /// <summary>
@@ -286,9 +282,8 @@ namespace ExcelHelper
             double minHeight,
             double maxHeight)
         {
-            using (var rows = _sheet.Rows()) {
-                rows.AdjustToContents(minHeight, maxHeight);
-            }
+            var rows = _sheet.Rows();
+            rows.AdjustToContents(minHeight, maxHeight);
         }
 
         /// <summary>
@@ -300,9 +295,8 @@ namespace ExcelHelper
             int col,
             double width)
         {
-            using (var xlColumn = _sheet.Column(col + 1)) {
-                xlColumn.Width = width;
-            }
+            var xlColumn = _sheet.Column(col + 1);
+            xlColumn.Width = width;
         }
 
         /// <summary>
@@ -314,9 +308,8 @@ namespace ExcelHelper
             int row,
             double height)
         {
-            using (var xlRow = _sheet.Row(row + 1)) {
-                xlRow.Height = height;
-            }
+            var xlRow = _sheet.Row(row + 1);
+            xlRow.Height = height;
         }
 
         /// <summary>
@@ -390,9 +383,8 @@ namespace ExcelHelper
 
             // Set the style for the header to bold if desired
             if (_configuration.HeaderIsBold) {
-                using (var xlRow = _sheet.Row(_row)) {
-                    xlRow.Style.Font.SetBold(true);
-                }
+                var xlRow = _sheet.Row(_row);
+                xlRow.Style.Font.SetBold(true);
             }
 
             // Move to the next record
@@ -424,12 +416,11 @@ namespace ExcelHelper
                 var isDate = data.TypeConverter.ConvertedType == typeof(DateTime);
                 var format = isDate ? typeConverterOptions.DateFormat : typeConverterOptions.NumberFormat;
                 if (format != null) {
-                    using (var xlColumn = _sheet.Column(col + 1)) {
-                        if (isDate) {
-                            xlColumn.Style.DateFormat.Format = format;
-                        } else {
-                            xlColumn.Style.NumberFormat.Format = format;
-                        }
+                    var xlColumn = _sheet.Column(col + 1);
+                    if (isDate) {
+                        xlColumn.Style.DateFormat.Format = format;
+                    } else {
+                        xlColumn.Style.NumberFormat.Format = format;
                     }
                 }
             }
@@ -495,7 +486,6 @@ namespace ExcelHelper
 
                 // Clean up and dispose of everything
                 _book?.Dispose();
-                _sheet?.Dispose();
                 _defaultFont?.Dispose();
                 _sheet = null;
                 _book = null;
@@ -509,9 +499,8 @@ namespace ExcelHelper
         {
             // ReSharper disable once UseNullPropagationWhenPossible
             if (_configuration.AutoSizeColumns && _sheet != null) {
-                using (var columns = _sheet.Columns()) {
-                    columns.AdjustToContents(0, _configuration.MaxColumnWidth);
-                }
+                var columns = _sheet.Columns();
+                columns.AdjustToContents(0, _configuration.MaxColumnWidth);
             }
         }
 

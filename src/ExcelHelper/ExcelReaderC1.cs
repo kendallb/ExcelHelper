@@ -373,8 +373,12 @@ namespace ExcelHelper
                                 }
                             } else {
                                 if (style != null && style.Format.Length > 0 && value is IFormattable) {
-                                    var fmt = XLStyle.FormatXLToDotNet(style.Format);
-                                    text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
+                                    var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
+                                    if (!string.IsNullOrEmpty(fmt)) {
+                                        text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
+                                    } else {
+                                        text = value.ToString();
+                                    }
                                 } else {
                                     text = value.ToString();
                                 }

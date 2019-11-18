@@ -90,7 +90,7 @@ namespace ExcelHelper.Tests
 
                         // Check some automatically sizes column widths
                         Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(2347, sheet.Columns[4].Width);
+                        Assert.AreEqual(2461, sheet.Columns[4].Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet[0, 0].Value);
@@ -111,7 +111,7 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual((double)1, sheet[0, 7].Value);
                         Assert.AreEqual((double)2, sheet[0, 8].Value);
                         Assert.AreEqual((double)3, sheet[0, 9].Value);
-                        Assert.AreEqual("=1+2", sheet[0, 10].Formula);
+                        Assert.AreEqual("1+2", sheet[0, 10].Formula);
                         Assert.AreEqual(null, sheet[0, 10].Value);
 
                         // Verify second row
@@ -129,7 +129,7 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual("", sheet[1, 8].Style.Format);
                         Assert.AreEqual("01:02:03", sheet[1, 9].Value);
                         Assert.AreEqual("", sheet[1, 9].Style.Format);
-                        Assert.AreEqual("=2*3", sheet[1, 10].Formula);
+                        Assert.AreEqual("2*3", sheet[1, 10].Formula);
                         Assert.AreEqual(null, sheet[1, 10].Value);
 
                         // Verify third sheet
@@ -255,7 +255,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(date, sheet[1, 6].Value);
             Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[1, 6].Style.Format);
             Assert.AreEqual(null, sheet[1, 7].Value);
-            Assert.AreEqual("=1+2", sheet[1, 8].Formula);
+            Assert.AreEqual("1+2", sheet[1, 8].Formula);
             Assert.AreEqual(null, sheet[1, 8].Value);
 
             // Check the second record

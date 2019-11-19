@@ -62,10 +62,6 @@
     <DefineConstants>USE_C1_EXCEL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C1.C1Excel.4, Version=4.0.20173.282, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
-    </Reference>
     <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.Signed.0.94.2\lib\net46\ClosedXML.dll</HintPath>
     </Reference>
@@ -144,12 +140,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
-    <When Condition="'$(Configuration)' == 'Debug C1'" />
+    <When Condition="'$(Configuration)' == 'Debug'" />
+    <When Condition="'$(Configuration)' == 'Debug C1'">
+      <ItemGroup>
+        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
     <When Condition="'$(Configuration)' == 'Release C1'">
       <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Version=4.1.20141.316, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-        </Reference>
+        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
   </Choose>

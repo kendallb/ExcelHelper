@@ -347,7 +347,7 @@ namespace ExcelHelper
                 if (!_configuration.IsHeaderCaseSensitive) {
                     name = name.ToLower();
                 }
-                headers.Add(name);
+                headers.Add(name.Trim());
             }
 
             // Move to the next row

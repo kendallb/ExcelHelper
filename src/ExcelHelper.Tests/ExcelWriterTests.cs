@@ -47,7 +47,7 @@ namespace ExcelHelper.Tests
                     excel.WriteCell(0, 2, "one \"two\" three", fontSize: 18);
                     excel.WriteCell(0, 3, " one ", fontName: "Times New Roman");
                     excel.WriteCell(0, 4, date);
-                    excel.WriteCell(0, 5, date, dateFormat: "M/d/yyyy h:mm:ss tt");
+                    excel.WriteCell(0, 5, date, dateFormat: "M/d/yyyy h:mm:ss AM/PM");
                     excel.WriteCell(0, 6, date, dateFormat: "M/d/yyyy");
                     excel.WriteCell(0, 7, date, dateFormat: "dddd, MMMM d, yyyy", fontStyle: FontStyle.Bold);
                     excel.WriteCell(0, 8, (byte)1);
@@ -124,8 +124,8 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(date, sheet.Cell(1, 6).Value);
 
                         // TODO: This is broken also. GetFormattedString() returns the format itself, not the string? (M/d/yyyy h:mm:ss tt)
-                        //Assert.AreEqual("10/16/2017 3:05:00 PM", sheet.Cell(1, 6).GetFormattedString());
-                        Assert.AreEqual("M/d/yyyy h:mm:ss tt", sheet.Cell(1, 6).Style.DateFormat.Format);
+                        Assert.AreEqual("10/16/2017 3:05:00 PM", sheet.Cell(1, 6).GetFormattedString());
+                        Assert.AreEqual("M/d/yyyy h:mm:ss AM/PM", sheet.Cell(1, 6).Style.DateFormat.Format);
                         Assert.AreEqual(date, sheet.Cell(1, 7).Value);
                         Assert.AreEqual("10/16/2017", sheet.Cell(1, 7).GetFormattedString());
                         Assert.AreEqual("M/d/yyyy", sheet.Cell(1, 7).Style.DateFormat.Format);

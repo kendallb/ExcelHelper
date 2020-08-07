@@ -163,3 +163,6 @@ TestResult.xml
 # Ignore NuGet packages
 packages/
 NuGet/
+
+# Ignore Rider files
+/src/.idea/.idea.ExcelHelper/

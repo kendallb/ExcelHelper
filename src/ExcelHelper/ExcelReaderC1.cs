@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -99,7 +99,7 @@ namespace ExcelHelper
         public string SheetName => _sheet?.Name;
 
         /// <summary>
-        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the 
+        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the
         /// internal row counter used by GetRecords.
         /// </summary>
         /// <param name="sheet">Sheet to change to (0 to TotalSheets - 1)</param>
@@ -195,10 +195,14 @@ namespace ExcelHelper
             for (var i = 0; i < _columnCount; i++) {
                 // Get the header name
                 var name = _sheet[_row, i].Value as string;
-                if (string.IsNullOrEmpty(name)) {
-                    // Header is null or empty, so we are done. This can happen if the file has more total columns 
-                    // in it than header rows, which can happen if some white space ends up in a right column 
-                    // or there are extra rows below the records
+                if (string.IsNullOrWhiteSpace(name)) {
+                    // Header is null or empty, so we are done. This can happen if the file has more total columns
+                    // in it than header rows, which can happen if some white space ends up in a right column
+                    // or there are extra rows below the records. Also check that the next column is
+                    // also empty and throw and exception if not.
+                    if (i + 1 < _columnCount && !string.IsNullOrWhiteSpace(_sheet[_row, i + 1].Value as string)) {
+                        throw new Exception($"Blank column header found at column {ColumnHelper.ColumnIndexToColumnLetter(i + 1)}");
+                    }
                     _columnCount = i;
                     break;
                 }
@@ -229,7 +233,7 @@ namespace ExcelHelper
                 if (o != null) {
                     if (o.GetType() == typeof(string)) {
                         // Make sure string fields are not empty strings
-                        if (!string.IsNullOrEmpty((string)o)) {
+                        if (!string.IsNullOrWhiteSpace((string)o)) {
                             return false;
                         }
                     } else {
@@ -246,7 +250,7 @@ namespace ExcelHelper
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> of the record.</typeparam>
         /// <returns>An <see cref="IEnumerable{T}" /> of records.</returns>
-        public IEnumerable<T> GetRecords<T>() 
+        public IEnumerable<T> GetRecords<T>()
         {
             // Get the type of all the records
             var type = typeof(T);
@@ -335,10 +339,14 @@ namespace ExcelHelper
             for (var i = 0; i < _columnCount; i++) {
                 // Get the header name
                 var name = _sheet[_row, i].Value as string;
-                if (string.IsNullOrEmpty(name)) {
-                    // Header is null or empty, so we are done. This can happen if the file has more total columns 
-                    // in it than header rows, which can happen if some white space ends up in a right column 
-                    // or there are extra rows below the records
+                if (string.IsNullOrWhiteSpace(name)) {
+                    // Header is null or empty, so we are done. This can happen if the file has more total columns
+                    // in it than header rows, which can happen if some white space ends up in a right column
+                    // or there are extra rows below the records. Also check that the next column is
+                    // also empty and throw and exception if not.
+                    if (i + 1 < _columnCount && !string.IsNullOrWhiteSpace(_sheet[_row, i + 1].Value as string)) {
+                        throw new Exception($"Blank column header found at column {ColumnHelper.ColumnIndexToColumnLetter(i + 1)}");
+                    }
                     _columnCount = i;
                     break;
                 }
@@ -374,7 +382,7 @@ namespace ExcelHelper
                             } else {
                                 if (style != null && style.Format.Length > 0 && value is IFormattable) {
                                     var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
-                                    if (!string.IsNullOrEmpty(fmt)) {
+                                    if (!string.IsNullOrWhiteSpace(fmt)) {
                                         text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
                                     } else {
                                         text = value.ToString();
@@ -585,7 +593,7 @@ namespace ExcelHelper
                 }
 
                 // Skip if the index was not found. This can happen if not all fields are included in the
-                // import file, and we are not in strict reading mode or the field was marked as optional read. 
+                // import file, and we are not in strict reading mode or the field was marked as optional read.
                 // Very useful if you want missing fields to be imported with default values. The optional read mode
                 // is useful to make sure critical fields are always present.
                 if (index == -1) {
@@ -641,7 +649,7 @@ namespace ExcelHelper
                 } else {
                     // Convert the field from Excel format to the native type directly
                     expression = Expression.Convert(
-                        Expression.Call(typeConverterExpression, "ConvertFromExcel", null, typeConverterOptionsExpression, fieldExpression), 
+                        Expression.Call(typeConverterExpression, "ConvertFromExcel", null, typeConverterOptionsExpression, fieldExpression),
                         propertyType);
                 }
 

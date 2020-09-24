@@ -101,6 +101,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColumnHelper.cs" />
     <Compile Include="Configuration\IExcelConfiguration.cs" />
     <Compile Include="Configuration\DefaultExcelClassMap`1.cs" />
     <Compile Include="Configuration\ExcelClassMap`1.cs" />

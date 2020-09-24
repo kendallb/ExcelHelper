@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -43,7 +43,7 @@ namespace ExcelHelper
         public IExcelConfiguration Configuration => _configuration;
 
         /// <summary>
-        /// Creates a new Excel writer using the given <see cref="Stream"/> and 
+        /// Creates a new Excel writer using the given <see cref="Stream"/> and
         /// a default <see cref="ExcelConfiguration"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> used to write the Excel file.</param>
@@ -84,7 +84,7 @@ namespace ExcelHelper
         /// <summary>
         /// Gets or sets the default font for the Excel file
         /// </summary>
-        public Font DefaultFont 
+        public Font DefaultFont
         {
             get { return _book.DefaultFont; }
             set { _book.DefaultFont = value; }
@@ -127,7 +127,7 @@ namespace ExcelHelper
         }
 
         /// <summary>
-        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the 
+        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the
         /// internal row and column counter used by WriteRecords.
         /// </summary>
         /// <param name="sheet">Sheet to change to</param>
@@ -227,7 +227,7 @@ namespace ExcelHelper
         }
 
         /// <summary>
-        /// Set an entire column to a specific format. By default Excel defines the 
+        /// Set an entire column to a specific format. By default Excel defines the
         /// cell style in the following order; cell, row, column, worksheet default
         /// </summary>
         /// <param name="col">Column to set the format for</param>
@@ -251,7 +251,7 @@ namespace ExcelHelper
         }
 
         /// <summary>
-        /// Set an entire row to a specific format. By default Excel defines the 
+        /// Set an entire row to a specific format. By default Excel defines the
         /// cell style in the following order; cell, row, column, worksheet default
         /// </summary>
         /// <param name="row">Row to set the format for</param>
@@ -418,7 +418,7 @@ namespace ExcelHelper
 
         /// <summary>
         /// Writes a field to the Excel file as a formula. We assume the incoming value
-        /// is a string 
+        /// is a string
         /// </summary>
         /// <param name="field">The field object to write.</param>
         protected void WriteFieldFormula(
@@ -434,7 +434,7 @@ namespace ExcelHelper
         }
 
         /// <summary>
-        /// Ends writing of the current record and starts a new record. This is used 
+        /// Ends writing of the current record and starts a new record. This is used
         /// when manually writing records with WriteField.
         /// </summary>
         private void NextRecord()
@@ -506,8 +506,10 @@ namespace ExcelHelper
         /// Writes the list of typed records to the Excel file.
         /// </summary>
         /// <param name="records">The list of records to write.</param>
+        /// <param name="writeHeader">True to write the header, false to not write the header</param>
         public void WriteRecords<T>(
-            IEnumerable<T> records)
+            IEnumerable<T> records,
+            bool writeHeader = true)
             where T : class
         {
             // Get the type of all the records
@@ -525,8 +527,11 @@ namespace ExcelHelper
                 throw new ExcelWriterException($"No properties are mapped for type '{type.FullName}'.");
             }
 
-            // Write the header
-            WriteHeader(properties);
+
+            // Only write the header the first time we are called (allows for paginating results into a file)
+            if (writeHeader) {
+                WriteHeader(properties);
+            }
 
             // Write all the column styles
             WriteColumnStyles(properties);
@@ -704,7 +709,7 @@ namespace ExcelHelper
                     var data = propertyMap.Data;
                     var typeConverter = data.TypeConverter;
                     var typeConverterOptions = TypeConverterOptions.Merge(
-                        TypeConverterOptionsFactory.GetOptions(data.Property.PropertyType, _configuration.CultureInfo), 
+                        TypeConverterOptionsFactory.GetOptions(data.Property.PropertyType, _configuration.CultureInfo),
                         data.TypeConverterOptions);
 
                     // Create an expression to extract the field from the record

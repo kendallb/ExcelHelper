@@ -196,7 +196,7 @@
         <EmbeddedResource Include="..\..\..\..\snap\ExternalAssemblies\ExcelHelper\licenses.licx">
           <Link>Properties\licenses.licx</Link>
         </EmbeddedResource>
-        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
     <When Condition="'$(Configuration)' == 'Release'">
@@ -229,7 +229,7 @@
         <EmbeddedResource Include="..\..\..\..\snap\ExternalAssemblies\ExcelHelper\licenses.licx">
           <Link>Properties\licenses.licx</Link>
         </EmbeddedResource>
-        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
   </Choose>

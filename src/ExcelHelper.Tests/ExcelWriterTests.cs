@@ -244,7 +244,7 @@ namespace ExcelHelper.Tests
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.WriteRecords(records);
                     excel.ChangeSheet(2);
-                    excel.WriteRecords(records);
+                    excel.WriteRecords(records, false);
                     excel.Close();
 
                     stream.Position = 0;
@@ -253,7 +253,7 @@ namespace ExcelHelper.Tests
                         CheckRecords(sheet, date, yesterday);
                         Assert.AreEqual(3, book.Worksheets.Count);
                         sheet = book.Worksheets.Worksheet(3);
-                        CheckRecords(sheet, date, yesterday);
+                        CheckRecords(sheet, date, yesterday, false);
                     }
                 }
             }
@@ -265,49 +265,56 @@ namespace ExcelHelper.Tests
         /// <param name="sheet">Sheet to check</param>
         /// <param name="date">Current date</param>
         /// <param name="yesterday">Yesterdays date</param>
+        /// <param name="checkHeader">True to check the header, false to not</param>
         private static void CheckRecords(
             IXLWorksheet sheet,
             DateTime date,
-            DateTime yesterday)
+            DateTime yesterday,
+            bool checkHeader = true)
         {
-            // Check the header is bold
-            Assert.AreEqual(true, sheet.Row(1).Style.Font.Bold);
+            var row = 1;
+            if (checkHeader) {
+                // Check the header is bold
+                Assert.AreEqual(true, sheet.Row(1).Style.Font.Bold);
 
-            // Check the header row
-            Assert.AreEqual("FirstColumn", sheet.Cell(1, 1).Value);
-            Assert.AreEqual("Int Column", sheet.Cell(1, 2).Value);
-            Assert.AreEqual("StringColumn", sheet.Cell(1, 3).Value);
-            Assert.AreEqual("TypeConvertedColumn", sheet.Cell(1, 4).Value);
-            Assert.AreEqual("BoolColumn", sheet.Cell(1, 5).Value);
-            Assert.AreEqual("DoubleColumn", sheet.Cell(1, 6).Value);
-            Assert.AreEqual("DateTimeColumn", sheet.Cell(1, 7).Value);
-            Assert.AreEqual("NullStringColumn", sheet.Cell(1, 8).Value);
-            Assert.AreEqual("FormulaColumn", sheet.Cell(1, 9).Value);
+                // Check the header row
+                Assert.AreEqual("FirstColumn", sheet.Cell(row, 1).Value);
+                Assert.AreEqual("Int Column", sheet.Cell(row, 2).Value);
+                Assert.AreEqual("StringColumn", sheet.Cell(row, 3).Value);
+                Assert.AreEqual("TypeConvertedColumn", sheet.Cell(row, 4).Value);
+                Assert.AreEqual("BoolColumn", sheet.Cell(row, 5).Value);
+                Assert.AreEqual("DoubleColumn", sheet.Cell(row, 6).Value);
+                Assert.AreEqual("DateTimeColumn", sheet.Cell(row, 7).Value);
+                Assert.AreEqual("NullStringColumn", sheet.Cell(row, 8).Value);
+                Assert.AreEqual("FormulaColumn", sheet.Cell(row, 9).Value);
+                row++;
+            }
 
             // Check the first record
-            Assert.AreEqual("first column", sheet.Cell(2, 1).Value);
-            Assert.AreEqual((double)1, sheet.Cell(2, 2).Value);
-            Assert.AreEqual("string column", sheet.Cell(2, 3).Value);
-            Assert.AreEqual("test", sheet.Cell(2, 4).Value);
-            Assert.AreEqual("true", sheet.Cell(2, 5).Value);
-            Assert.AreEqual(12.34, sheet.Cell(2, 6).Value);
-            Assert.AreEqual(date, sheet.Cell(2, 7).Value);
-            Assert.AreEqual("", sheet.Cell(2, 8).Style.DateFormat.Format);    // TODO: Do we need a different default here for dates?
-            Assert.AreEqual("", sheet.Cell(2, 8).Value);
-            Assert.AreEqual("1+2", sheet.Cell(2, 9).FormulaA1);
-            Assert.AreEqual((double)3, sheet.Cell(2, 9).Value);
+            Assert.AreEqual("first column", sheet.Cell(row, 1).Value);
+            Assert.AreEqual((double)1, sheet.Cell(row, 2).Value);
+            Assert.AreEqual("string column", sheet.Cell(row, 3).Value);
+            Assert.AreEqual("test", sheet.Cell(row, 4).Value);
+            Assert.AreEqual("true", sheet.Cell(row, 5).Value);
+            Assert.AreEqual(12.34, sheet.Cell(row, 6).Value);
+            Assert.AreEqual(date, sheet.Cell(row, 7).Value);
+            Assert.AreEqual("", sheet.Cell(row, 8).Style.DateFormat.Format);    // TODO: Do we need a different default here for dates?
+            Assert.AreEqual("", sheet.Cell(row, 8).Value);
+            Assert.AreEqual("1+2", sheet.Cell(row, 9).FormulaA1);
+            Assert.AreEqual((double)3, sheet.Cell(row, 9).Value);
+            row++;
 
             // Check the second record
-            Assert.AreEqual("first column 2", sheet.Cell(3, 1).Value);
-            Assert.AreEqual((double)2, sheet.Cell(3, 2).Value);
-            Assert.AreEqual("string column 2", sheet.Cell(3, 3).Value);
-            Assert.AreEqual("test", sheet.Cell(3, 4).Value);
-            Assert.AreEqual("false", sheet.Cell(3, 5).Value);
-            Assert.AreEqual(43.21, sheet.Cell(3, 6).Value);
-            Assert.AreEqual(yesterday, sheet.Cell(3, 7).Value);
-            Assert.AreEqual("", sheet.Cell(3, 7).Style.DateFormat.Format);    // TODO: Do we need a different default here for dates?
-            Assert.AreEqual("", sheet.Cell(3, 8).Value);
-            Assert.AreEqual("not a formula", sheet.Cell(3, 9).Value);
+            Assert.AreEqual("first column 2", sheet.Cell(row, 1).Value);
+            Assert.AreEqual((double)2, sheet.Cell(row, 2).Value);
+            Assert.AreEqual("string column 2", sheet.Cell(row, 3).Value);
+            Assert.AreEqual("test", sheet.Cell(row, 4).Value);
+            Assert.AreEqual("false", sheet.Cell(row, 5).Value);
+            Assert.AreEqual(43.21, sheet.Cell(row, 6).Value);
+            Assert.AreEqual(yesterday, sheet.Cell(row, 7).Value);
+            Assert.AreEqual("", sheet.Cell(row, 7).Style.DateFormat.Format);    // TODO: Do we need a different default here for dates?
+            Assert.AreEqual("", sheet.Cell(row, 8).Value);
+            Assert.AreEqual("not a formula", sheet.Cell(row, 9).Value);
         }
 
         [TestMethod]

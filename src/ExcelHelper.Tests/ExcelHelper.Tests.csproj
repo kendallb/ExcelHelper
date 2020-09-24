@@ -143,12 +143,12 @@
     <When Condition="'$(Configuration)' == 'Debug'" />
     <When Condition="'$(Configuration)' == 'Debug C1'">
       <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
     <When Condition="'$(Configuration)' == 'Release C1'">
       <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Version=4.0.20193.393, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
   </Choose>

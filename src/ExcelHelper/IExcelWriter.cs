@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -29,7 +29,7 @@ namespace ExcelHelper
         Font DefaultFont { get; set; }
 
         /// <summary>
-        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the 
+        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the
         /// internal row and column counter used by WriteRecords.
         /// </summary>
         /// <param name="sheet">Sheet to change to</param>
@@ -59,7 +59,7 @@ namespace ExcelHelper
             string fontName = null);
 
         /// <summary>
-        /// Set an entire column to a specific format. By default Excel defines the 
+        /// Set an entire column to a specific format. By default Excel defines the
         /// cell style in the following order; cell, row, column, worksheet default
         /// </summary>
         /// <param name="col">Column to set the format for</param>
@@ -77,7 +77,7 @@ namespace ExcelHelper
             string fontName = null);
 
         /// <summary>
-        /// Set an entire row to a specific format. By default Excel defines the 
+        /// Set an entire row to a specific format. By default Excel defines the
         /// cell style in the following order; cell, row, column, worksheet default
         /// </summary>
         /// <param name="row">Row to set the format for</param>
@@ -134,8 +134,10 @@ namespace ExcelHelper
         /// Writes the list of typed records to the Excel file.
         /// </summary>
         /// <param name="records">The list of records to write.</param>
+        /// <param name="writeHeader">True to write the header, false to not write the header</param>
         void WriteRecords<T>(
-            IEnumerable<T> records)
+            IEnumerable<T> records,
+            bool writeHeader = true)
             where T : class;
 
         /// <summary>

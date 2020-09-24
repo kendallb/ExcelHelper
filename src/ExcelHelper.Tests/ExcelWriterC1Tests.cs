@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -90,7 +90,7 @@ namespace ExcelHelper.Tests
 
                         // Check some automatically sizes column widths
                         Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(2232, sheet.Columns[4].Width);
+                        Assert.AreEqual(2347, sheet.Columns[4].Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet[0, 0].Value);
@@ -204,7 +204,7 @@ namespace ExcelHelper.Tests
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.WriteRecords(records);
                     excel.ChangeSheet(2);
-                    excel.WriteRecords(records);
+                    excel.WriteRecords(records, false);
                     excel.Close();
 
                     stream.Position = 0;
@@ -214,7 +214,7 @@ namespace ExcelHelper.Tests
                         CheckRecords(sheet, date, yesterday);
                         Assert.AreEqual(3, book.Sheets.Count);
                         sheet = book.Sheets[2];
-                        CheckRecords(sheet, date, yesterday);
+                        CheckRecords(sheet, date, yesterday, false);
                     }
                 }
             }
@@ -226,49 +226,56 @@ namespace ExcelHelper.Tests
         /// <param name="sheet">Sheet to check</param>
         /// <param name="date">Current date</param>
         /// <param name="yesterday">Yesterdays date</param>
+        /// <param name="checkHeader">True to check the header, false to not</param>
         private static void CheckRecords(
             XLSheet sheet,
             DateTime date,
-            DateTime yesterday)
+            DateTime yesterday,
+            bool checkHeader = true)
         {
-            // Check the header is bold
-            Assert.AreEqual(FontStyle.Bold, sheet.Rows[0].Style.Font.Style);
+            var row = 0;
+            if (checkHeader) {
+                // Check the header is bold
+                Assert.AreEqual(FontStyle.Bold, sheet.Rows[0].Style.Font.Style);
 
-            // Check the header row
-            Assert.AreEqual("FirstColumn", sheet[0, 0].Value);
-            Assert.AreEqual("Int Column", sheet[0, 1].Value);
-            Assert.AreEqual("StringColumn", sheet[0, 2].Value);
-            Assert.AreEqual("TypeConvertedColumn", sheet[0, 3].Value);
-            Assert.AreEqual("BoolColumn", sheet[0, 4].Value);
-            Assert.AreEqual("DoubleColumn", sheet[0, 5].Value);
-            Assert.AreEqual("DateTimeColumn", sheet[0, 6].Value);
-            Assert.AreEqual("NullStringColumn", sheet[0, 7].Value);
-            Assert.AreEqual("FormulaColumn", sheet[0, 8].Value);
+                // Check the header row
+                Assert.AreEqual("FirstColumn", sheet[row, 0].Value);
+                Assert.AreEqual("Int Column", sheet[row, 1].Value);
+                Assert.AreEqual("StringColumn", sheet[row, 2].Value);
+                Assert.AreEqual("TypeConvertedColumn", sheet[row, 3].Value);
+                Assert.AreEqual("BoolColumn", sheet[row, 4].Value);
+                Assert.AreEqual("DoubleColumn", sheet[row, 5].Value);
+                Assert.AreEqual("DateTimeColumn", sheet[row, 6].Value);
+                Assert.AreEqual("NullStringColumn", sheet[row, 7].Value);
+                Assert.AreEqual("FormulaColumn", sheet[row, 8].Value);
+                row++;
+            }
 
             // Check the first record
-            Assert.AreEqual("first column", sheet[1, 0].Value);
-            Assert.AreEqual((double)1, sheet[1, 1].Value);
-            Assert.AreEqual("string column", sheet[1, 2].Value);
-            Assert.AreEqual("test", sheet[1, 3].Value);
-            Assert.AreEqual("true", sheet[1, 4].Value);
-            Assert.AreEqual(12.34, sheet[1, 5].Value);
-            Assert.AreEqual(date, sheet[1, 6].Value);
-            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[1, 6].Style.Format);
-            Assert.AreEqual(null, sheet[1, 7].Value);
-            Assert.AreEqual("1+2", sheet[1, 8].Formula);
-            Assert.AreEqual(null, sheet[1, 8].Value);
+            Assert.AreEqual("first column", sheet[row, 0].Value);
+            Assert.AreEqual((double)1, sheet[row, 1].Value);
+            Assert.AreEqual("string column", sheet[row, 2].Value);
+            Assert.AreEqual("test", sheet[row, 3].Value);
+            Assert.AreEqual("true", sheet[row, 4].Value);
+            Assert.AreEqual(12.34, sheet[row, 5].Value);
+            Assert.AreEqual(date, sheet[row, 6].Value);
+            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[row, 6].Style.Format);
+            Assert.AreEqual(null, sheet[row, 7].Value);
+            Assert.AreEqual("1+2", sheet[row, 8].Formula);
+            Assert.AreEqual(null, sheet[row, 8].Value);
+            row++;
 
             // Check the second record
-            Assert.AreEqual("first column 2", sheet[2, 0].Value);
-            Assert.AreEqual((double)2, sheet[2, 1].Value);
-            Assert.AreEqual("string column 2", sheet[2, 2].Value);
-            Assert.AreEqual("test", sheet[2, 3].Value);
-            Assert.AreEqual("false", sheet[2, 4].Value);
-            Assert.AreEqual(43.21, sheet[2, 5].Value);
-            Assert.AreEqual(yesterday, sheet[2, 6].Value);
-            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[2, 6].Style.Format);
-            Assert.AreEqual(null, sheet[2, 7].Value);
-            Assert.AreEqual("not a formula", sheet[2, 8].Value);
+            Assert.AreEqual("first column 2", sheet[row, 0].Value);
+            Assert.AreEqual((double)2, sheet[row, 1].Value);
+            Assert.AreEqual("string column 2", sheet[row, 2].Value);
+            Assert.AreEqual("test", sheet[row, 3].Value);
+            Assert.AreEqual("false", sheet[row, 4].Value);
+            Assert.AreEqual(43.21, sheet[row, 5].Value);
+            Assert.AreEqual(yesterday, sheet[row, 6].Value);
+            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[row, 6].Style.Format);
+            Assert.AreEqual(null, sheet[row, 7].Value);
+            Assert.AreEqual("not a formula", sheet[row, 8].Value);
         }
 
         [TestMethod]

@@ -383,12 +383,12 @@ namespace ExcelHelper
                                 if (style != null && style.Format.Length > 0 && value is IFormattable) {
                                     var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
                                     if (!string.IsNullOrWhiteSpace(fmt)) {
-                                        text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
+                                        text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture).Trim();
                                     } else {
-                                        text = value.ToString();
+                                        text = value.ToString().Trim();
                                     }
                                 } else {
-                                    text = value.ToString();
+                                    text = value.ToString().Trim();
                                 }
                             }
                             record.Add(headers[i], text);

@@ -136,11 +136,48 @@ namespace ExcelHelper
             return _reader.Read();
         }
 
+
+        /// <summary>
+        /// Format a cell as a string before we pass to the type converter, so any formatting done in Excel
+        /// is properly applied to the string result that is then sent to the users parser.
+        /// </summary>
+        /// <param name="index">Column in the excel file</param>
+        /// <param name="capitalBoolean">True to use capital boolean format, false to use C# style</param>
+        /// <returns>Cell value formatted as a string, or the original value if not</returns>
+        private string FormatValueAsString(
+            int index,
+            bool capitalBoolean)
+        {
+            var value = _reader.GetValue(index);
+            if (value != null) {
+                // For compatibility with old PHP code, format TRUE and FALSE for boolean values
+                var type = _reader.GetFieldType(index);
+                if (type == typeof(bool)) {
+                    if ((bool)value) {
+                        return capitalBoolean ? "TRUE" : "True";
+                    }
+                    return capitalBoolean ? "FALSE" : "False";
+                }
+
+                // To ensure DateTime values make sense in any culture, we render them in ISO 8601 format
+                if (type == typeof(DateTime)) {
+                    return ((DateTime)value).ToString("o");
+                }
+
+                // TODO: We currently do not have a way to get real formatting out of the Excel file cell,
+                // so to do this correctly we really need to find a way to get that, and then format it.
+                return value.ToString().Trim();
+            }
+
+            // Always return empty strings, not nulls
+            return string.Empty;
+        }
+
         /// <summary>
         /// Reads a cell from the Excel file.
         /// </summary>
         /// <typeparam name="T">The type of the field.</typeparam>
-        /// <param name="index">Column index to reead the value from.</param>
+        /// <param name="index">Column index to read the value from.</param>
         /// <returns>The value from the column converted to the specific type</returns>
         public T GetColumn<T>(
             int index)
@@ -148,7 +185,7 @@ namespace ExcelHelper
             var type = typeof(T);
             var converter = TypeConverterFactory.GetConverter(type);
             var typeConverterOptions = TypeConverterOptionsFactory.GetOptions(type, _configuration.CultureInfo);
-            var value = _reader.GetValue(index);
+            var value = type == typeof(string) ? FormatValueAsString(index, false) : _reader.GetValue(index);
             return (T)converter.ConvertFromExcel(typeConverterOptions, value);
         }
 
@@ -156,15 +193,17 @@ namespace ExcelHelper
         /// Gets the raw field at position (column) index.
         /// </summary>
         /// <param name="index">The zero based index of the field.</param>
+        /// <param name="type">Type of the resulting property</param>
         /// <returns>The raw field.</returns>
         protected object GetField(
-            int index)
+            int index,
+            Type type)
         {
             // Set the current index being used so we have more information if an error occurs when reading records.
             _currentIndex = index;
 
             // Get the field value from the Excel file
-            var field = _reader.GetValue(index);
+            var field = type == typeof(string) ? FormatValueAsString(index, false) : _reader.GetValue(index);
 
             // Trim string fields if the option is set
             if (_configuration.TrimFields && field.GetType() == typeof(string)) {
@@ -353,24 +392,7 @@ namespace ExcelHelper
                 var record = new Dictionary<string, string>();
                 for (var i = 0; i < _columnCount; i++) {
                     try {
-                        var value = _reader.GetValue(i);
-                        if (value != null) {
-                            string text;
-                            var type = _reader.GetFieldType(i);
-                            if (type == typeof(bool)) {
-                                // For compatibility with old PHP code, format TRUE and FALSE for boolean values
-                                text = (bool)value ? "TRUE" : "FALSE";
-                            } else if (type == typeof(DateTime)) {
-                                // To ensure DateTime values make sense in any culture, we render them in ISO 8601 format
-                                text = ((DateTime)value).ToString("o");
-                            } else {
-                                text = value.ToString();
-                            }
-                            record.Add(headers[i], text);
-                        } else {
-                            // Always return empty strings, not nulls
-                            record.Add(headers[i], "");
-                        }
+                        record.Add(headers[i], FormatValueAsString(i, true));
                     } catch (Exception ex) {
                         // Build the details about the error so it can be logged
                         var details = new ExcelReadErrorDetails {
@@ -578,12 +600,15 @@ namespace ExcelHelper
                 }
 
                 // Get the field using the field index
-                var method = GetType().GetMethod("GetField", BindingFlags.NonPublic | BindingFlags.Instance);
-                Expression fieldExpression = Expression.Call(Expression.Constant(this), method, Expression.Constant(index, typeof(int)));
-
-                // Get the type conversion information we need
                 var property = data.Property;
                 var propertyType = property.PropertyType;
+                var method = GetType().GetMethod("GetField", BindingFlags.NonPublic | BindingFlags.Instance);
+                Expression fieldExpression = Expression.Call(Expression.Constant(this),
+                    method,
+                    Expression.Constant(index, typeof(int)),
+                    Expression.Constant(propertyType, typeof(Type)));
+
+                // Get the type conversion information we need
                 var typeConverterExpression = Expression.Constant(data.TypeConverter);
                 var typeConverterOptions = TypeConverterOptions.Merge(
                     TypeConverterOptionsFactory.GetOptions(propertyType, _configuration.CultureInfo),

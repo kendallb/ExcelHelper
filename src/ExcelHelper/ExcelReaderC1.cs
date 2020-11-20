@@ -143,10 +143,50 @@ namespace ExcelHelper
         }
 
         /// <summary>
+        /// Format a cell as a string before we pass to the type converter, so any formatting done in Excel
+        /// is properly applied to the string result that is then sent to the users parser.
+        /// </summary>
+        /// <param name="cell">Cell in the Excel file being formatted</param>
+        /// <param name="row">Row in the excel file</param>
+        /// <param name="index">Column in the excel file</param>
+        /// <param name="capitalBoolean">True to use capital boolean format, false to use C# style</param>
+        /// <returns>Cell value formatted as a string, or the original value if not</returns>
+        private string FormatValueAsString(
+            XLCell cell,
+            int row,
+            int index,
+            bool capitalBoolean)
+        {
+            var value = cell.Value;
+            if (value != null) {
+                // For compatibility with old PHP code, format TRUE and FALSE for boolean values
+                if (value.GetType() == typeof(bool)) {
+                    if ((bool)value) {
+                        return capitalBoolean ? "TRUE" : "True";
+                    }
+                    return capitalBoolean ? "FALSE" : "False";
+                }
+
+                // Format value if cell has a style with format set
+                if (value is IFormattable formatValue) {
+                    var style = cell.Style ?? (_sheet.Rows[row].Style ?? _sheet.Columns[index].Style);
+                    if (style != null && style.Format.Length > 0) {
+                        var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
+                        return !string.IsNullOrWhiteSpace(fmt) ? formatValue.ToString(fmt, CultureInfo.CurrentCulture).Trim() : formatValue.ToString().Trim();
+                    }
+                }
+                return value.ToString().Trim();
+            }
+
+            // Always return empty strings, not nulls
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Reads a cell from the Excel file.
         /// </summary>
         /// <typeparam name="T">The type of the field.</typeparam>
-        /// <param name="index">Column index to reead the value from.</param>
+        /// <param name="index">Column index to read the value from.</param>
         /// <returns>The value from the column converted to the specific type</returns>
         public T GetColumn<T>(
             int index)
@@ -154,22 +194,27 @@ namespace ExcelHelper
             var type = typeof(T);
             var converter = TypeConverterFactory.GetConverter(type);
             var typeConverterOptions = TypeConverterOptionsFactory.GetOptions(type, _configuration.CultureInfo);
-            return (T)converter.ConvertFromExcel(typeConverterOptions, _sheet[_row, index].Value);
+            var cell = _sheet[_row, index];
+            var value = type == typeof(string) ? FormatValueAsString(cell, _row, index, false) : cell.Value;
+            return (T)converter.ConvertFromExcel(typeConverterOptions, value);
         }
 
         /// <summary>
         /// Gets the raw field at position (column) index.
         /// </summary>
         /// <param name="index">The zero based index of the field.</param>
+        /// <param name="type">Type of the resulting property</param>
         /// <returns>The raw field.</returns>
         protected object GetField(
-            int index)
+            int index,
+            Type type)
         {
             // Set the current index being used so we have more information if an error occurs when reading records.
             _currentIndex = index;
 
             // Get the field value from the Excel file
-            var field = _sheet[_row, index].Value;
+            var cell = _sheet[_row, index];
+            var field = type == typeof(string) ? FormatValueAsString(cell, _row, index, false) : cell.Value;
 
             // Trim string fields if the option is set
             if (_configuration.TrimFields && field.GetType() == typeof(string)) {
@@ -370,35 +415,7 @@ namespace ExcelHelper
                 for (var i = 0; i < _columnCount; i++) {
                     try {
                         var cell = _sheet[_row, i];
-                        var value = cell.Value;
-                        if (value != null) {
-                            // Format value if cell has a style with format set
-                            string text;
-                            var style = cell.Style ?? (_sheet.Rows[_row].Style ?? _sheet.Columns[i].Style);
-                            if (value.GetType() == typeof(bool)) {
-                                // By default Excel formats boolean as uppercase
-                                if ((bool)value) {
-                                    text = "TRUE";
-                                } else {
-                                    text = "FALSE";
-                                }
-                            } else {
-                                if (style != null && style.Format.Length > 0 && value is IFormattable) {
-                                    var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
-                                    if (!string.IsNullOrWhiteSpace(fmt)) {
-                                        text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture).Trim();
-                                    } else {
-                                        text = value.ToString().Trim();
-                                    }
-                                } else {
-                                    text = value.ToString().Trim();
-                                }
-                            }
-                            record.Add(headers[i], text);
-                        } else {
-                            // Always return empty strings, not nulls
-                            record.Add(headers[i], "");
-                        }
+                        record.Add(headers[i], FormatValueAsString(cell, _row, i, true));
                     } catch (Exception ex) {
                         // Build the details about the error so it can be logged
                         var details = new ExcelReadErrorDetails {
@@ -607,12 +624,15 @@ namespace ExcelHelper
                 }
 
                 // Get the field using the field index
-                var method = GetType().GetMethod("GetField", BindingFlags.NonPublic | BindingFlags.Instance);
-                Expression fieldExpression = Expression.Call(Expression.Constant(this), method, Expression.Constant(index, typeof(int)));
-
-                // Get the type conversion information we need
                 var property = data.Property;
                 var propertyType = property.PropertyType;
+                var method = GetType().GetMethod("GetField", BindingFlags.NonPublic | BindingFlags.Instance);
+                Expression fieldExpression = Expression.Call(Expression.Constant(this),
+                    method,
+                    Expression.Constant(index, typeof(int)),
+                    Expression.Constant(propertyType, typeof(Type)));
+
+                // Get the type conversion information we need
                 var typeConverterExpression = Expression.Constant(data.TypeConverter);
                 var typeConverterOptions = TypeConverterOptions.Merge(
                     TypeConverterOptionsFactory.GetOptions(propertyType, _configuration.CultureInfo),

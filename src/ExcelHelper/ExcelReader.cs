@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2013 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -93,7 +93,7 @@ namespace ExcelHelper
         public string SheetName => _reader.Name;
 
         /// <summary>
-        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the 
+        /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the
         /// internal row counter used by GetRecords.
         /// </summary>
         /// <param name="sheet">Sheet to change to (0 to TotalSheets - 1)</param>
@@ -191,8 +191,8 @@ namespace ExcelHelper
                 // Get the header name
                 var name = _reader.GetString(i);
                 if (string.IsNullOrEmpty(name)) {
-                    // Header is null or empty, so we are done. This can happen if the file has more total columns 
-                    // in it than header rows, which can happen if some white space ends up in a right column 
+                    // Header is null or empty, so we are done. This can happen if the file has more total columns
+                    // in it than header rows, which can happen if some white space ends up in a right column
                     // or there are extra rows below the records
                     _columnCount = i;
                     break;
@@ -212,7 +212,7 @@ namespace ExcelHelper
             // Move to the next row
             _row++;
         }
-        
+
         /// <summary>
         /// Determines if the record at the current line is empty or not
         /// </summary>
@@ -241,7 +241,7 @@ namespace ExcelHelper
         /// </summary>
         /// <typeparam name="T">The <see cref="Type"/> of the record.</typeparam>
         /// <returns>An <see cref="IEnumerable{T}" /> of records.</returns>
-        public IEnumerable<T> GetRecords<T>() 
+        public IEnumerable<T> GetRecords<T>()
         {
             // Get the type of all the records
             var type = typeof(T);
@@ -293,6 +293,9 @@ namespace ExcelHelper
                         FieldValue = _reader.GetValue(_currentIndex),
                     };
 
+                    // Use the inner exception if we have one so the message is more clear
+                    ex = ex.InnerException ?? ex;
+
                     // Add the details to the exception
                     ExceptionHelper.AddExceptionDataMessage(ex, type, details);
 
@@ -328,8 +331,8 @@ namespace ExcelHelper
                 // Get the header name
                 var name = _reader.GetString(i);
                 if (string.IsNullOrEmpty(name)) {
-                    // Header is null or empty, so we are done. This can happen if the file has more total columns 
-                    // in it than header rows, which can happen if some white space ends up in a right column 
+                    // Header is null or empty, so we are done. This can happen if the file has more total columns
+                    // in it than header rows, which can happen if some white space ends up in a right column
                     // or there are extra rows below the records
                     _columnCount = i;
                     break;
@@ -376,6 +379,9 @@ namespace ExcelHelper
                             FieldName = headers[i],
                             FieldValue = _reader.GetValue(i),
                         };
+
+                        // Use the inner exception if we have one so the message is more clear
+                        ex = ex.InnerException ?? ex;
 
                         // Add the details to the exception
                         ExceptionHelper.AddExceptionDataMessage(ex, null, details);
@@ -564,7 +570,7 @@ namespace ExcelHelper
                 }
 
                 // Skip if the index was not found. This can happen if not all fields are included in the
-                // import file, and we are not in strict reading mode or the field was marked as optional read. 
+                // import file, and we are not in strict reading mode or the field was marked as optional read.
                 // Very useful if you want missing fields to be imported with default values. The optional read mode
                 // is useful to make sure critical fields are always present.
                 if (index == -1) {
@@ -620,7 +626,7 @@ namespace ExcelHelper
                 } else {
                     // Convert the field from Excel format to the native type directly
                     expression = Expression.Convert(
-                        Expression.Call(typeConverterExpression, "ConvertFromExcel", null, typeConverterOptionsExpression, fieldExpression), 
+                        Expression.Call(typeConverterExpression, "ConvertFromExcel", null, typeConverterOptionsExpression, fieldExpression),
                         propertyType);
                 }
 

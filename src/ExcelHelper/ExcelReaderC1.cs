@@ -304,6 +304,9 @@ namespace ExcelHelper
                         FieldValue = _sheet[_row, _currentIndex].Value,
                     };
 
+                    // Use the inner exception if we have one so the message is more clear
+                    ex = ex.InnerException ?? ex;
+
                     // Add the details to the exception
                     ExceptionHelper.AddExceptionDataMessage(ex, type, details);
 
@@ -404,6 +407,9 @@ namespace ExcelHelper
                             FieldName = headers[i],
                             FieldValue = _sheet[_row, i].Value,
                         };
+
+                        // Use the inner exception if we have one so the message is more clear
+                        ex = ex.InnerException ?? ex;
 
                         // Add the details to the exception
                         ExceptionHelper.AddExceptionDataMessage(ex, null, details);

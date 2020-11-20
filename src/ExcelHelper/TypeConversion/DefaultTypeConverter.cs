@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -23,7 +23,12 @@ namespace ExcelHelper.TypeConversion
         /// <summary>
         /// Invalid conversion message
         /// </summary>
-        protected const string InvalidConversionMessage = "The conversion cannot be performed.";
+        protected const string ConversionCannotBePerformed = "The conversion cannot be performed.";
+
+        /// <summary>
+        /// Value is not a number conversion message
+        /// </summary>
+        protected const string ValueIsNotANumber = "The value is not an number.";
 
         /// <summary>
         /// Constructor for the default type converter base class
@@ -72,7 +77,7 @@ namespace ExcelHelper.TypeConversion
             TypeConverterOptions options,
             object excelValue)
         {
-            throw new ExcelTypeConverterException(InvalidConversionMessage);
+            throw new ExcelTypeConverterException(ConversionCannotBePerformed);
         }
 
 #if USE_C1_EXCEL

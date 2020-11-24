@@ -432,7 +432,7 @@ namespace ExcelHelper.Tests
             };
             sheet[row, 8].Value = 1 * 0.21;
             var percentStyle = new XLStyle(sheet.Book) {
-                Format = "0%",
+                Format = "0.00%",
             };
             sheet[row, 8].Style = percentStyle;
             sheet[row, 9].Value = 1 * 0.21;
@@ -462,13 +462,9 @@ namespace ExcelHelper.Tests
                 Format = "General",
             };
             sheet[row, 8].Value = 2 * 0.21;
-            sheet[row, 8].Style = new XLStyle(sheet.Book) {
-                Format = "0%",
-            };
+            sheet[row, 8].Style = percentStyle;
             sheet[row, 9].Value = 2 * 0.21;
-            sheet[row, 9].Style = new XLStyle(sheet.Book) {
-                Format = "0%",
-            };
+            sheet[row, 9].Style = percentStyle;
             sheet[row, 10].Value = date.AddDays(2);
             sheet[row, 11].Value = null;
             if (optionalReadValue != null) {
@@ -518,9 +514,10 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual(i * 4.5, record.GeneralDoubleColumn);
                 Assert.AreEqual(i * 0.21, record.DoublePercentColumn);
                 
-                // TODO! This is broken as for some reason the formatting is lost when the file is saved
+                // TODO! This is broken as for some reason the formatting is lost when the file is saved. For now use 0.00%
+                // as that does work until C1 fixes it.
                 //Assert.AreEqual($"{i * 0.21:0%}", record.StringPercentColumn);
-                Assert.AreEqual($"{i * 0.21}", record.StringPercentColumn);
+                Assert.AreEqual($"{i * 0.21:0.00%}", record.StringPercentColumn);
                 Assert.AreEqual(date.AddDays(i), record.DateTimeColumn);
                 Assert.AreEqual("", record.NullStringColumn);
                 Assert.AreEqual(optionalReadValue, record.OptionalReadColumn);
@@ -1200,11 +1197,13 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
                 Assert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
                 Assert.AreEqual((i * 4.5).ToString(), record["GeneralDoubleColumn"]);
-                Assert.AreEqual((i * 0.21).ToString(), record["DoublePercentColumn"]);
                 
-                // TODO! This is broken as for some reason the formatting is lost when the file is saved
+                // TODO! This is broken as for some reason the formatting is lost when the file is saved. For now use 0.00%
+                // as that does work until C1 fixes it.
+                //Assert.AreEqual($"{i * 0.21:0%}", record["DoublePercentColumn"]);
                 //Assert.AreEqual($"{i * 0.21:0%}", record["StringPercentColumn"]);
-                Assert.AreEqual($"{i * 0.21}", record["StringPercentColumn"]);
+                Assert.AreEqual($"{i * 0.21:0.00%}", record["DoublePercentColumn"]);
+                Assert.AreEqual($"{i * 0.21:0.00%}", record["StringPercentColumn"]);
                 Assert.AreEqual(date.AddDays(i).ToOADate().ToString(), record["DateTimeColumn"]);
                 Assert.AreEqual("", record["NullStringColumn"]);
             }

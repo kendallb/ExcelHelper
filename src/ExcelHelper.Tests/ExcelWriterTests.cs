@@ -49,7 +49,7 @@ namespace ExcelHelper.Tests
                     excel.WriteCell(0, 4, date);
                     excel.WriteCell(0, 5, date, dateFormat: "M/d/yyyy h:mm:ss AM/PM");
                     excel.WriteCell(0, 6, date, dateFormat: "M/d/yyyy");
-                    excel.WriteCell(0, 7, date, dateFormat: "dddd, MMMM d, yyyy", fontStyle: FontStyle.Bold);
+                    excel.WriteCell(0, 7, date, dateFormat: "dddd, MMMM d, yyyy", fontStyle: FontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Bottom);
                     excel.WriteCell(0, 8, (byte)1);
                     excel.WriteCell(0, 9, (short)2);
                     excel.WriteCell(0, 10, 3);
@@ -129,6 +129,8 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(date, sheet.Cell(1, 7).Value);
                         Assert.AreEqual("10/16/2017", sheet.Cell(1, 7).GetFormattedString());
                         Assert.AreEqual("M/d/yyyy", sheet.Cell(1, 7).Style.DateFormat.Format);
+                        Assert.AreEqual(XLAlignmentHorizontalValues.Right, sheet.Cell(1, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right);
+                        Assert.AreEqual(XLAlignmentVerticalValues.Bottom, sheet.Cell(1, 7).Style.Alignment.Vertical = XLAlignmentVerticalValues.Bottom);
                         Assert.AreEqual(date, sheet.Cell(1, 8).Value);
 
                         // TODO: This is broken. Returns Monday October 16, 2017 when it should be Monday, October 16, 2017. The Excel file has the correct value.

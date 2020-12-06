@@ -98,12 +98,16 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         private void UpdateStyle(
             ref XLStyle cellStyle,
-            string format = null,
-            FontStyle? fontStyle = null,
-            float? fontSize = null,
-            string fontName = null)
+            string format,
+            FontStyle? fontStyle,
+            float? fontSize,
+            string fontName,
+            ExcelAlignHorizontal? horizontalAlign,
+            ExcelAlignVertical? verticalAlign)
         {
             // Set up native formatting if provided
             if (!string.IsNullOrEmpty(format)) {
@@ -124,6 +128,54 @@ namespace ExcelHelper
                 var style = fontStyle ?? defaultFont.Style;
                 cellStyle.Font = new Font(name, size, style);
             }
+
+            // Apply the horizontal alignment if defined
+            if (horizontalAlign != null) {
+                if (cellStyle == null) {
+                    cellStyle = new XLStyle(_book);
+                }
+                switch (horizontalAlign) {
+                    case ExcelAlignHorizontal.General:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.General;
+                        break;
+                    case ExcelAlignHorizontal.Left:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.Left;
+                        break;
+                    case ExcelAlignHorizontal.Center:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.Center;
+                        break;
+                    case ExcelAlignHorizontal.Right:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.Right;
+                        break;
+                    case ExcelAlignHorizontal.Fill:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.Fill;
+                        break;
+                    case ExcelAlignHorizontal.Justify:
+                        cellStyle.AlignHorz = XLAlignHorzEnum.Justify;
+                        break;
+                }
+            }
+
+            // Apply the vertical alignment if defined
+            if (verticalAlign !=  null) {
+                if (cellStyle == null) {
+                    cellStyle = new XLStyle(_book);
+                }
+                switch (verticalAlign) {
+                    case ExcelAlignVertical.Top:
+                        cellStyle.AlignVert = XLAlignVertEnum.Top;
+                        break;
+                    case ExcelAlignVertical.Center:
+                        cellStyle.AlignVert = XLAlignVertEnum.Center;
+                        break;
+                    case ExcelAlignVertical.Bottom:
+                        cellStyle.AlignVert = XLAlignVertEnum.Bottom;
+                        break;
+                    case ExcelAlignVertical.Justify:
+                        cellStyle.AlignVert = XLAlignVertEnum.Justify;
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -134,7 +186,7 @@ namespace ExcelHelper
         public void ChangeSheet(
             int sheet)
         {
-            // Peform any column resizing for the current sheet before we change it
+            // Perform any column resizing for the current sheet before we change it
             PerformColumnResize();
 
             // Insert all the sheets up to the index we need if the count is less
@@ -160,6 +212,8 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void WriteCell<T>(
             int row,
             int col,
@@ -168,7 +222,9 @@ namespace ExcelHelper
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             // Find the type conversion options
             var type = typeof(T);
@@ -202,7 +258,7 @@ namespace ExcelHelper
             cellStyle = cellStyle?.Clone();
 
             // Set up cell formatting for this cell
-            UpdateStyle(ref cellStyle, format, fontStyle, fontSize, fontName);
+            UpdateStyle(ref cellStyle, format, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
 
             // Apply the style to this cell if defined
             if (cellStyle != null) {
@@ -236,17 +292,21 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void SetColumnFormat(
             int col,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
             XLStyle style = null;
-            UpdateStyle(ref style, format, fontStyle, fontSize, fontName);
+            UpdateStyle(ref style, format, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
             _sheet.Columns[col].Style = style;
         }
 
@@ -260,17 +320,21 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void SetRowFormat(
             int row,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
             XLStyle style = null;
-            UpdateStyle(ref style, format, fontStyle, fontSize, fontName);
+            UpdateStyle(ref style, format, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
             _sheet.Rows[row].Style = style;
         }
 

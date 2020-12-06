@@ -48,6 +48,8 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         void WriteCell<T>(
             int row,
             int col,
@@ -56,7 +58,9 @@ namespace ExcelHelper
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null);
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
 
         /// <summary>
         /// Set an entire column to a specific format. By default Excel defines the
@@ -68,13 +72,17 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         void SetColumnFormat(
             int col,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null);
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
 
         /// <summary>
         /// Set an entire row to a specific format. By default Excel defines the
@@ -86,13 +94,17 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         void SetRowFormat(
             int row,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null);
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
 
         /// <summary>
         /// Adjusts all the column widths to match the content

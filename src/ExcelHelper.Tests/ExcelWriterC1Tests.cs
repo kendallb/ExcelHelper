@@ -40,7 +40,7 @@ namespace ExcelHelper.Tests
                     excel.WriteCell(0, 3, " one ", fontName: "Times");
                     excel.WriteCell(0, 4, date);
                     excel.WriteCell(0, 5, date, null, "d");
-                    excel.WriteCell(0, 6, date, null, "D", FontStyle.Bold);
+                    excel.WriteCell(0, 6, date, null, "D", FontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Center);
                     excel.WriteCell(0, 7, (byte)1);
                     excel.WriteCell(0, 8, (short)2);
                     excel.WriteCell(0, 9, 3);
@@ -90,7 +90,7 @@ namespace ExcelHelper.Tests
 
                         // Check some automatically sizes column widths
                         Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(2461, sheet.Columns[4].Width);
+                        Assert.AreEqual(2347, sheet.Columns[4].Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet[0, 0].Value);
@@ -108,6 +108,8 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(date, sheet[0, 6].Value);
                         Assert.AreEqual(@"DDDD,\ mmmm\ D,\ YYYY", sheet[0, 6].Style.Format);
                         Assert.AreEqual(FontStyle.Bold, sheet[0, 6].Style.Font.Style);
+                        Assert.AreEqual(XLAlignHorzEnum.Right, sheet[0, 6].Style.AlignHorz);
+                        Assert.AreEqual(XLAlignVertEnum.Center, sheet[0, 6].Style.AlignVert);
                         Assert.AreEqual((double)1, sheet[0, 7].Value);
                         Assert.AreEqual((double)2, sheet[0, 8].Value);
                         Assert.AreEqual((double)3, sheet[0, 9].Value);

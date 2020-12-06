@@ -103,13 +103,17 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         private void UpdateStyle(
             IXLStyle cellStyle,
-            string numberFormat = null,
-            string dateFormat = null,
-            FontStyle? fontStyle = null,
-            float? fontSize = null,
-            string fontName = null)
+            string numberFormat,
+            string dateFormat,
+            FontStyle? fontStyle,
+            float? fontSize,
+            string fontName,
+            ExcelAlignHorizontal? horizontalAlign,
+            ExcelAlignVertical? verticalAlign)
         {
             // Set up native formatting if provided
             if (!string.IsNullOrEmpty(numberFormat)) {
@@ -130,6 +134,48 @@ namespace ExcelHelper
                 font.Strikethrough = (style & FontStyle.Strikeout) != 0;
                 font.FontSize = fontSize ?? defaultFont.SizeInPoints;
                 font.FontName = fontName ?? defaultFont.Name;
+            }
+
+            // Apply the horizontal alignment if defined
+            if (horizontalAlign != null) {
+                switch (horizontalAlign) {
+                    case ExcelAlignHorizontal.General:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.General;
+                        break;
+                    case ExcelAlignHorizontal.Left:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        break;
+                    case ExcelAlignHorizontal.Center:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        break;
+                    case ExcelAlignHorizontal.Right:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                        break;
+                    case ExcelAlignHorizontal.Fill:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Fill;
+                        break;
+                    case ExcelAlignHorizontal.Justify:
+                        cellStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Justify;
+                        break;
+                }
+            }
+
+            // Apply the vertical alignment if defined
+            if (verticalAlign !=  null) {
+                switch (verticalAlign) {
+                    case ExcelAlignVertical.Top:
+                        cellStyle.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+                        break;
+                    case ExcelAlignVertical.Center:
+                        cellStyle.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                        break;
+                    case ExcelAlignVertical.Bottom:
+                        cellStyle.Alignment.Vertical = XLAlignmentVerticalValues.Bottom;
+                        break;
+                    case ExcelAlignVertical.Justify:
+                        cellStyle.Alignment.Vertical = XLAlignmentVerticalValues.Justify;
+                        break;
+                }
             }
         }
 
@@ -169,6 +215,8 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void WriteCell<T>(
             int row,
             int col,
@@ -177,7 +225,9 @@ namespace ExcelHelper
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             // Clear the cell if the field is null
             var cell = _sheet.Cell(row + 1, col + 1);
@@ -196,8 +246,8 @@ namespace ExcelHelper
             dateFormat = dateFormat ?? options.DateFormat;
 
             // Apply the style to this cell if defined
-            if (numberFormat != null || dateFormat != null || fontStyle != null || fontSize != null || fontName != null) {
-                UpdateStyle(cell.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
+            if (numberFormat != null || dateFormat != null || fontStyle != null || fontSize != null || fontName != null || horizontalAlign != null || verticalAlign != null) {
+                UpdateStyle(cell.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
             }
 
             // Now write the cell contents
@@ -226,16 +276,20 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void SetColumnFormat(
             int col,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             var xlColumn = _sheet.Column(col + 1);
-            UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
+            UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
         }
 
         /// <summary>
@@ -248,16 +302,20 @@ namespace ExcelHelper
         /// <param name="fontStyle">Optional font style for the cell</param>
         /// <param name="fontSize">Optional font size for the cell</param>
         /// <param name="fontName">Optional font name for the cell</param>
+        /// <param name="horizontalAlign">Optional horizontal alignment</param>
+        /// <param name="verticalAlign">Optional vertical alignment</param>
         public void SetRowFormat(
             int row,
             string numberFormat = null,
             string dateFormat = null,
             FontStyle? fontStyle = null,
             float? fontSize = null,
-            string fontName = null)
+            string fontName = null,
+            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
+            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
         {
             var xlRow = _sheet.Row(row + 1);
-            UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName);
+            UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
         }
 
         /// <summary>

@@ -110,6 +110,8 @@
     <Compile Include="Configuration\ExcelPropertyMap.cs" />
     <Compile Include="Configuration\ExcelPropertyMapData.cs" />
     <Compile Include="Configuration\ExcelPropertyReferenceMap.cs" />
+    <Compile Include="ExcelAlignHorizontal.cs" />
+    <Compile Include="ExcelAlignVertical.cs" />
     <Compile Include="ExcelReaderC1.cs" />
     <Compile Include="ExcelReaderErrorDetails.cs" />
     <Compile Include="ExcelBadDataException.cs" />

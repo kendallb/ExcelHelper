@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -68,17 +68,14 @@ namespace ExcelHelper.TypeConversion
                     return (double)excelValue != 0.0;
                 }
 
-                var text = excelValue as string;
-                if (text != null) {
+                if (excelValue is string text) {
                     // Try parsing the strings true/false
-                    bool b;
-                    if (bool.TryParse(text, out b)) {
+                    if (bool.TryParse(text, out var b)) {
                         return b;
                     }
 
                     // Try parsing as 0 or 1
-                    short sh;
-                    if (short.TryParse(text, out sh)) {
+                    if (short.TryParse(text, out var sh)) {
                         if (sh == 0) {
                             return false;
                         }

@@ -205,8 +205,8 @@ namespace ExcelHelper.Configuration
         ///                 </exception>
         public virtual ExcelPropertyMap this[int index]
         {
-            get { return _list[index]; }
-            set { _list[index] = value; }
+            get => _list[index];
+            set => _list[index] = value;
         }
     }
 }

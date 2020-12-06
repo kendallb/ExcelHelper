@@ -59,8 +59,7 @@ namespace ExcelHelper
         public static NewExpression GetConstructor<T>(
             Expression<Func<T>> expression)
         {
-            var newExpression = expression.Body as NewExpression;
-            if (newExpression == null) {
+            if (!(expression.Body is NewExpression newExpression)) {
                 throw new ArgumentException("Not a constructor expression.", nameof(expression));
             }
 

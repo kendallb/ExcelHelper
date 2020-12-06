@@ -60,14 +60,8 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
-            if (stream == null) {
-                throw new ArgumentNullException(nameof(stream));
-            }
-            if (configuration == null) {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-            _configuration = configuration;
-            _stream = stream;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
             _book = new XLWorkbook(XLEventTracking.Disabled);
             ChangeSheet(0);
 
@@ -80,7 +74,7 @@ namespace ExcelHelper
         /// </summary>
         public Font DefaultFont
         {
-            get { return _defaultFont; }
+            get => _defaultFont;
             set
             {
                 var font = _book.Style.Font;
@@ -187,7 +181,7 @@ namespace ExcelHelper
         public void ChangeSheet(
             int sheet)
         {
-            // Peform any column resizing for the current sheet before we change it
+            // Perform any column resizing for the current sheet before we change it
             PerformColumnResize();
 
             // Insert all the sheets up to the index we need if the count is less
@@ -602,7 +596,7 @@ namespace ExcelHelper
         /// <param name="mapping">The mapping where the properties are added from.</param>
         protected void AddProperties(
             ExcelPropertyMapCollection properties,
-            ExcelClassMap mapping)
+            ExcelClassMapBase mapping)
         {
             properties.AddRange(mapping.PropertyMaps);
             foreach (var refMap in mapping.ReferenceMaps) {
@@ -621,7 +615,7 @@ namespace ExcelHelper
         /// <returns>An Expression to access the given property.</returns>
         protected Expression CreatePropertyExpression(
             Expression recordExpression,
-            ExcelClassMap mapping,
+            ExcelClassMapBase mapping,
             ExcelPropertyMap propertyMap)
         {
             // Handle the simple case where the property is on this level.

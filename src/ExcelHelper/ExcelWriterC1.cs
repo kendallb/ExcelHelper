@@ -62,14 +62,8 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
-            if (stream == null) {
-                throw new ArgumentNullException(nameof(stream));
-            }
-            if (configuration == null) {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-            _configuration = configuration;
-            _stream = stream;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _stream = stream ?? throw new ArgumentNullException(nameof(stream));
             _book = new C1XLBook();
             _book.CompatibilityMode = CompatibilityMode.Excel2007;
             ChangeSheet(0);
@@ -86,8 +80,8 @@ namespace ExcelHelper
         /// </summary>
         public Font DefaultFont
         {
-            get { return _book.DefaultFont; }
-            set { _book.DefaultFont = value; }
+            get => _book.DefaultFont;
+            set => _book.DefaultFont = value;
         }
 
         /// <summary>
@@ -272,8 +266,8 @@ namespace ExcelHelper
             } else {
                 value = converter.ConvertToExcel(options, field);
             }
-            var s = value as string;
-            if (s != null && s.StartsWith("=")) {
+
+            if (value is string s && s.StartsWith("=")) {
                 // Write as a formula if it starts with an equals sign
                 _sheet[row, col].Value = "";
                 _sheet[row, col].Formula = s;
@@ -373,12 +367,12 @@ namespace ExcelHelper
                             text = "FALSE";
                         }
                     } else {
-                        if (style != null && style.Format.Length > 0 && value is IFormattable) {
+                        if (style != null && style.Format.Length > 0 && value is IFormattable formattable) {
                             var fmt = XLStyle.FormatXLToDotNet(style.Format.ToUpperInvariant());
                             if (!string.IsNullOrEmpty(fmt)) {
-                                text = ((IFormattable)value).ToString(fmt, CultureInfo.CurrentCulture);
+                                text = formattable.ToString(fmt, CultureInfo.CurrentCulture);
                             } else {
-                                text = value.ToString();
+                                text = formattable.ToString();
                             }
                         } else {
                             text = value.ToString();
@@ -488,8 +482,7 @@ namespace ExcelHelper
         protected void WriteFieldFormula(
             object field)
         {
-            var s = field as string;
-            if (s != null && s.StartsWith("=")) {
+            if (field is string s && s.StartsWith("=")) {
                 _sheet[_row, _col].Value = "";
                 _sheet[_row, _col++].Formula = s;
             } else {
@@ -686,7 +679,7 @@ namespace ExcelHelper
         /// <param name="mapping">The mapping where the properties are added from.</param>
         protected void AddProperties(
             ExcelPropertyMapCollection properties,
-            ExcelClassMap mapping)
+            ExcelClassMapBase mapping)
         {
             properties.AddRange(mapping.PropertyMaps);
             foreach (var refMap in mapping.ReferenceMaps) {
@@ -705,7 +698,7 @@ namespace ExcelHelper
         /// <returns>An Expression to access the given property.</returns>
         protected Expression CreatePropertyExpression(
             Expression recordExpression,
-            ExcelClassMap mapping,
+            ExcelClassMapBase mapping,
             ExcelPropertyMap propertyMap)
         {
             // Handle the simple case where the property is on this level.

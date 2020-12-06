@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -17,23 +17,22 @@ namespace ExcelHelper.Configuration
     /// </summary>
     public class ExcelClassMapCollection
     {
-        private readonly Dictionary<Type, ExcelClassMap> _data = new Dictionary<Type, ExcelClassMap>();
+        private readonly Dictionary<Type, ExcelClassMapBase> _data = new Dictionary<Type, ExcelClassMapBase>();
 
         /// <summary>
-        /// Gets the <see cref="ExcelClassMap"/> for the specified record type.
+        /// Gets the <see cref="ExcelClassMapBase"/> for the specified record type.
         /// </summary>
         /// <value>
-        /// The <see cref="ExcelClassMap"/>.
+        /// The <see cref="ExcelClassMapBase"/>.
         /// </value>
         /// <param name="type">The record type.</param>
-        /// <returns>The <see cref="ExcelClassMap"/> for the specified record type.</returns>
-        public virtual ExcelClassMap this[Type type]
+        /// <returns>The <see cref="ExcelClassMapBase"/> for the specified record type.</returns>
+        public virtual ExcelClassMapBase this[Type type]
         {
             get
             {
-                ExcelClassMap map;
-                _data.TryGetValue(type, out map);
-                return map;
+                _data.TryGetValue(type, out var mapBase);
+                return mapBase;
             }
         }
 
@@ -42,16 +41,16 @@ namespace ExcelHelper.Configuration
         /// already exists for the record type, the specified
         /// map will replace it.
         /// </summary>
-        /// <param name="map">The map.</param>
+        /// <param name="mapBase">The map.</param>
         internal virtual void Add(
-            ExcelClassMap map)
+            ExcelClassMapBase mapBase)
         {
-            var type = GetGenericExcelClassMapType(map.GetType()).GetGenericArguments().First();
+            var type = GetGenericExcelClassMapType(mapBase.GetType()).GetGenericArguments().First();
 
             if (_data.ContainsKey(type)) {
-                _data[type] = map;
+                _data[type] = mapBase;
             } else {
-                _data.Add(type, map);
+                _data.Add(type, mapBase);
             }
         }
 
@@ -62,7 +61,7 @@ namespace ExcelHelper.Configuration
         internal virtual void Remove(
             Type classMapType)
         {
-            if (!typeof(ExcelClassMap).IsAssignableFrom(classMapType)) {
+            if (!typeof(ExcelClassMapBase).IsAssignableFrom(classMapType)) {
                 throw new ArgumentException("The class map type must inherit from ExcelClassMap.");
             }
             var type = GetGenericExcelClassMapType(classMapType).GetGenericArguments().First();

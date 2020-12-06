@@ -33,7 +33,7 @@ namespace ExcelHelper
         private int _columnCount;
         private readonly Dictionary<string, List<int>> _namedIndexes = new Dictionary<string, List<int>>();
         private readonly List<PropertyInfo> _importedColumns = new List<PropertyInfo>();
-        private readonly Dictionary<Type, Delegate> _recordFuncs = new Dictionary<Type, Delegate>();
+        private readonly Dictionary<Type, Delegate> _recordFunctions = new Dictionary<Type, Delegate>();
         private readonly ExcelConfiguration _configuration;
 
         /// <summary>
@@ -64,10 +64,7 @@ namespace ExcelHelper
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            if (configuration == null) {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _reader = ExcelReaderFactory.CreateReader(stream);
             ChangeSheet(0);
         }
@@ -80,7 +77,7 @@ namespace ExcelHelper
         /// <summary>
         /// Returns the total number of rows
         /// </summary>
-        public int TotalRows { get { throw new NotSupportedException(); } } // TODO!?
+        public int TotalRows => throw new NotSupportedException(); // TODO!?
 
         /// <summary>
         /// Returns the total number of sheets in the Excel file
@@ -521,7 +518,7 @@ namespace ExcelHelper
         private Delegate GetParseRecordFunc(
             Type type)
         {
-            if (!_recordFuncs.ContainsKey(type)) {
+            if (!_recordFunctions.ContainsKey(type)) {
                 // Build binding functions for all the properties in the record
                 var bindings = new List<MemberBinding>();
                 CreatePropertyBindingsForMapping(_configuration.Maps[type], bindings);
@@ -533,18 +530,18 @@ namespace ExcelHelper
                 var constructorExpression = _configuration.Maps[type].Constructor ?? Expression.New(type);
                 var body = Expression.MemberInit(constructorExpression, bindings);
                 var funcType = typeof(Func<>).MakeGenericType(type);
-                _recordFuncs[type] = Expression.Lambda(funcType, body).Compile();
+                _recordFunctions[type] = Expression.Lambda(funcType, body).Compile();
             }
-            return _recordFuncs[type];
+            return _recordFunctions[type];
         }
 
         /// <summary>
-        /// Creates the property bindings for the given <see cref="ExcelClassMap"/>.
+        /// Creates the property bindings for the given <see cref="ExcelClassMapBase"/>.
         /// </summary>
         /// <param name="mapping">The mapping to create the bindings for.</param>
         /// <param name="bindings">The bindings that will be added to from the mapping.</param>
         private void CreatePropertyBindingsForMapping(
-            ExcelClassMap mapping,
+            ExcelClassMapBase mapping,
             List<MemberBinding> bindings)
         {
             // First bind all the regular properties for this record

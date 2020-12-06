@@ -71,8 +71,7 @@ namespace ExcelHelper.TypeConversion
                 throw new ArgumentNullException(nameof(type));
             }
             lock (_locker) {
-                ITypeConverter typeConverter;
-                if (_typeConverters.TryGetValue(type, out typeConverter)) {
+                if (_typeConverters.TryGetValue(type, out var typeConverter)) {
                     return typeConverter;
                 }
             }

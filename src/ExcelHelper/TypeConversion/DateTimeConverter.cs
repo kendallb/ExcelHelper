@@ -48,8 +48,7 @@ namespace ExcelHelper.TypeConversion
                 }
 
                 // Try to parse the date as a string if it comes in that way
-                var text = excelValue as string;
-                if (text != null) {
+                if (excelValue is string text) {
                     if (string.IsNullOrWhiteSpace(text)) {
                         return DateTime.MinValue;
                     }

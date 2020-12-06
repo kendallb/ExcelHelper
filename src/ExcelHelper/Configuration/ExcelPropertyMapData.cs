@@ -93,7 +93,7 @@ namespace ExcelHelper.Configuration
         /// </summary>
         public object Default
         {
-            get { return _defaultValue; }
+            get => _defaultValue;
             set
             {
                 _defaultValue = value;

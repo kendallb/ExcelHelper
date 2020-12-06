@@ -2,133 +2,119 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ExcelHelper.Configuration
 {
-    ///<summary>
+    /// <summary>
     /// Maps class properties to Excel fields.
-    ///</summary>
-    public abstract class ExcelClassMap
+    /// </summary>
+    /// <typeparam name="T">The <see cref="Type"/> of class to map.</typeparam>
+    public abstract class ExcelClassMap<T> : ExcelClassMapBase
     {
-        private readonly ExcelPropertyMapCollection _propertyMaps = new ExcelPropertyMapCollection();
-        private readonly List<ExcelPropertyReferenceMap> _referenceMaps = new List<ExcelPropertyReferenceMap>();
-
         /// <summary>
-        /// Gets the constructor expression.
+        /// Constructs the row object using the given expression.
         /// </summary>
-        public virtual NewExpression Constructor { get; protected set; } 
-
-        /// <summary>
-        /// The class property mappings.
-        /// </summary>
-        public virtual ExcelPropertyMapCollection PropertyMaps => _propertyMaps;
-
-        /// <summary>
-        /// The class property reference mappings.
-        /// </summary>
-        public virtual List<ExcelPropertyReferenceMap> ReferenceMaps => _referenceMaps;
-
-        /// <summary>
-        /// Allow only internal creation of ExcelClassMap.
-        /// </summary>
-        internal ExcelClassMap()
+        /// <param name="expression">The expression.</param>
+        protected virtual void ConstructUsing(
+            Expression<Func<T>> expression)
         {
+            Constructor = ReflectionHelper.GetConstructor(expression);
         }
 
         /// <summary>
-        /// Gets the property map for the given property expression.
+        /// Maps a property to a Excel field.
         /// </summary>
-        /// <typeparam name="T">The type of the class the property belongs to.</typeparam>
-        /// <param name="propertyExpression">The property expression.</param>
-        /// <returns>The ExcelPropertyMap for the given expression.</returns>
-        public virtual ExcelPropertyMap PropertyMap<T>(
-            Expression<Func<T, object>> propertyExpression)
+        /// <param name="property">Property to map</param>
+        /// <returns>The property mapping.</returns>
+        private ExcelPropertyMap Map(
+            PropertyInfo property)
         {
-            var property = ReflectionHelper.GetProperty(propertyExpression);
-            var propertyMap = _propertyMaps.Single(pm => pm.Data.Property == property);
+            var existingMap = PropertyMaps.SingleOrDefault(m => m.Data.Property == property);
+            if (existingMap != null) {
+                return existingMap;
+            }
+
+            var propertyMap = new ExcelPropertyMap(property);
+            propertyMap.Data.Index = GetMaxIndex() + 1;
+            PropertyMaps.Add(propertyMap);
+
             return propertyMap;
         }
 
         /// <summary>
-        /// Get the largest index for the
-        /// properties and references.
+        /// Maps a property to a Excel field.
         /// </summary>
-        /// <returns>The max index.</returns>
-        internal int GetMaxIndex()
+        /// <param name="expression">The property to map.</param>
+        /// <returns>The property mapping.</returns>
+        protected ExcelPropertyMap Map(
+            Expression<Func<T, object>> expression)
         {
-            if (PropertyMaps.Count == 0 && ReferenceMaps.Count == 0) {
-                return -1;
-            }
-
-            var indexes = new List<int>();
-            if (PropertyMaps.Count > 0) {
-                indexes.Add(PropertyMaps.Max(pm => pm.Data.Index));
-            }
-            indexes.AddRange(ReferenceMaps.Select(referenceMap => referenceMap.GetMaxIndex()));
-
-            return indexes.Max();
+            return Map(ReflectionHelper.GetProperty(expression));
         }
 
         /// <summary>
-        /// Resets the indexes based on the given start index.
+        /// Maps a property to a Excel field by name
         /// </summary>
-        /// <param name="indexStart">The index start.</param>
-        /// <returns>The last index + 1.</returns>
-        internal int ReIndex(
-            int indexStart = 0)
+        /// <param name="name">Name of the property to map</param>
+        /// <returns>The property mapping.</returns>
+        protected ExcelPropertyMap Map(
+            string name)
         {
-            foreach (var propertyMap in PropertyMaps) {
-                propertyMap.Data.Index = indexStart;
-                indexStart++;
-            }
-            foreach (var referenceMap in ReferenceMaps) {
-                indexStart = referenceMap.Mapping.ReIndex(indexStart);
-            }
-            return indexStart;
+            return Map(typeof(T).GetProperty(name));
         }
 
         /// <summary>
-        /// Auto maps all properties for the given type. If a property
-        /// is mapped again it will override the existing map.
+        /// Determines if a column that is mapped is actually imported in the Excel file
         /// </summary>
-        public virtual void AutoMap()
+        /// <param name="expression">The property to map.</param>
+        /// <param name="importedColumns">List of mapped columns to check against</param>
+        /// <returns>The property mapping.</returns>
+        public static bool IsImported(
+            Expression<Func<T, object>> expression,
+            List<PropertyInfo> importedColumns)
         {
-            AutoMapInternal(this);
+            var property = ReflectionHelper.GetProperty(expression);
+            return importedColumns.FirstOrDefault(p => p == property) != null;
         }
 
         /// <summary>
-        /// Auto maps the given map and checks for circular references as it goes.
+        /// Maps a property to another class map.
         /// </summary>
-        /// <param name="map">The map to auto map.</param>
-        internal static void AutoMapInternal(
-            ExcelClassMap map)
+        /// <typeparam name="TClassMap">The type of the class map.</typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns>The reference mapping for the property.</returns>
+        protected ExcelPropertyReferenceMap References<TClassMap>(
+            Expression<Func<T, object>> expression)
+            where TClassMap : ExcelClassMapBase
         {
-            var type = map.GetType().BaseType.GetGenericArguments()[0];
-            if (typeof(IEnumerable).IsAssignableFrom(type)) {
-                throw new ExcelConfigurationException("Types that inherit IEnumerable cannot be auto mapped. " +
-                                                      "Did you accidentally call GetRecord or WriteRecord which " +
-                                                      "acts on a single record instead of calling GetRecords or " +
-                                                      "WriteRecords which acts on a list of records?");
-            }
+            return References(typeof(TClassMap), expression);
+        }
 
-            // Process all the properties in this type
-            foreach (var property in type.GetProperties()) {
-                var propertyMap = new ExcelPropertyMap(property);
-                propertyMap.Data.Index = map.GetMaxIndex() + 1;
-                map.PropertyMaps.Add(propertyMap);
-            }
-
-            // Re-index all the properties when we are done
-            map.ReIndex();
+        /// <summary>
+        /// Maps a property to another class map.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>The reference mapping for the property</returns>
+        protected ExcelPropertyReferenceMap References(
+            Type type,
+            Expression<Func<T, object>> expression)
+        {
+            var property = ReflectionHelper.GetProperty(expression);
+            var map = (ExcelClassMapBase)ReflectionHelper.CreateInstance(type);
+            map.ReIndex(GetMaxIndex() + 1);
+            var reference = new ExcelPropertyReferenceMap(property, map);
+            ReferenceMaps.Add(reference);
+            return reference;
         }
     }
 }

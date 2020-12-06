@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -25,7 +25,7 @@ namespace ExcelHelper.Configuration
         private readonly ExcelClassMapCollection _maps = new ExcelClassMapCollection();
 
         /// <summary>
-        /// The configured <see cref="ExcelClassMap"/>s.
+        /// The configured <see cref="ExcelClassMapBase"/>s.
         /// </summary>
         public ExcelClassMapCollection Maps => _maps;
 
@@ -35,34 +35,34 @@ namespace ExcelHelper.Configuration
         /// become blank strings when read into a string field, rather than being null.
         /// </summary>
         public bool ReadEmptyStrings { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating if the Excel file header row should be bold or not.
         /// Default is true.
         /// </summary>
         public bool HeaderIsBold
         {
-            get { return _headerIsBold; }
-            set { _headerIsBold = value; }
+            get => _headerIsBold;
+            set => _headerIsBold = value;
         }
 
         /// <summary>
         /// Gets or sets a value indicating if the Excel file columns should be auto sized.
-        /// Default is false.
+        /// Default is true.
         /// </summary>
         public bool AutoSizeColumns
         {
-            get { return _autoSizeColumns; }
-            set { _autoSizeColumns = value; }
+            get => _autoSizeColumns;
+            set => _autoSizeColumns = value;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the maximum column widht for auto column sizing in twips
+        /// Gets or sets a value indicating the maximum column width for auto column sizing in twips
         /// </summary>
         public double MaxColumnWidth
         {
-            get { return _maxColumnWidth; }
-            set { _maxColumnWidth = value; }
+            get => _maxColumnWidth;
+            set => _maxColumnWidth = value;
         }
 
         /// <summary>
@@ -71,8 +71,8 @@ namespace ExcelHelper.Configuration
         /// </summary>
         public bool WillThrowOnMissingHeader
         {
-            get { return _willThrowOnMissingHeader; }
-            set { _willThrowOnMissingHeader = value; }
+            get => _willThrowOnMissingHeader;
+            set => _willThrowOnMissingHeader = value;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace ExcelHelper.Configuration
         /// </summary>
         public bool IsHeaderCaseSensitive
         {
-            get { return _isHeaderCaseSensitive; }
-            set { _isHeaderCaseSensitive = value; }
+            get => _isHeaderCaseSensitive;
+            set => _isHeaderCaseSensitive = value;
         }
 
         /// <summary>
@@ -108,19 +108,19 @@ namespace ExcelHelper.Configuration
         /// </summary>
         public CultureInfo CultureInfo
         {
-            get { return _cultureInfo; }
-            set { _cultureInfo = value; }
+            get => _cultureInfo;
+            set => _cultureInfo = value;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating if private get and set property accessor should be 
+        /// Gets or sets a value indicating if private get and set property accessor should be
         /// ignored when reading and writing. True to ignore, otherwise false. Default is false.
         /// </summary>
         public bool IgnorePrivateAccessor { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether exceptions that occur during reading should be 
-        /// ignored. True to ignore exceptions, otherwise false. Default is false. This is only 
+        /// Gets or sets a value indicating whether exceptions that occur during reading should be
+        /// ignored. True to ignore exceptions, otherwise false. Default is false. This is only
         /// applicable when during <see cref="IExcelReader.GetRecords{T}"/>.
         /// </summary>
         public bool IgnoreReadingExceptions { get; set; }
@@ -138,45 +138,45 @@ namespace ExcelHelper.Configuration
         public Action<Exception, ExcelReadErrorDetails> ReadingExceptionCallback { get; set; }
 
         /// <summary>
-        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no properties 
+        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no properties
         /// are mapped by default. Only properties specified in the mapping are used.
         /// </summary>
         /// <typeparam name="TMap">The type of mapping class to use.</typeparam>
         public void RegisterClassMap<TMap>()
-            where TMap : ExcelClassMap
+            where TMap : ExcelClassMapBase
         {
             var map = ReflectionHelper.CreateInstance<TMap>();
             RegisterClassMap(map);
         }
 
         /// <summary>
-        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no 
+        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no
         /// properties are mapped by default. Only properties specified in the mapping are used.
         /// </summary>
         /// <param name="classMapType">The type of mapping class to use.</param>
         public void RegisterClassMap(
             Type classMapType)
         {
-            if (!typeof(ExcelClassMap).IsAssignableFrom(classMapType)) {
+            if (!typeof(ExcelClassMapBase).IsAssignableFrom(classMapType)) {
                 throw new ArgumentException("The class map type must inherit from ExcelClassMap.");
             }
 
-            var map = (ExcelClassMap)ReflectionHelper.CreateInstance(classMapType);
+            var map = (ExcelClassMapBase)ReflectionHelper.CreateInstance(classMapType);
             RegisterClassMap(map);
         }
 
         /// <summary>
         /// Registers the class map.
         /// </summary>
-        /// <param name="map">The class map to register.</param>
+        /// <param name="mapBase">The class map to register.</param>
         public void RegisterClassMap(
-            ExcelClassMap map)
+            ExcelClassMapBase mapBase)
         {
-            if (map.Constructor == null && map.PropertyMaps.Count == 0 && map.ReferenceMaps.Count == 0) {
+            if (mapBase.Constructor == null && mapBase.PropertyMaps.Count == 0 && mapBase.ReferenceMaps.Count == 0) {
                 throw new ExcelConfigurationException("No mappings were specified in the ExcelClassMap.");
             }
 
-            Maps.Add(map);
+            Maps.Add(mapBase);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace ExcelHelper.Configuration
         /// </summary>
         /// <typeparam name="TMap">The map type to unregister.</typeparam>
         public void UnregisterClassMap<TMap>()
-            where TMap : ExcelClassMap
+            where TMap : ExcelClassMapBase
         {
             UnregisterClassMap(typeof(TMap));
         }
@@ -208,25 +208,25 @@ namespace ExcelHelper.Configuration
         }
 
         /// <summary>
-        /// Generates a <see cref="ExcelClassMap"/> for the type.
+        /// Generates a <see cref="ExcelClassMapBase"/> for the type.
         /// </summary>
         /// <typeparam name="T">The type to generate the map for.</typeparam>
         /// <returns>The generate map.</returns>
-        public ExcelClassMap AutoMap<T>()
+        public ExcelClassMapBase AutoMap<T>()
         {
             return AutoMap(typeof(T));
         }
 
         /// <summary>
-        /// Generates a <see cref="ExcelClassMap"/> for the type.
+        /// Generates a <see cref="ExcelClassMapBase"/> for the type.
         /// </summary>
         /// <param name="type">The type to generate for the map.</param>
         /// <returns>The generate map.</returns>
-        public ExcelClassMap AutoMap(
+        public ExcelClassMapBase AutoMap(
             Type type)
         {
             var mapType = typeof(DefaultExcelClassMap<>).MakeGenericType(type);
-            var map = (ExcelClassMap)ReflectionHelper.CreateInstance(mapType);
+            var map = (ExcelClassMapBase)ReflectionHelper.CreateInstance(mapType);
             map.AutoMap();
             return map;
         }

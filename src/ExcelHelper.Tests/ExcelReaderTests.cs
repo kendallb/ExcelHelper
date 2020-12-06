@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable ClassNeverInstantiated.Local
 // ReSharper disable UnusedMember.Local
 
-// TODO: Use the C1 libraries for unit testing to convert from OpenXML test file data to BIFF8 in memory ...    
+// TODO: Use the C1 libraries for unit testing to convert from OpenXML test file data to BIFF8 in memory ...
 
 namespace ExcelHelper.Tests
 {
@@ -643,7 +643,7 @@ namespace ExcelHelper.Tests
                     book.SaveAs(stream);
                 }
 
-                // Now parse the Excel file 
+                // Now parse the Excel file
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordDuplicateHeaderNamesMap>();
@@ -683,7 +683,7 @@ namespace ExcelHelper.Tests
                     book.SaveAs(stream);
                 }
 
-                // Now parse the Excel file 
+                // Now parse the Excel file
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<MultipleNamesClassMap>();
@@ -709,7 +709,7 @@ namespace ExcelHelper.Tests
                     book.SaveAs(stream);
                 }
 
-                // Now parse the Excel file 
+                // Now parse the Excel file
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     try {
@@ -751,7 +751,7 @@ namespace ExcelHelper.Tests
                 }
 
                 // Now parse the Excel file. Note that we are unable to write NULL strings with ClosedXML so they are always blank.
-                // If we wish to test this we should create some real Excel files with null's in them using the C1 library and save
+                // If we wish to test this we should create some real Excel files with nulls in them using the C1 library and save
                 // them to disk to use directly rather than building them on the fly here with ClosedXML.
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {

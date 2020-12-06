@@ -65,10 +65,7 @@ namespace ExcelHelper
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            if (configuration == null) {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _book = new C1XLBook();
             try {
                 _book.Load(stream, FileFormat.OpenXml);
@@ -563,12 +560,12 @@ namespace ExcelHelper
         }
 
         /// <summary>
-        /// Creates the property bindings for the given <see cref="ExcelClassMap"/>.
+        /// Creates the property bindings for the given <see cref="ExcelClassMapBase"/>.
         /// </summary>
         /// <param name="mapping">The mapping to create the bindings for.</param>
         /// <param name="bindings">The bindings that will be added to from the mapping.</param>
         private void CreatePropertyBindingsForMapping(
-            ExcelClassMap mapping,
+            ExcelClassMapBase mapping,
             List<MemberBinding> bindings)
         {
             // First bind all the regular properties for this record

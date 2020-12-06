@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -26,23 +26,19 @@ namespace ExcelHelper.Configuration
         /// <summary>
         /// Gets the mapping.
         /// </summary>
-        public ExcelClassMap Mapping { get; protected set; }
+        public ExcelClassMapBase Mapping { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcelPropertyReferenceMap"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
-        /// <param name="mapping">The <see cref="ExcelClassMap"/> to use for the reference map.</param>
+        /// <param name="mapping">The <see cref="ExcelClassMapBase"/> to use for the reference map.</param>
         public ExcelPropertyReferenceMap(
             PropertyInfo property,
-            ExcelClassMap mapping)
+            ExcelClassMapBase mapping)
         {
-            if (mapping == null) {
-                throw new ArgumentNullException(nameof(mapping));
-            }
-
-            _property = property;
-            Mapping = mapping;
+            _property = property ?? throw new ArgumentNullException(nameof(property));
+            Mapping = mapping ?? throw new ArgumentNullException(nameof(mapping));
         }
 
         /// <summary>

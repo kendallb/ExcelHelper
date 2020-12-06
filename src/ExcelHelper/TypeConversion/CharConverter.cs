@@ -31,10 +31,8 @@ namespace ExcelHelper.TypeConversion
             TypeConverterOptions options,
             object excelValue)
         {
-            var text = excelValue as string;
-            if (text != null) {
-                char c;
-                if (char.TryParse(text.Trim(), out c)) {
+            if (excelValue is string text) {
+                if (char.TryParse(text.Trim(), out var c)) {
                     return c;
                 }
             }

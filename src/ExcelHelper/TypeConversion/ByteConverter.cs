@@ -34,12 +34,10 @@ namespace ExcelHelper.TypeConversion
             TypeConverterOptions options,
             object excelValue)
         {
-            var text = excelValue as string;
-            if (text != null) {
+            if (excelValue is string text) {
                 var numberStyle = options.NumberStyle ?? NumberStyles.Integer;
 
-                byte b;
-                if (byte.TryParse(text, numberStyle, options.CultureInfo, out b)) {
+                if (byte.TryParse(text, numberStyle, options.CultureInfo, out var b)) {
                     return b;
                 }
             }

@@ -54,8 +54,7 @@ namespace ExcelHelper.TypeConversion
                 throw new ArgumentNullException();
             }
             lock (_locker) {
-                TypeConverterOptions options;
-                if (!_typeConverterOptions.TryGetValue(type, out options)) {
+                if (!_typeConverterOptions.TryGetValue(type, out var options)) {
                     options = new TypeConverterOptions();
                 }
                 if (options.CultureInfo == null) {

@@ -103,10 +103,10 @@
   <ItemGroup>
     <Compile Include="ColumnHelper.cs" />
     <Compile Include="Configuration\IExcelConfiguration.cs" />
-    <Compile Include="Configuration\DefaultExcelClassMap`1.cs" />
-    <Compile Include="Configuration\ExcelClassMap`1.cs" />
-    <Compile Include="Configuration\ExcelConfigurationException.cs" />
+    <Compile Include="Configuration\DefaultExcelClassMapBase.cs" />
     <Compile Include="Configuration\ExcelClassMap.cs" />
+    <Compile Include="Configuration\ExcelConfigurationException.cs" />
+    <Compile Include="Configuration\ExcelClassMapBase.cs" />
     <Compile Include="Configuration\ExcelPropertyMap.cs" />
     <Compile Include="Configuration\ExcelPropertyMapData.cs" />
     <Compile Include="Configuration\ExcelPropertyReferenceMap.cs" />

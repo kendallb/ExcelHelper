@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -17,7 +17,7 @@ namespace ExcelHelper.Configuration
     public interface IExcelConfiguration
     {
         /// <summary>
-        /// The configured <see cref="ExcelClassMap"/>s.
+        /// The configured <see cref="ExcelClassMapBase"/>s.
         /// </summary>
         ExcelClassMapCollection Maps { get; }
 
@@ -34,7 +34,7 @@ namespace ExcelHelper.Configuration
         bool AutoSizeColumns { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating the maximum column widht for auto column sizing in twips
+        /// Gets or sets a value indicating the maximum column width for auto column sizing in twips
         /// </summary>
         double MaxColumnWidth { get; set; }
 
@@ -74,14 +74,14 @@ namespace ExcelHelper.Configuration
         CultureInfo CultureInfo { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating if private get and set property accessor should be 
+        /// Gets or sets a value indicating if private get and set property accessor should be
         /// ignored when reading and writing. True to ignore, otherwise false. Default is false.
         /// </summary>
         bool IgnorePrivateAccessor { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether exceptions that occur during reading should be 
-        /// ignored. True to ignore exceptions, otherwise false. Default is false. This is only 
+        /// Gets or sets a value indicating whether exceptions that occur during reading should be
+        /// ignored. True to ignore exceptions, otherwise false. Default is false. This is only
         /// applicable when during <see cref="IExcelReader.GetRecords{T}"/>.
         /// </summary>
         bool IgnoreReadingExceptions { get; set; }
@@ -99,15 +99,15 @@ namespace ExcelHelper.Configuration
         Action<Exception, ExcelReadErrorDetails> ReadingExceptionCallback { get; set; }
 
         /// <summary>
-        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no properties 
+        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no properties
         /// are mapped by default. Only properties specified in the mapping are used.
         /// </summary>
         /// <typeparam name="TMap">The type of mapping class to use.</typeparam>
         void RegisterClassMap<TMap>()
-            where TMap : ExcelClassMap;
+            where TMap : ExcelClassMapBase;
 
         /// <summary>
-        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no 
+        /// Use a <see cref="ExcelClassMap{T}" /> to configure mappings. When using a class map, no
         /// properties are mapped by default. Only properties specified in the mapping are used.
         /// </summary>
         /// <param name="classMapType">The type of mapping class to use.</param>
@@ -117,16 +117,16 @@ namespace ExcelHelper.Configuration
         /// <summary>
         /// Registers the class map.
         /// </summary>
-        /// <param name="map">The class map to register.</param>
+        /// <param name="mapBase">The class map to register.</param>
         void RegisterClassMap(
-            ExcelClassMap map);
+            ExcelClassMapBase mapBase);
 
         /// <summary>
         /// Unregisters the class map.
         /// </summary>
         /// <typeparam name="TMap">The map type to unregister.</typeparam>
         void UnregisterClassMap<TMap>()
-            where TMap : ExcelClassMap;
+            where TMap : ExcelClassMapBase;
 
         /// <summary>
         /// Unregisters the class map.
@@ -141,18 +141,18 @@ namespace ExcelHelper.Configuration
         void UnregisterClassMap();
 
         /// <summary>
-        /// Generates a <see cref="ExcelClassMap"/> for the type.
+        /// Generates a <see cref="ExcelClassMapBase"/> for the type.
         /// </summary>
         /// <typeparam name="T">The type to generate the map for.</typeparam>
         /// <returns>The generate map.</returns>
-        ExcelClassMap AutoMap<T>();
+        ExcelClassMapBase AutoMap<T>();
 
         /// <summary>
-        /// Generates a <see cref="ExcelClassMap"/> for the type.
+        /// Generates a <see cref="ExcelClassMapBase"/> for the type.
         /// </summary>
         /// <param name="type">The type to generate for the map.</param>
         /// <returns>The generate map.</returns>
-        ExcelClassMap AutoMap(
+        ExcelClassMapBase AutoMap(
             Type type);
     }
 }

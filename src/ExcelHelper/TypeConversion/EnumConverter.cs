@@ -41,8 +41,7 @@ namespace ExcelHelper.TypeConversion
             TypeConverterOptions options,
             object excelValue)
         {
-            var text = excelValue as string;
-            if (text != null) {
+            if (excelValue is string text) {
                 try {
                     return Enum.Parse(_type, text, true);
                 } catch (Exception e) {

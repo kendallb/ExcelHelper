@@ -33,8 +33,7 @@ namespace ExcelHelper.TypeConversion
             TypeConverterOptions options,
             object excelValue)
         {
-            var text = excelValue as string;
-            if (text != null) {
+            if (excelValue is string text) {
                 try {
                     return new Guid(text);
                 } catch (Exception e) {

@@ -45,11 +45,9 @@ namespace ExcelHelper.TypeConversion
                 }
 
                 // Try to parse the timespan as a string if it comes in that way
-                var text = excelValue as string;
-                if (text != null) {
+                if (excelValue is string text) {
                     var formatProvider = (IFormatProvider)options.CultureInfo;
-                    TimeSpan span;
-                    if (TimeSpan.TryParse(text, formatProvider, out span)) {
+                    if (TimeSpan.TryParse(text, formatProvider, out var span)) {
                         return span;
                     }
                 }

@@ -274,6 +274,10 @@ namespace ExcelHelper
             } else {
                 _sheet[row, col].Value = value;
             }
+
+            // Update the internal row counter to be the maximum of this row, but it is always set to the start of the next row
+            // so if you manually write stuff to a sheet, rendering records will end up start at the next row after that.
+            _row = Math.Max(_row, row + 1);
         }
 
         /// <summary>
@@ -405,8 +409,43 @@ namespace ExcelHelper
             double minWidth,
             double maxWidth)
         {
-            for (var i = 0; i <= _row; i++) {
-                AutoSizeColumnsForRow(_row, (float)maxWidth);
+            for (var i = 0; i < _row; i++) {
+                AutoSizeColumnsForRow(i, (float)maxWidth);
+            }
+        }
+
+        /// <summary>
+        /// Adjusts all the column widths to match the content for specific rows
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width</param>
+        /// <param name="minWidth">Minimum width in twips</param>
+        /// <param name="maxWidth">Maximum width in twips</param>
+        public void AdjustColumnsToContent(
+            int startRow,
+            double minWidth,
+            double maxWidth)
+        {
+            for (var i = startRow; i < _row; i++) {
+                AutoSizeColumnsForRow(i, (float)maxWidth);
+            }
+        }
+
+        /// <summary>
+        /// Adjusts all the column widths to match the content for specific rows
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width</param>
+        /// <param name="endRow">The row to end calculating the column width (inclusive)</param>
+        /// <param name="minWidth">Minimum width in twips</param>
+        /// <param name="maxWidth">Maximum width in twips</param>
+        public void AdjustColumnsToContent(
+            int startRow,
+            int endRow,
+            double minWidth,
+            double maxWidth)
+        {
+            endRow = Math.Min(endRow + 1, _row);
+            for (var i = startRow; i < endRow; i++) {
+                AutoSizeColumnsForRow(i, (float)maxWidth);
             }
         }
 

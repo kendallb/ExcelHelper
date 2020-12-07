@@ -116,6 +116,30 @@ namespace ExcelHelper
             double maxWidth = double.MaxValue);
 
         /// <summary>
+        /// Adjusts all the column widths to match the content for specific rows
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width</param>
+        /// <param name="minWidth">Minimum width in twips</param>
+        /// <param name="maxWidth">Maximum width in twips</param>
+        void AdjustColumnsToContent(
+            int startRow,
+            double minWidth = 0,
+            double maxWidth = double.MaxValue);
+
+        /// <summary>
+        /// Adjusts all the column widths to match the content for specific rows
+        /// </summary>
+        /// <param name="startRow">The row to start calculating the column width</param>
+        /// <param name="endRow">The row to end calculating the column width (inclusive)</param>
+        /// <param name="minWidth">Minimum width in twips</param>
+        /// <param name="maxWidth">Maximum width in twips</param>
+        void AdjustColumnsToContent(
+            int startRow,
+            int endRow,
+            double minWidth = 0,
+            double maxWidth = double.MaxValue);
+
+        /// <summary>
         /// Adjusts all the column widths to match the content
         /// </summary>
         /// <param name="minHeight">Minimum height in twips</param>

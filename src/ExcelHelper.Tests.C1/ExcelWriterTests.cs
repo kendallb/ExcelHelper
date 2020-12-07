@@ -82,14 +82,14 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(FontStyle.Italic, sheet.Columns[7].Style.Font.Style);
                         Assert.AreEqual(24.0, sheet.Columns[7].Style.Font.SizeInPoints);
 
+                        // Check some automatically sizes column widths
+                        Assert.AreEqual(2655, sheet.Columns[2].Width);
+                        Assert.AreEqual(5541, sheet.Columns[4].Width);
+
                         // Verify the overridden row and column sizes
                         Assert.AreEqual(600, sheet.Rows[1].Height);
                         Assert.AreEqual(495, sheet.Columns[1].Width);
                         Assert.AreEqual(700, sheet.Columns[11].Width);
-
-                        // Check some automatically sizes column widths
-                        Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(2347, sheet.Columns[4].Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet[0, 0].Value);

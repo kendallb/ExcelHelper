@@ -58,6 +58,9 @@ namespace ExcelHelper.Tests
                     excel.WriteCell(1, 9, new TimeSpan(1, 2, 3));
                     excel.WriteCell(1, 10, "=2*3");
 
+                    // Auto size the columns
+                    excel.AdjustColumnsToContent(0, 10000);
+
                     // Override some column and row sizes
                     excel.SetRowHeight(1, 600);
                     excel.SetColumnWidth(1, 500);
@@ -83,21 +86,17 @@ namespace ExcelHelper.Tests
                         // Verify row and column styles
                         Assert.AreEqual(true, sheet.Row(2).Style.Font.Bold);
                         Assert.AreEqual(16.0, sheet.Row(2).Style.Font.FontSize);
-
-                        // TODO: This is not working in ClosedXML 0.94.2. This is fixed in 0.95 beta 2 so when 0.95 is out, we can put this back.
-                        // Assert.AreEqual(true, sheet.Column(8).Style.Font.Italic);
-                        // Assert.AreEqual(24.0, sheet.Column(8).Style.Font.FontSize);
-
-                        // Verify the overridden row and column sizes
-                        Assert.AreEqual(600, sheet.Row(2).Height);
-
-                        // TODO: This is not working. Have to figure out why ...
-                        // Assert.AreEqual(495, sheet.Column(2).Width);
-                        // Assert.AreEqual(700, sheet.Column(12).Width);
+                        Assert.AreEqual(true, sheet.Column(8).Style.Font.Italic);
+                        Assert.AreEqual(24.0, sheet.Column(8).Style.Font.FontSize);
 
                         // Check some automatically sized column widths
                         Assert.AreEqual(23.71, sheet.Column(3).Width);
                         Assert.AreEqual(11.209999999999999, sheet.Column(4).Width);
+
+                        // Verify the overridden row and column sizes
+                        Assert.AreEqual(600, sheet.Row(2).Height);
+                        Assert.AreEqual(8.8599999999999994, sheet.Column(2).Width);
+                        Assert.AreEqual(2.1899999999999999, sheet.Column(12).Width);
 
                         // Verify first row
                         Assert.AreEqual("one", sheet.Cell(1, 1).Value);
@@ -113,8 +112,6 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual("10/16/2017 15:05", sheet.Cell(1, 5).GetFormattedString());
                         Assert.AreEqual("", sheet.Cell(1, 5).Style.DateFormat.Format);
                         Assert.AreEqual(date, sheet.Cell(1, 6).Value);
-
-                        // TODO: This is broken also. GetFormattedString() returns the format itself, not the string? (M/d/yyyy h:mm:ss tt)
                         Assert.AreEqual("10/16/2017 3:05:00 PM", sheet.Cell(1, 6).GetFormattedString());
                         Assert.AreEqual("M/d/yyyy h:mm:ss AM/PM", sheet.Cell(1, 6).Style.DateFormat.Format);
                         Assert.AreEqual(date, sheet.Cell(1, 7).Value);
@@ -123,9 +120,7 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(XLAlignmentHorizontalValues.Right, sheet.Cell(1, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right);
                         Assert.AreEqual(XLAlignmentVerticalValues.Bottom, sheet.Cell(1, 7).Style.Alignment.Vertical = XLAlignmentVerticalValues.Bottom);
                         Assert.AreEqual(date, sheet.Cell(1, 8).Value);
-
-                        // TODO: This is broken. Returns Monday October 16, 2017 when it should be Monday, October 16, 2017. The Excel file has the correct value.
-                        //Assert.AreEqual("Monday, October 16, 2017", sheet.Cell(1, 8).GetFormattedString());
+                        Assert.AreEqual("Monday, October 16, 2017", sheet.Cell(1, 8).GetFormattedString());
                         Assert.AreEqual("dddd, MMMM d, yyyy", sheet.Cell(1, 8).Style.DateFormat.Format);
                         Assert.AreEqual(true, sheet.Cell(1, 8).Style.Font.Bold);
                         Assert.AreEqual((double)1, sheet.Cell(1, 9).Value);

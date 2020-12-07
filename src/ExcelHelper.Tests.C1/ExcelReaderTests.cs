@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ using C1.C1Excel;
 using System.Linq;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
@@ -22,10 +21,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
-    public class ExcelReaderC1Tests
+    [TestFixture]
+    public class ExcelReaderTests
     {
-        [TestMethod]
+        [Test]
         public void ReadCellTest()
         {
             using (var stream = new MemoryStream()) {
@@ -61,7 +60,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file as all available types
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     // Check the column and row counts are correct
                     Assert.AreEqual(14, excel.TotalColumns);
                     Assert.AreEqual(1, excel.TotalRows);
@@ -142,7 +141,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ReadBiff8Test()
         {
             using (var stream = new MemoryStream()) {
@@ -155,7 +154,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file as all available types
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     // Test all number conversions
                     if (!excel.ReadRow()) {
                         throw new ArgumentException();
@@ -165,7 +164,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsMissingFieldsThrowsErrorTest()
         {
             using (var stream = new MemoryStream()) {
@@ -178,7 +177,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     try {
                         excel.GetRecords<TestRecord>().ToList();
@@ -190,7 +189,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -210,7 +209,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
                     Assert.AreEqual(3, excel.TotalSheets);
@@ -221,7 +220,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithEmptyRowTest()
         {
             using (var stream = new MemoryStream()) {
@@ -241,7 +240,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
                     Assert.AreEqual(3, excel.TotalSheets);
@@ -252,7 +251,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SkipRowsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -272,7 +271,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.SkipRows(2);
                     ValidateRecords(excel, guid, date);
@@ -284,7 +283,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SheetNameTest()
         {
             using (var stream = new MemoryStream()) {
@@ -306,7 +305,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
                     Assert.AreEqual(excel.SheetName, "Test Sheet 1");
@@ -319,7 +318,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsOptionalFieldTest()
         {
             using (var stream = new MemoryStream()) {
@@ -339,7 +338,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date, "optional");
                     Assert.AreEqual(3, excel.TotalSheets);
@@ -350,7 +349,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsMissingFieldTest()
         {
             using (var stream = new MemoryStream()) {
@@ -370,7 +369,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.RegisterClassMap<TestRecordMapMissingField>();
                     ValidateRecords(excel, guid, date);
@@ -513,7 +512,7 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual(i * 3.0, record.DoubleColumn);
                 Assert.AreEqual(i * 4.5, record.GeneralDoubleColumn);
                 Assert.AreEqual(i * 0.21, record.DoublePercentColumn);
-                
+
                 // TODO! This is broken as for some reason the formatting is lost when the file is saved. For now use 0.00%
                 // as that does work until C1 fixes it.
                 //Assert.AreEqual($"{i * 0.21:0%}", record.StringPercentColumn);
@@ -546,7 +545,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithReferencesTest()
         {
             using (var stream = new MemoryStream()) {
@@ -584,7 +583,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<PersonMap>();
                     var records = excel.GetRecords<Person>().ToList();
 
@@ -605,7 +604,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsFailsWithMissingHeadersTest()
         {
             using (var stream = new MemoryStream()) {
@@ -624,7 +623,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     try {
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
@@ -635,7 +634,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithDuplicateHeaderNames()
         {
             using (var stream = new MemoryStream()) {
@@ -659,7 +658,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordDuplicateHeaderNamesMap>();
                     var records = excel.GetRecords<TestRecordDuplicateHeaderNames>().ToList();
 
@@ -673,7 +672,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithMultipleHeaderNames()
         {
             using (var stream = new MemoryStream()) {
@@ -699,7 +698,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<MultipleNamesClassMap>();
                     var records = excel.GetRecords<MultipleNamesClass>().ToList();
 
@@ -713,7 +712,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordEmptyFileFailsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -724,7 +723,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     try {
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
@@ -735,7 +734,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordEmptyValuesNullableTest()
         {
             using (var stream = new MemoryStream()) {
@@ -765,7 +764,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     var records = excel.GetRecords<TestNullable>().ToList();
 
                     // Make sure we got two records
@@ -785,7 +784,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CaseInsensitiveHeaderMatchingTest()
         {
             using (var stream = new MemoryStream()) {
@@ -807,7 +806,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IsHeaderCaseSensitive = false;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -821,7 +820,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SpacesInHeaderTest()
         {
             using (var stream = new MemoryStream()) {
@@ -843,7 +842,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IgnoreHeaderWhiteSpace = true;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -857,7 +856,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TrimHeadersTest()
         {
             using (var stream = new MemoryStream()) {
@@ -879,7 +878,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.TrimHeaders = true;
                     excel.Configuration.RegisterClassMap<TestRecordMapMissingField>();
@@ -894,7 +893,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultValueTest()
         {
             using (var stream = new MemoryStream()) {
@@ -920,7 +919,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestDefaultValuesMap>();
                     var records = excel.GetRecords<TestDefaultValues>().ToList();
 
@@ -936,7 +935,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BooleanTypeConverterTest()
         {
             using (var stream = new MemoryStream()) {
@@ -965,7 +964,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     var records = excel.GetRecords<TestBoolean>().ToList();
 
                     // Verify the records are what we expect
@@ -980,7 +979,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void IgnoreExceptionsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1019,7 +1018,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.IgnoreReadingExceptions = true;
                     var allDetails = new List<ExcelReadErrorDetails>();
@@ -1054,14 +1053,14 @@ namespace ExcelHelper.Tests
                     // Check the exception details are what we expect
                     Assert.AreEqual(2, exceptions.Count);
                     var message =
-                        @"Type: 'ExcelHelper.Tests.ExcelReaderC1Tests+TestRecord'" + "\r\n" +
+                        @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
                         @"Row: '2' (1 based)" + "\r\n" +
                         @"Column: '3' (1 based)" + "\r\n" +
                         @"Field Name: 'BoolColumn'" + "\r\n" +
                         @"Field Value: 'bullshit'" + "\r\n";
                     Assert.AreEqual(message, exceptions[0].Data["ExcelHelper"]);
                     message =
-                        @"Type: 'ExcelHelper.Tests.ExcelReaderC1Tests+TestRecord'" + "\r\n" +
+                        @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
                         @"Row: '3' (1 based)" + "\r\n" +
                         @"Column: '4' (1 based)" + "\r\n" +
                         @"Field Name: 'DateTimeColumn'" + "\r\n" +
@@ -1071,7 +1070,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ReadStructRecordsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1093,7 +1092,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     var records = excel.GetRecords<TestStruct>().ToList();
 
                     // Verify the records are what we expect
@@ -1105,7 +1104,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TrimFieldsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1127,7 +1126,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.TrimFields = true;
                     var records = excel.GetRecords<TestRecord>().ToList();
@@ -1141,7 +1140,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsAsDictionaryTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1161,7 +1160,7 @@ namespace ExcelHelper.Tests
 
                 // Now parse the Excel file
                 stream.Position = 0;
-                using (var excel = new ExcelReaderC1(stream)) {
+                using (var excel = new ExcelReader(stream)) {
                     ValidateRecordsAsDictionary(excel, guid, date);
                     Assert.AreEqual(3, excel.TotalSheets);
                     Assert.IsTrue(excel.ChangeSheet(2));
@@ -1197,7 +1196,7 @@ namespace ExcelHelper.Tests
                 Assert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
                 Assert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
                 Assert.AreEqual((i * 4.5).ToString(), record["GeneralDoubleColumn"]);
-                
+
                 // TODO! This is broken as for some reason the formatting is lost when the file is saved. For now use 0.00%
                 // as that does work until C1 fixes it.
                 //Assert.AreEqual($"{i * 0.21:0%}", record["DoublePercentColumn"]);
@@ -1409,4 +1408,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

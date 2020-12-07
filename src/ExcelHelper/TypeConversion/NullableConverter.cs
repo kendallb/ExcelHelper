@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -96,7 +96,6 @@ namespace ExcelHelper.TypeConversion
             return UnderlyingTypeConverter.ConvertFromExcel(options, excelValue);
         }
 
-#if USE_C1_EXCEL
         /// <summary>
         /// Return the Excel type formatting string for the current options (null if not defined)
         /// </summary>
@@ -107,6 +106,5 @@ namespace ExcelHelper.TypeConversion
         {
             return UnderlyingTypeConverter.ExcelFormatString(options);
         }
-#endif
     }
 }

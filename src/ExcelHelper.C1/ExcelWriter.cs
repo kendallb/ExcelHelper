@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,9 +23,10 @@ namespace ExcelHelper
     /// <summary>
     /// Used to write Excel files.
     /// </summary>
-    public class ExcelWriterC1 : IExcelWriter
+    public class ExcelWriter : IExcelWriter
     {
         private bool _disposed;
+        private bool _closed;
         private readonly Stream _stream;
         private C1XLBook _book;
         private XLSheet _sheet;
@@ -47,7 +47,7 @@ namespace ExcelHelper
         /// a default <see cref="ExcelConfiguration"/>.
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> used to write the Excel file.</param>
-        public ExcelWriterC1(
+        public ExcelWriter(
             Stream stream)
             : this(stream, new ExcelConfiguration())
         {
@@ -58,7 +58,7 @@ namespace ExcelHelper
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> used to write the Excel file.</param>
         /// <param name="configuration">The configuration.</param>
-        public ExcelWriterC1(
+        public ExcelWriter(
             Stream stream,
             ExcelConfiguration configuration)
         {
@@ -615,19 +615,15 @@ namespace ExcelHelper
         /// </summary>
         public void Close()
         {
-            if (_book != null) {
+            if (_book != null && !_closed) {
                 // Set the column widths if we are doing auto sizing
                 PerformColumnResize();
 
                 // Now save the Excel file to the output stream
                 _book.Save(_stream, FileFormat.OpenXml);
 
-                // Clean up and dispose of everything
-                _book?.Dispose();
-                _graphics?.Dispose();
-                _sheet = null;
-                _book = null;
-                _graphics = null;
+                // Mark us as now closed
+                _closed = true;
             }
         }
 
@@ -667,6 +663,13 @@ namespace ExcelHelper
             if (disposing) {
                 Close();
             }
+
+            // Clean up and dispose of everything. We do it during the dispose as it makes it easier for us to measure the memory usage
+            _book?.Dispose();
+            _graphics?.Dispose();
+            _sheet = null;
+            _book = null;
+            _graphics = null;
             _disposed = true;
         }
 
@@ -826,4 +829,3 @@ namespace ExcelHelper
         }
     }
 }
-#endif

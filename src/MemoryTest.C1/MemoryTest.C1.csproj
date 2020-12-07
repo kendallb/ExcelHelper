@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{56A74FB1-FD9E-4F3B-8F57-50FB6C4633EA}</ProjectGuid>
+    <ProjectGuid>{C7B6E41C-496B-433A-9198-34D744D3AE08}</ProjectGuid>
     <RootNamespace>MemoryTest</RootNamespace>
-    <AssemblyName>MemoryTest</AssemblyName>
+    <AssemblyName>MemoryTest.C1</AssemblyName>
     <TargetFramework>net461</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -19,6 +19,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExcelHelper\ExcelHelper.csproj" />
+    <ProjectReference Include="..\ExcelHelper.C1\ExcelHelper.C1.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="C1.C1Excel.4, Version=4.0.20202.438, Culture=neutral, PublicKeyToken=79882d576c6336da">
+      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MemoryTest\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

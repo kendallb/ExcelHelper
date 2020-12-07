@@ -8,24 +8,22 @@
 
 using System.IO;
 using ExcelHelper.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-#if USE_C1_EXCEL
 namespace ExcelHelper.Tests
 {
-    [TestClass]
-    public class ExcelWriterC1ConstructorTests
+    [TestFixture]
+    public class ExcelWriterConstructorTests
     {
-        [TestMethod]
+        [Test]
         public void EnsureInternalsAreSetupWhenPassingWriterAndConfigTest()
         {
             using (var stream = new MemoryStream()) {
                 var config = new ExcelConfiguration();
-                using (var excel = new ExcelWriterC1(stream, config)) {
+                using (var excel = new ExcelWriter(stream, config)) {
                     Assert.AreSame(config, excel.Configuration);
                 }
             }
         }
     }
 }
-#endif

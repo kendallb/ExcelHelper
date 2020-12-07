@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -10,7 +10,8 @@ using System;
 using System.Linq;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable UnusedMember.Local
 // ReSharper disable ClassNeverInstantiated.Local
@@ -18,10 +19,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExcelClassMappingTests
     {
-        [TestMethod]
+        [Test]
         public void MapTest()
         {
             var map = new TestMappingDefaultClass();
@@ -41,7 +42,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(typeof(StringConverter), map.PropertyMaps[2].Data.TypeConverter.GetType());
         }
 
-        [TestMethod]
+        [Test]
         public void MapByNameTest()
         {
             var map = new TestMappingByNameClass();
@@ -53,7 +54,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("StringColumn", map.PropertyMaps[2].Data.Names.FirstOrDefault());
         }
 
-        [TestMethod]
+        [Test]
         public void MapNameTest()
         {
             var map = new TestMappingNameClass();
@@ -65,7 +66,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("String Column", map.PropertyMaps[2].Data.Names.FirstOrDefault());
         }
 
-        [TestMethod]
+        [Test]
         public void MapIndexTest()
         {
             var map = new TestMappingIndexClass();
@@ -77,7 +78,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(1, map.PropertyMaps[2].Data.Index);
         }
 
-        [TestMethod]
+        [Test]
         public void MapIgnoreTest()
         {
             var map = new TestMappingIngoreClass();
@@ -89,19 +90,19 @@ namespace ExcelHelper.Tests
             Assert.IsTrue(map.PropertyMaps[2].Data.Ignore);
         }
 
-        [TestMethod]
+        [Test]
         public void MapTypeConverterTest()
         {
             var map = new TestMappingTypeConverterClass();
 
             Assert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.IsInstanceOfType(map.PropertyMaps[0].Data.TypeConverter, typeof(Int16Converter));
-            Assert.IsInstanceOfType(map.PropertyMaps[1].Data.TypeConverter, typeof(StringConverter));
-            Assert.IsInstanceOfType(map.PropertyMaps[2].Data.TypeConverter, typeof(Int64Converter));
+            Assert.IsInstanceOf<Int16Converter>(map.PropertyMaps[0].Data.TypeConverter);
+            Assert.IsInstanceOf<StringConverter>(map.PropertyMaps[1].Data.TypeConverter);
+            Assert.IsInstanceOf<Int64Converter>(map.PropertyMaps[2].Data.TypeConverter);
         }
 
-        [TestMethod]
+        [Test]
         public void MapMultipleNamesTest()
         {
             var map = new TestMappingMultipleNamesClass();
@@ -125,7 +126,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("string3", map.PropertyMaps[2].Data.Names[2]);
         }
 
-        [TestMethod]
+        [Test]
         public void MapConstructorTest()
         {
             var map = new TestMappingConstructorClass();
@@ -133,7 +134,7 @@ namespace ExcelHelper.Tests
             Assert.IsNotNull(map.Constructor);
         }
 
-        [TestMethod]
+        [Test]
         public void MapMultipleTypesTest()
         {
             var config = new ExcelConfiguration();
@@ -144,7 +145,7 @@ namespace ExcelHelper.Tests
             Assert.IsNotNull(config.Maps[typeof(B)]);
         }
 
-        [TestMethod]
+        [Test]
         public void PropertyMapAccessTest()
         {
             var config = new ExcelConfiguration();
@@ -154,7 +155,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.Ignore);
         }
 
-        [TestMethod]
+        [Test]
         public void PropertyMapWriteOnlyTest()
         {
             var config = new ExcelConfiguration();
@@ -164,7 +165,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.WriteOnly);
         }
 
-        [TestMethod]
+        [Test]
         public void PropertyMapOptionalReadTest()
         {
             var config = new ExcelConfiguration();
@@ -217,7 +218,7 @@ namespace ExcelHelper.Tests
                 StringColumn = stringColumn;
             }
         }
-		
+
         private sealed class TestMappingConstructorClass : ExcelClassMap<TestClass>
         {
             public TestMappingConstructorClass()

@@ -1,0 +1,110 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{71990549-0C5F-44A2-BAC4-2068B37843B9}</ProjectGuid>
+    <RootNamespace>ExcelHelper.Tests</RootNamespace>
+    <AssemblyName>ExcelHelper.Tests.C1</AssemblyName>
+    <TargetFramework>net461</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\ExcelHelper.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExcelHelper.C1\ExcelHelper.C1.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit">
+      <Version>3.12.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ExcelHelper.Tests\ExcelClassMappingTests.cs">
+      <Link>ExcelClassMappingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\ExcelConfigurationTests.cs">
+      <Link>ExcelConfigurationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\ReflectionHelperTests.cs">
+      <Link>ReflectionHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\ByteConverterTests.cs">
+      <Link>TypeConversion\ByteConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\CharConverterTests.cs">
+      <Link>TypeConversion\CharConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\DateTimeConverterTests.cs">
+      <Link>TypeConversion\DateTimeConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\DecimalConverterTests.cs">
+      <Link>TypeConversion\DecimalConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\DefaultTypeConverterTests.cs">
+      <Link>TypeConversion\DefaultTypeConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\DoubleConverterTests.cs">
+      <Link>TypeConversion\DoubleConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\EnumConverterTests.cs">
+      <Link>TypeConversion\EnumConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\EnumerableConverterTests.cs">
+      <Link>TypeConversion\EnumerableConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\GuidConverterTests.cs">
+      <Link>TypeConversion\GuidConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\Int16ConverterTests.cs">
+      <Link>TypeConversion\Int16ConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\Int32ConverterTests.cs">
+      <Link>TypeConversion\Int32ConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\Int64ConverterTests.cs">
+      <Link>TypeConversion\Int64ConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\NullableConverterTests.cs">
+      <Link>TypeConversion\NullableConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\SByteConverterTests.cs">
+      <Link>TypeConversion\SByteConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\SingleConverterTests.cs">
+      <Link>TypeConversion\SingleConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\StringConverterTests.cs">
+      <Link>TypeConversion\StringConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\TimeSpanConverterTests.cs">
+      <Link>TypeConversion\TimeSpanConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\TypeConverterFactoryTests.cs">
+      <Link>TypeConversion\TypeConverterFactoryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\UInt16ConverterTests.cs">
+      <Link>TypeConversion\UInt16ConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\UInt32ConverterTests.cs">
+      <Link>TypeConversion\UInt32ConverterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper.Tests\TypeConversion\UInt64ConverterTests.cs">
+      <Link>TypeConversion\UInt64ConverterTests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="C1.C1Excel.4, Version=4.0.20202.438, Culture=neutral, PublicKeyToken=79882d576c6336da">
+      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

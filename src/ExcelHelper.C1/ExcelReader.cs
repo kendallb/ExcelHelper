@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,7 +23,7 @@ namespace ExcelHelper
     /// <summary>
     /// Used to read original non-XML Excel files.
     /// </summary>
-    public class ExcelReaderC1 : IExcelReader
+    public class ExcelReader : IExcelReader
     {
         private bool _disposed;
         private C1XLBook _book;
@@ -46,7 +45,7 @@ namespace ExcelHelper
         /// Creates a new Excel stream using the given <see cref="Stream"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public ExcelReaderC1(
+        public ExcelReader(
             Stream stream)
             : this(stream, new ExcelConfiguration())
         {
@@ -57,7 +56,7 @@ namespace ExcelHelper
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <param name="configuration">The configuration.</param>
-        public ExcelReaderC1(
+        public ExcelReader(
             Stream stream,
             ExcelConfiguration configuration)
         {
@@ -720,4 +719,3 @@ namespace ExcelHelper
         }
     }
 }
-#endif

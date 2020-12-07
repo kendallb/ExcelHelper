@@ -1,263 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{968A4E7C-B1E9-457E-B1F9-A774E68926C6}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExcelHelper</RootNamespace>
     <AssemblyName>ExcelHelper</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net461</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\ExcelHelper.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\ExcelHelper.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\ExcelHelper.XML</DocumentationFile>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\Release\ExcelHelper.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\ExcelHelper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug C1|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug C1\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;USE_C1_EXCEL</DefineConstants>
-    <DocumentationFile>bin\Debug C1\ExcelHelper.XML</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release C1|AnyCPU'">
-    <OutputPath>bin\Release C1\</OutputPath>
-    <DocumentationFile>bin\Release C1\ExcelHelper.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>USE_C1_EXCEL</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="ClosedXML.Signed">
+      <Version>0.95.3</Version>
+    </PackageReference>
+    <PackageReference Include="DocumentFormat.OpenXml">
+      <Version>2.11.3</Version>
+    </PackageReference>
+    <PackageReference Include="ExcelDataReader">
+      <Version>3.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="ExcelNumberFormat">
+      <Version>1.0.10</Version>
+    </PackageReference>
+    <PackageReference Include="FastMember.Signed">
+      <Version>1.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.FileSystem.Primitives">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.Packaging">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ColumnHelper.cs" />
-    <Compile Include="Configuration\IExcelConfiguration.cs" />
-    <Compile Include="Configuration\DefaultExcelClassMapBase.cs" />
-    <Compile Include="Configuration\ExcelClassMap.cs" />
-    <Compile Include="Configuration\ExcelConfigurationException.cs" />
-    <Compile Include="Configuration\ExcelClassMapBase.cs" />
-    <Compile Include="Configuration\ExcelPropertyMap.cs" />
-    <Compile Include="Configuration\ExcelPropertyMapData.cs" />
-    <Compile Include="Configuration\ExcelPropertyReferenceMap.cs" />
-    <Compile Include="ExcelAlignHorizontal.cs" />
-    <Compile Include="ExcelAlignVertical.cs" />
-    <Compile Include="ExcelReaderC1.cs" />
-    <Compile Include="ExcelReaderErrorDetails.cs" />
-    <Compile Include="ExcelBadDataException.cs" />
-    <Compile Include="ExcelFactory.cs" />
-    <Compile Include="ExcelHelperException.cs" />
-    <Compile Include="ExcelMissingFieldException.cs" />
-    <Compile Include="Configuration\ExcelPropertyMapCollection.cs" />
-    <Compile Include="Configuration\ExcelPropertyMapComparer.cs" />
-    <Compile Include="ExcelReader.cs" />
-    <Compile Include="Configuration\ExcelConfiguration.cs" />
-    <Compile Include="ExcelReaderException.cs" />
-    <Compile Include="ExcelWriter.cs" />
-    <Compile Include="ExcelWriterC1.cs" />
-    <Compile Include="ExcelWriterException.cs" />
-    <Compile Include="ExceptionHelper.cs" />
-    <Compile Include="IExcelFactory.cs" />
-    <Compile Include="IExcelReader.cs" />
-    <Compile Include="IExcelWriter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionHelper.cs" />
-    <Compile Include="Configuration\ExcelClassMapCollection.cs" />
-    <Compile Include="TypeConversion\BooleanConverter.cs" />
-    <Compile Include="TypeConversion\ByteConverter.cs" />
-    <Compile Include="TypeConversion\CharConverter.cs" />
-    <Compile Include="TypeConversion\ExcelTypeConverterException.cs" />
-    <Compile Include="TypeConversion\DateTimeConverter.cs" />
-    <Compile Include="TypeConversion\DecimalConverter.cs" />
-    <Compile Include="TypeConversion\DoubleConverter.cs" />
-    <Compile Include="TypeConversion\EnumConverter.cs" />
-    <Compile Include="TypeConversion\EnumerableConverter.cs" />
-    <Compile Include="TypeConversion\SingleConverter.cs" />
-    <Compile Include="TypeConversion\GuidConverter.cs" />
-    <Compile Include="TypeConversion\Int16Converter.cs" />
-    <Compile Include="TypeConversion\Int32Converter.cs" />
-    <Compile Include="TypeConversion\Int64Converter.cs" />
-    <Compile Include="TypeConversion\ITypeConverter.cs" />
-    <Compile Include="TypeConversion\NullableConverter.cs" />
-    <Compile Include="TypeConversion\SByteConverter.cs" />
-    <Compile Include="TypeConversion\StringConverter.cs" />
-    <Compile Include="TypeConversion\DefaultTypeConverter.cs" />
-    <Compile Include="TypeConversion\TimeSpanConverter.cs" />
-    <Compile Include="TypeConversion\TypeConverterOptionsFactory.cs" />
-    <Compile Include="TypeConversion\TypeConverterOptions.cs" />
-    <Compile Include="TypeConversion\TypeConverterFactory.cs" />
-    <Compile Include="TypeConversion\UInt32Converter.cs" />
-    <Compile Include="TypeConversion\UInt64Converter.cs" />
-    <Compile Include="TypeConversion\UInt16Converter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ExcelHelper.snk">
-      <Link>ExcelHelper.snk</Link>
-    </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(Configuration)' == 'Debug'">
-      <ItemGroup>
-        <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
-          <HintPath>..\packages\ClosedXML.Signed.0.94.2\lib\net46\ClosedXML.dll</HintPath>
-        </Reference>
-        <Reference Include="DocumentFormat.OpenXml, Version=2.10.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-          <HintPath>..\packages\DocumentFormat.OpenXml.2.10.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-        </Reference>
-        <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
-        </Reference>
-        <Reference Include="ExcelNumberFormat, Version=1.0.9.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExcelNumberFormat.1.0.9\lib\net20\ExcelNumberFormat.dll</HintPath>
-        </Reference>
-        <Reference Include="FastMember.Signed, Version=1.5.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
-          <HintPath>..\packages\FastMember.Signed.1.5.0\lib\net461\FastMember.Signed.dll</HintPath>
-        </Reference>
-        <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-        </Reference>
-        <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>..\packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Configuration)' == 'Debug C1'">
-      <ItemGroup>
-        <EmbeddedResource Include="..\..\..\..\snap\ExternalAssemblies\ExcelHelper\licenses.licx">
-          <Link>Properties\licenses.licx</Link>
-        </EmbeddedResource>
-        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Configuration)' == 'Release'">
-      <ItemGroup>
-        <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
-          <HintPath>..\packages\ClosedXML.Signed.0.94.2\lib\net46\ClosedXML.dll</HintPath>
-        </Reference>
-        <Reference Include="DocumentFormat.OpenXml, Version=2.10.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-          <HintPath>..\packages\DocumentFormat.OpenXml.2.10.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-        </Reference>
-        <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
-        </Reference>
-        <Reference Include="ExcelNumberFormat, Version=1.0.9.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
-          <HintPath>..\packages\ExcelNumberFormat.1.0.9\lib\net20\ExcelNumberFormat.dll</HintPath>
-        </Reference>
-        <Reference Include="FastMember.Signed, Version=1.5.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
-          <HintPath>..\packages\FastMember.Signed.1.5.0\lib\net461\FastMember.Signed.dll</HintPath>
-        </Reference>
-        <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-        </Reference>
-        <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>..\packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Configuration)' == 'Release C1'">
-      <ItemGroup>
-        <EmbeddedResource Include="..\..\..\..\snap\ExternalAssemblies\ExcelHelper\licenses.licx">
-          <Link>Properties\licenses.licx</Link>
-        </EmbeddedResource>
-        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-  </Choose>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

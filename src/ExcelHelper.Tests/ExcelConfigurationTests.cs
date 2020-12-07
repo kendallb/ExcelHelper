@@ -2,21 +2,21 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
 using System;
 using ExcelHelper.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExcelConfigurationTests
     {
-        [TestMethod]
+        [Test]
         public void AddingMappingsWithGenericMethod1Test()
         {
             var config = new ExcelConfiguration();
@@ -25,7 +25,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void AddingMappingsWithGenericMethod2Test()
         {
             var config = new ExcelConfiguration();
@@ -34,7 +34,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void AddingMappingsWithNonGenericMethodTest()
         {
             var config = new ExcelConfiguration();
@@ -43,7 +43,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void AddingMappingsWithInstanceMethodTest()
         {
             var config = new ExcelConfiguration();
@@ -52,7 +52,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void RegisterClassMapGenericTest()
         {
             var config = new ExcelConfiguration();
@@ -62,7 +62,7 @@ namespace ExcelHelper.Tests
             Assert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
-        [TestMethod]
+        [Test]
         public void RegisterClassMapNonGenericTest()
         {
             var config = new ExcelConfiguration();
@@ -72,7 +72,7 @@ namespace ExcelHelper.Tests
             Assert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
-        [TestMethod]
+        [Test]
         public void RegisterClassInstanceTest()
         {
             var config = new ExcelConfiguration();
@@ -82,7 +82,7 @@ namespace ExcelHelper.Tests
             Assert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
-        [TestMethod]
+        [Test]
         public void UnregisterClassMapGenericTest()
         {
             var config = new ExcelConfiguration();
@@ -95,7 +95,7 @@ namespace ExcelHelper.Tests
             Assert.IsNull(config.Maps[typeof(TestClass)]);
         }
 
-        [TestMethod]
+        [Test]
         public void UnregisterClassNonMapGenericTest()
         {
             var config = new ExcelConfiguration();
@@ -108,7 +108,7 @@ namespace ExcelHelper.Tests
             Assert.IsNull(config.Maps[typeof(TestClass)]);
         }
 
-        [TestMethod]
+        [Test]
         public void AddingMappingsWithNonGenericMethodThrowsWhenNotAExcelClassMap()
         {
             try {

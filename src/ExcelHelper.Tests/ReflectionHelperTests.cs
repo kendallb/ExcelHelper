@@ -6,14 +6,14 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ReflectionHelperTests
     {
-        [TestMethod]
+        [Test]
         public void CreateInstanceTests()
         {
             var test = ReflectionHelper.CreateInstance<Test>();

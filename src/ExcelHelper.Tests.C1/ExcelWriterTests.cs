@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,20 +13,20 @@ using System.IO;
 using C1.C1Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
-    public class ExcelWriterC1Tests
+    [TestFixture]
+    public class ExcelWriterTests
     {
-        [TestMethod]
+        [Test]
         public void WriteCellTest()
         {
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     // Set up our row and column formats first
                     excel.SetRowFormat(1, fontStyle: FontStyle.Bold, fontSize: 16);
                     excel.SetColumnFormat(7, fontStyle: FontStyle.Italic, fontSize: 24);
@@ -143,11 +142,11 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LargeFileTest()
         {
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     // Write out 66K rows
                     for (var i = 0; i < 66000; i++) {
                         excel.WriteCell(i, 0, i.ToString());
@@ -169,7 +168,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsTest()
         {
             var date = DateTime.Today;
@@ -202,7 +201,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.WriteRecords(records);
                     excel.ChangeSheet(2);
@@ -280,7 +279,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("not a formula", sheet[row, 8].Value);
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsNoIndexesTest()
         {
             var records = new List<TestRecordNoIndexes> {
@@ -294,7 +293,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordNoIndexesMap>();
                     excel.WriteRecords(records);
                     excel.Close();
@@ -320,7 +319,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsWithReferencesTest()
         {
             var records = new List<Person> {
@@ -346,7 +345,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<PersonMap>();
                     excel.WriteRecords(records);
                     excel.Close();
@@ -398,11 +397,11 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteNoGetterTest()
         {
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     var list = new List<TestPrivateGet> {
                         new TestPrivateGet {
                             ID = 1,
@@ -425,7 +424,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteMultipleNamesTest()
         {
             var records = new List<MultipleNamesClass> {
@@ -440,7 +439,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<MultipleNamesClassMap>();
                     excel.WriteRecords(records);
                     excel.Close();
@@ -466,7 +465,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SameNameMultipleTimesTest()
         {
             var records = new List<SameNameMultipleTimesClass> {
@@ -478,7 +477,7 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<SameNameMultipleTimesClassMap>();
                     excel.WriteRecords(records);
                     excel.Close();
@@ -684,4 +683,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

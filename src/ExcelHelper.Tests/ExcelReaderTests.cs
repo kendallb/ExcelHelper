@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if !USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ using System.Linq;
 using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
@@ -24,18 +23,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExcelReaderTests
     {
         private ExcelFactory _factory;
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
             _factory = new ExcelFactory();
         }
 
-        [TestMethod]
+        [Test]
         public void ReadCellTest()
         {
             using (var stream = new MemoryStream()) {
@@ -153,7 +152,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LargeFileTest()
         {
             using (var stream = new MemoryStream()) {
@@ -183,7 +182,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsMissingFieldsThrowsErrorTest()
         {
             using (var stream = new MemoryStream()) {
@@ -208,7 +207,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -239,7 +238,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithEmptyRowTest()
         {
             using (var stream = new MemoryStream()) {
@@ -270,7 +269,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SkipRowsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -302,7 +301,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SheetNameTest()
         {
             using (var stream = new MemoryStream()) {
@@ -337,7 +336,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsOptionalFieldTest()
         {
             using (var stream = new MemoryStream()) {
@@ -368,7 +367,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsMissingFieldTest()
         {
             using (var stream = new MemoryStream()) {
@@ -532,7 +531,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithReferencesTest()
         {
             using (var stream = new MemoryStream()) {
@@ -591,7 +590,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsFailsWithMissingHeadersTest()
         {
             using (var stream = new MemoryStream()) {
@@ -621,7 +620,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithDuplicateHeaderNames()
         {
             using (var stream = new MemoryStream()) {
@@ -659,7 +658,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsWithMultipleHeaderNames()
         {
             using (var stream = new MemoryStream()) {
@@ -699,7 +698,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordEmptyFileFailsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -722,7 +721,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordEmptyValuesNullableTest()
         {
             using (var stream = new MemoryStream()) {
@@ -774,7 +773,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CaseInsensitiveHeaderMatchingTest()
         {
             using (var stream = new MemoryStream()) {
@@ -810,7 +809,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SpacesInHeaderTest()
         {
             using (var stream = new MemoryStream()) {
@@ -846,7 +845,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TrimHeadersTest()
         {
             using (var stream = new MemoryStream()) {
@@ -883,7 +882,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultValueTest()
         {
             using (var stream = new MemoryStream()) {
@@ -925,7 +924,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BooleanTypeConverterTest()
         {
             using (var stream = new MemoryStream()) {
@@ -969,7 +968,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void IgnoreExceptionsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1060,7 +1059,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void ReadStructRecordsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1094,7 +1093,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TrimFieldsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1130,7 +1129,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetRecordsAsDictionaryTest()
         {
             using (var stream = new MemoryStream()) {
@@ -1385,4 +1384,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

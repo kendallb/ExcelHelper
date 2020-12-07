@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using ExcelHelper;
@@ -17,6 +18,8 @@ namespace MemoryTest
 {
     class Program
     {
+        private static long _maxMemory;
+
         public class ExcelRecord
         {
             public string String1 { get; set; }
@@ -153,22 +156,29 @@ namespace MemoryTest
 
         private static void Main()
         {
-            // Save the time stamp
-            var start = DateTime.Now;
+            // Save the time stamp and starting memory
             Console.WriteLine(@"Starting ...");
+            var start = DateTime.Now;
+            var startMemory = _maxMemory = Process.GetCurrentProcess().WorkingSet64;
 
             // Profile the excel generation
             var factory = new ExcelFactory();
             using (var ms = new MemoryStream()) {
                 using (var excel = factory.CreateWriter(ms)) {
                     excel.WriteRecords(GenerateRecords());
+
+                    // Call close before we dispose of our classes, so we can measure the total memory used
+                    excel.Close();
+                    _maxMemory = Math.Max(Process.GetCurrentProcess().WorkingSet64, _maxMemory);
                 }
             }
 
-            // Write out how long it took
+            // Write out how long it took and how much memory was used
+            var usedMemory = _maxMemory - startMemory;
             var elapsed = DateTime.Now - start;
             Console.WriteLine(@"Done!");
             Console.WriteLine(@"Process took: {0} minutes and {1} seconds", Math.Floor(elapsed.TotalMinutes), elapsed.Seconds);
+            Console.WriteLine(@"Process used: {0:F1}MB", usedMemory / 1048576.0);
         }
     }
 }

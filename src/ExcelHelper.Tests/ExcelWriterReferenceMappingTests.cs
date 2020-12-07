@@ -2,24 +2,23 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if !USE_C1_EXCEL
 using System.Collections.Generic;
 using System.IO;
 using ClosedXML.Excel;
 using ExcelHelper.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExcelWriterReferenceMappingTests
     {
-        [TestMethod]
+        [Test]
         public void NestedReferencesTest()
         {
             var records = new List<A>();
@@ -72,7 +71,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void NullReferenceTest()
         {
             var records = new List<A> {
@@ -166,4 +165,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

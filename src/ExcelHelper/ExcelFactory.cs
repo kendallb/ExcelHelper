@@ -2,7 +2,7 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
@@ -24,11 +24,7 @@ namespace ExcelHelper
         public virtual IExcelReader CreateReader(
             Stream stream)
         {
-#if USE_C1_EXCEL
-            return new ExcelReaderC1(stream);
-#else
             return new ExcelReader(stream);
-#endif
         }
 
         /// <summary>
@@ -41,11 +37,7 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
-#if USE_C1_EXCEL
-            return new ExcelReaderC1(stream, configuration);
-#else
             return new ExcelReader(stream, configuration);
-#endif
         }
 
         /// <summary>
@@ -56,11 +48,7 @@ namespace ExcelHelper
         public virtual IExcelWriter CreateWriter(
             Stream stream)
         {
-#if USE_C1_EXCEL
-            return new ExcelWriterC1(stream);
-#else
             return new ExcelWriter(stream);
-#endif
         }
 
         /// <summary>
@@ -73,11 +61,7 @@ namespace ExcelHelper
             Stream stream,
             ExcelConfiguration configuration)
         {
-#if USE_C1_EXCEL
-            return new ExcelWriterC1(stream, configuration);
-#else
             return new ExcelWriter(stream, configuration);
-#endif
         }
     }
 }

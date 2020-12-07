@@ -2,24 +2,23 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if USE_C1_EXCEL
 using System.Collections.Generic;
 using System.IO;
-using ClosedXML.Excel;
+using C1.C1Excel;
 using ExcelHelper.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
-    public class ExcelWriterC1ReferenceMappingTests
+    [TestFixture]
+    public class ExcelWriterReferenceMappingTests
     {
-        [TestMethod]
+        [Test]
         public void NestedReferencesTest()
         {
             var records = new List<A>();
@@ -41,38 +40,39 @@ namespace ExcelHelper.Tests
             }
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<AMap>();
                     excel.WriteRecords(records);
                     excel.Close();
 
                     stream.Position = 0;
-                    using (var book = new XLWorkbook(stream)) {
-                        var sheet = book.Worksheets.Worksheet(1);
+                    using (var book = new C1XLBook()) {
+                        book.Load(stream, FileFormat.OpenXml);
+                        var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("AId", sheet.Cell(1, 1).Value);
-                        Assert.AreEqual("BId", sheet.Cell(1, 2).Value);
-                        Assert.AreEqual("CId", sheet.Cell(1, 3).Value);
-                        Assert.AreEqual("DId", sheet.Cell(1, 4).Value);
+                        Assert.AreEqual("AId", sheet[0, 0].Value);
+                        Assert.AreEqual("BId", sheet[0, 1].Value);
+                        Assert.AreEqual("CId", sheet[0, 2].Value);
+                        Assert.AreEqual("DId", sheet[0, 3].Value);
 
                         // Check the first record
-                        Assert.AreEqual("a1", sheet.Cell(2, 1).Value);
-                        Assert.AreEqual("b1", sheet.Cell(2, 2).Value);
-                        Assert.AreEqual("c1", sheet.Cell(2, 3).Value);
-                        Assert.AreEqual("d1", sheet.Cell(2, 4).Value);
+                        Assert.AreEqual("a1", sheet[1, 0].Value);
+                        Assert.AreEqual("b1", sheet[1, 1].Value);
+                        Assert.AreEqual("c1", sheet[1, 2].Value);
+                        Assert.AreEqual("d1", sheet[1, 3].Value);
 
                         // Check the second record
-                        Assert.AreEqual("a2", sheet.Cell(3, 1).Value);
-                        Assert.AreEqual("b2", sheet.Cell(3, 2).Value);
-                        Assert.AreEqual("c2", sheet.Cell(3, 3).Value);
-                        Assert.AreEqual("d2", sheet.Cell(3, 4).Value);
+                        Assert.AreEqual("a2", sheet[2, 0].Value);
+                        Assert.AreEqual("b2", sheet[2, 1].Value);
+                        Assert.AreEqual("c2", sheet[2, 2].Value);
+                        Assert.AreEqual("d2", sheet[2, 3].Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Test]
         public void NullReferenceTest()
         {
             var records = new List<A> {
@@ -82,26 +82,27 @@ namespace ExcelHelper.Tests
             };
 
             using (var stream = new MemoryStream()) {
-                using (var excel = new ExcelWriterC1(stream)) {
+                using (var excel = new ExcelWriter(stream)) {
                     excel.Configuration.RegisterClassMap<AMap>();
                     excel.WriteRecords(records);
                     excel.Close();
 
                     stream.Position = 0;
-                    using (var book = new XLWorkbook(stream)) {
-                        var sheet = book.Worksheets.Worksheet(1);
+                    using (var book = new C1XLBook()) {
+                        book.Load(stream, FileFormat.OpenXml);
+                        var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("AId", sheet.Cell(1, 1).Value);
-                        Assert.AreEqual("BId", sheet.Cell(1, 2).Value);
-                        Assert.AreEqual("CId", sheet.Cell(1, 3).Value);
-                        Assert.AreEqual("DId", sheet.Cell(1, 4).Value);
+                        Assert.AreEqual("AId", sheet[0, 0].Value);
+                        Assert.AreEqual("BId", sheet[0, 1].Value);
+                        Assert.AreEqual("CId", sheet[0, 2].Value);
+                        Assert.AreEqual("DId", sheet[0, 3].Value);
 
                         // Check the first record
-                        Assert.AreEqual("1", sheet.Cell(2, 1).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 2).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 3).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 4).Value);
+                        Assert.AreEqual("1", sheet[1, 0].Value);
+                        Assert.AreEqual(null, sheet[1, 1].Value);
+                        Assert.AreEqual(null, sheet[1, 2].Value);
+                        Assert.AreEqual(null, sheet[1, 3].Value);
                     }
                 }
             }
@@ -166,4 +167,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

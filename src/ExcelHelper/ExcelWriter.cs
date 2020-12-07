@@ -6,7 +6,6 @@
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if !USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,6 +25,7 @@ namespace ExcelHelper
     public class ExcelWriter : IExcelWriter
     {
         private bool _disposed;
+        private bool _closed;
         private readonly Stream _stream;
         private XLWorkbook _book;
         private IXLWorksheet _sheet;
@@ -534,18 +534,15 @@ namespace ExcelHelper
         /// </summary>
         public void Close()
         {
-            if (_book != null) {
+            if (_book != null && !_closed) {
                 // Set the column widths if we are doing auto sizing
                 PerformColumnResize();
 
                 // Now save the Excel file to the output stream
                 _book.SaveAs(_stream);
 
-                // Clean up and dispose of everything
-                _book?.Dispose();
-                _defaultFont?.Dispose();
-                _sheet = null;
-                _book = null;
+                // Mark us as now closed
+                _closed = true;
             }
         }
 
@@ -584,6 +581,12 @@ namespace ExcelHelper
             if (disposing) {
                 Close();
             }
+
+            // Clean up and dispose of everything. We do it during the dispose as it makes it easier for us to measure the memory usage
+            _book?.Dispose();
+            _defaultFont?.Dispose();
+            _sheet = null;
+            _book = null;
             _disposed = true;
         }
 
@@ -743,4 +746,3 @@ namespace ExcelHelper
         }
     }
 }
-#endif

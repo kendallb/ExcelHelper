@@ -1,172 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AB3E6DA8-0419-4341-89E0-3EFDF0ECA9D2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExcelHelper.Tests</RootNamespace>
     <AssemblyName>ExcelHelper.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
+    <TargetFramework>net461</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\ExcelHelper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug C1|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug C1\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;USE_C1_EXCEL</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release C1|AnyCPU'">
-    <OutputPath>bin\Release C1\</OutputPath>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>USE_C1_EXCEL</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClosedXML.Signed.0.94.2\lib\net46\ClosedXML.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.10.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.10.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelNumberFormat, Version=1.0.9.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelNumberFormat.1.0.9\lib\net20\ExcelNumberFormat.dll</HintPath>
-    </Reference>
-    <Reference Include="FastMember.Signed, Version=1.5.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember.Signed.1.5.0\lib\net461\FastMember.Signed.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Packaging.4.7.0\lib\net46\System.IO.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\ExcelHelper\ExcelHelper.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelReaderC1ConstructorTests.cs" />
-    <Compile Include="ExcelReaderC1ReferenceMappingTests.cs" />
-    <Compile Include="ExcelReaderC1Tests.cs" />
-    <Compile Include="ExcelReaderConstructorTests.cs" />
-    <Compile Include="ExcelReaderReferenceMappingTests.cs" />
-    <Compile Include="ExcelWriterC1ConstructorTests.cs" />
-    <Compile Include="ExcelWriterC1ReferenceMappingTests.cs" />
-    <Compile Include="ExcelWriterReferenceMappingTests.cs" />
-    <Compile Include="ExcelClassMappingTests.cs" />
-    <Compile Include="ExcelConfigurationTests.cs" />
-    <Compile Include="ExcelReaderTests.cs" />
-    <Compile Include="ExcelWriterConstructorTests.cs" />
-    <Compile Include="ExcelWriterC1Tests.cs" />
-    <Compile Include="ExcelWriterTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionHelperTests.cs" />
-    <Compile Include="TypeConversion\BooleanConverterTests.cs" />
-    <Compile Include="TypeConversion\ByteConverterTests.cs" />
-    <Compile Include="TypeConversion\CharConverterTests.cs" />
-    <Compile Include="TypeConversion\DefaultTypeConverterTests.cs" />
-    <Compile Include="TypeConversion\UInt64ConverterTests.cs" />
-    <Compile Include="TypeConversion\UInt32ConverterTests.cs" />
-    <Compile Include="TypeConversion\UInt16ConverterTests.cs" />
-    <Compile Include="TypeConversion\StringConverterTests.cs" />
-    <Compile Include="TypeConversion\SingleConverterTests.cs" />
-    <Compile Include="TypeConversion\SByteConverterTests.cs" />
-    <Compile Include="TypeConversion\NullableConverterTests.cs" />
-    <Compile Include="TypeConversion\Int64ConverterTests.cs" />
-    <Compile Include="TypeConversion\Int32ConverterTests.cs" />
-    <Compile Include="TypeConversion\Int16ConverterTests.cs" />
-    <Compile Include="TypeConversion\GuidConverterTests.cs" />
-    <Compile Include="TypeConversion\DoubleConverterTests.cs" />
-    <Compile Include="TypeConversion\DecimalConverterTests.cs" />
-    <Compile Include="TypeConversion\EnumConverterTests.cs" />
-    <Compile Include="TypeConversion\DateTimeConverterTests.cs" />
-    <Compile Include="TypeConversion\EnumerableConverterTests.cs" />
-    <Compile Include="TypeConversion\TimeSpanConverterTests.cs" />
-    <Compile Include="TypeConversion\TypeConverterFactoryTests.cs" />
+    <PackageReference Include="NUnit">
+      <Version>3.12.0</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ExcelHelper.snk">
-      <Link>ExcelHelper.snk</Link>
-    </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(Configuration)' == 'Debug'" />
-    <When Condition="'$(Configuration)' == 'Debug C1'">
-      <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Configuration)' == 'Release C1'">
-      <ItemGroup>
-        <Reference Include="C1.C1Excel.4, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-  </Choose>
-  <ItemGroup>
-    <ProjectReference Include="..\ExcelHelper\ExcelHelper.csproj">
-      <Project>{968a4e7c-b1e9-457e-b1f9-a774e68926c6}</Project>
-      <Name>ExcelHelper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

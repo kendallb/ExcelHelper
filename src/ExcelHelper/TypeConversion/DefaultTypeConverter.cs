@@ -7,9 +7,6 @@
  */
 
 using System;
-#if USE_C1_EXCEL
-using C1.C1Excel;
-#endif
 
 namespace ExcelHelper.TypeConversion
 {
@@ -80,7 +77,6 @@ namespace ExcelHelper.TypeConversion
             throw new ExcelTypeConverterException(ConversionCannotBePerformed);
         }
 
-#if USE_C1_EXCEL
         /// <summary>
         /// Return the Excel type formatting string for the current options (null if not defined)
         /// </summary>
@@ -89,21 +85,7 @@ namespace ExcelHelper.TypeConversion
         public virtual string ExcelFormatString(
             TypeConverterOptions options)
         {
-            if (AcceptsNativeType) {
-                if (options.NumberFormat != null) {
-                    var format = XLStyle.FormatDotNetToXL(options.NumberFormat, _convertedType, options.CultureInfo);
-                    if (!string.IsNullOrEmpty(format)) {
-                        return format;
-                    }
-                } else if (options.DateFormat != null) {
-                    var format = XLStyle.FormatDotNetToXL(options.DateFormat, _convertedType, options.CultureInfo);
-                    if (!string.IsNullOrEmpty(format)) {
-                        return format;
-                    }
-                }
-            }
-            return null;
+            return ExcelFormatting.DefaultFormatString(options, AcceptsNativeType, _convertedType);
         }
-#endif
     }
 }

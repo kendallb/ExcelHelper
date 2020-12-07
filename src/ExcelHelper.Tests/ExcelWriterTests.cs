@@ -2,11 +2,10 @@
  * Copyright (C) 2004-2017 AMain.com, Inc.
  * Copyright 2009-2013 Josh Close
  * All Rights Reserved
- * 
+ *
  * See LICENSE.txt for details or visit http://www.opensource.org/licenses/ms-pl.html for MS-PL and http://opensource.org/licenses/Apache-2.0 for Apache 2.0.
  */
 
-#if !USE_C1_EXCEL
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,24 +13,16 @@ using System.IO;
 using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace ExcelHelper.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ExcelWriterTests
     {
-        private ExcelFactory _factory;
-
-        [TestInitialize]
-        public void SetUp()
-        {
-            _factory = new ExcelFactory();
-        }
-
-        [TestMethod]
+        [Test]
         public void WriteCellTest()
         {
             using (var stream = new MemoryStream()) {
@@ -184,7 +175,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LargeFileTest()
         {
             using (var stream = new MemoryStream()) {
@@ -209,7 +200,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsTest()
         {
             var date = DateTime.Today;
@@ -319,7 +310,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("not a formula", sheet.Cell(row, 9).Value);
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsNoIndexesTest()
         {
             var records = new List<TestRecordNoIndexes> {
@@ -358,7 +349,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteRecordsWithReferencesTest()
         {
             var records = new List<Person> {
@@ -435,7 +426,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteNoGetterTest()
         {
             using (var stream = new MemoryStream()) {
@@ -461,7 +452,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteMultipleNamesTest()
         {
             var records = new List<MultipleNamesClass> {
@@ -501,7 +492,7 @@ namespace ExcelHelper.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SameNameMultipleTimesTest()
         {
             var records = new List<SameNameMultipleTimesClass> {
@@ -718,4 +709,3 @@ namespace ExcelHelper.Tests
         }
     }
 }
-#endif

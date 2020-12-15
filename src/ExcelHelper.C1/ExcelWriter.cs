@@ -217,8 +217,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             // Find the type conversion options
             var type = typeof(T);
@@ -299,8 +299,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
             XLStyle style = null;
@@ -327,8 +327,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             var format = XLStyle.FormatDotNetToXL(numberFormat ?? dateFormat);
             XLStyle style = null;

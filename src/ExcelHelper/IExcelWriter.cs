@@ -59,8 +59,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null);
 
         /// <summary>
         /// Set an entire column to a specific format. By default Excel defines the
@@ -81,8 +81,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null);
 
         /// <summary>
         /// Set an entire row to a specific format. By default Excel defines the
@@ -103,8 +103,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined);
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null);
 
         /// <summary>
         /// Adjusts all the column widths to match the content

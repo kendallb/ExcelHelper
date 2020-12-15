@@ -220,8 +220,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             // Clear the cell if the field is null
             var cell = _sheet.Cell(row + 1, col + 1);
@@ -279,8 +279,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             var xlColumn = _sheet.Column(col + 1);
             UpdateStyle(xlColumn.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);
@@ -305,8 +305,8 @@ namespace ExcelHelper
             FontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
-            ExcelAlignHorizontal? horizontalAlign = ExcelAlignHorizontal.Undefined,
-            ExcelAlignVertical? verticalAlign = ExcelAlignVertical.Undefined)
+            ExcelAlignHorizontal? horizontalAlign = null,
+            ExcelAlignVertical? verticalAlign = null)
         {
             var xlRow = _sheet.Row(row + 1);
             UpdateStyle(xlRow.Style, numberFormat, dateFormat, fontStyle, fontSize, fontName, horizontalAlign, verticalAlign);

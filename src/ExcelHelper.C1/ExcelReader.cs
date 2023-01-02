@@ -31,6 +31,7 @@ namespace ExcelHelper
         private int _row;
         private int _currentIndex = -1;
         private int _columnCount;
+        private int _rowCount;
         private readonly Dictionary<string, List<int>> _namedIndexes = new Dictionary<string, List<int>>();
         private readonly List<PropertyInfo> _importedColumns = new List<PropertyInfo>();
         private readonly Dictionary<Type, Delegate> _recordFuncs = new Dictionary<Type, Delegate>();
@@ -77,12 +78,12 @@ namespace ExcelHelper
         /// <summary>
         /// Returns the total number of columns
         /// </summary>
-        public int TotalColumns => _sheet.Columns.Count;
+        public int TotalColumns => _columnCount;
 
         /// <summary>
         /// Returns the total number of rows
         /// </summary>
-        public int TotalRows => _sheet.Rows.Count;
+        public int TotalRows => _rowCount;
 
         /// <summary>
         /// Returns the total number of sheets in the Excel file
@@ -109,6 +110,8 @@ namespace ExcelHelper
             }
             _sheet = sheets[sheet];
             _row = -1;
+            _columnCount = _sheet.Columns.Count;
+            _rowCount = _sheet.Rows.Count;
             return true;
         }
 
@@ -224,9 +227,6 @@ namespace ExcelHelper
         /// </summary>
         private void ParseHeaderRecord()
         {
-            // We assume all columns contain headers by default
-            _columnCount = _sheet.Columns.Count;
-
             // First make sure we have a header record
             if (IsEmptyRecord()) {
                 throw new ExcelReaderException("No header record was found.");
@@ -369,9 +369,6 @@ namespace ExcelHelper
         /// <returns>An enumeration of dictionaries.</returns>
         public IEnumerable<Dictionary<string, string>> GetRecordsAsDictionary()
         {
-            // We assume all columns contain headers by default
-            _columnCount = _sheet.Columns.Count;
-
             // First make sure we have a header record
             ReadRow();
             if (IsEmptyRecord()) {

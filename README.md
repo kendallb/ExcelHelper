@@ -42,6 +42,10 @@ Apache License, Version 2.0
 
 http://opensource.org/licenses/Apache-2.0
 
+Commercial license for C1.C1Excel can be generated for builds as explained here (you need an active license to do that):
+
+https://developer.mescius.com/componentone/docs/license/online-license/license-user-controls.html
+
 ## Contribution
 
 Want to contribute? Great! Here are a few guidelines.

@@ -45,7 +45,6 @@ src/!.vs/config
 *.vssscc
 .builds
 *.pidb
-*.log
 *.scc
 
 # Visual C++ cache files
@@ -165,4 +164,10 @@ packages/
 NuGet/
 
 # Ignore Rider files
-/src/.idea/.idea.ExcelHelper/
+/src/.idea/
+
+# Ignore Mescius license file so it's not checked in
+/src/ExcelHelper.C1/ExcelHelper.C1.gclicx
+
+# Ignore generated NuGet packages
+/deploy/

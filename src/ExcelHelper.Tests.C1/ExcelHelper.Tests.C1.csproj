@@ -3,7 +3,7 @@
     <ProjectGuid>{71990549-0C5F-44A2-BAC4-2068B37843B9}</ProjectGuid>
     <RootNamespace>ExcelHelper.Tests</RootNamespace>
     <AssemblyName>ExcelHelper.Tests.C1</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -101,10 +101,5 @@
     <Compile Include="..\ExcelHelper.Tests\TypeConversion\UInt64ConverterTests.cs">
       <Link>TypeConversion\UInt64ConverterTests.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="C1.C1Excel.4, Version=4.0.20202.438, Culture=neutral, PublicKeyToken=79882d576c6336da">
-      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

@@ -1,13 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{C4E9F9E4-FE67-4372-AA28-1A68043B693B}</ProjectGuid>
     <RootNamespace>ExcelHelper</RootNamespace>
-    <AssemblyName>ExcelHelper</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
+    <PackageId>AMain.ExcelHelper.C1</PackageId>
+    <Title>AMain.ExcelHelper.C1</Title>
+    <Authors>Kendall Bennett</Authors>
+    <PackageLicenseExpression>MS-PL OR Apache-2.0</PackageLicenseExpression>
+    <Description>A library for reading and writing Excel files. Extremely fast, flexible, and easy to use. The primary purpose of this library is to support reading Excel files into Plain Old C# Objects (POCO's) with a high performance parser for converting the records from Excel intil C# objects. Supports reading and writing of custom class objects. Supports reading Excel files in all formats including the newer OpenXML formats as well as the older binary BIFF8 and BIFF5 formats. This version is built using the commercial C1.Excel library from Mescius.</Description>
+    <Copyright>Copyright (C) 2004 and later AMain.com, Inc.</Copyright>
+    <PackageProjectUrl>https://github.com/kendallb/ExcelHelper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kendallb/ExcelHelper</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 C1.C1Excel</PackageTags>
+    <PackageReleaseNotes>Initial release using the commercial Mescius component.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -22,16 +35,6 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\ExcelHelper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\..\..\snap\ExternalAssemblies\ExcelHelper\licenses.licx">
-      <Link>Properties\licenses.licx</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="C1.C1Excel.4, Version=4.0.20202.438, Culture=neutral, PublicKeyToken=79882d576c6336da">
-      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ExcelHelper\ColumnHelper.cs">
       <Link>ColumnHelper.cs</Link>
@@ -192,5 +195,14 @@
     <Compile Include="..\ExcelHelper\TypeConversion\UInt64Converter.cs">
       <Link>TypeConversion\UInt64Converter.cs</Link>
     </Compile>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\"/>    
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="C1.C1Excel">
+      <Version>4.8.20241.664</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ExcelHelper.C1.gclicx" />
   </ItemGroup>
 </Project>

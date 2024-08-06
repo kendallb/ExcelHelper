@@ -101,11 +101,11 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual(" one ", sheet[0, 3].Value);
                         Assert.AreEqual("Times New Roman", sheet[0, 3].Style.Font.Name);
                         Assert.AreEqual(date, sheet[0, 4].Value);
-                        Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[0, 4].Style.Format);
+                        Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[0, 4].Style.Format);
                         Assert.AreEqual(date, sheet[0, 5].Value);
-                        Assert.AreEqual(@"m\/D\/YYYY", sheet[0, 5].Style.Format);
+                        Assert.AreEqual("m/D/YYYY", sheet[0, 5].Style.Format);
                         Assert.AreEqual(date, sheet[0, 6].Value);
-                        Assert.AreEqual(@"DDDD,\ mmmm\ D,\ YYYY", sheet[0, 6].Style.Format);
+                        Assert.AreEqual("DDDD, mmmm D, YYYY", sheet[0, 6].Style.Format);
                         Assert.AreEqual(FontStyle.Bold, sheet[0, 6].Style.Font.Style);
                         Assert.AreEqual(XLAlignHorzEnum.Right, sheet[0, 6].Style.AlignHorz);
                         Assert.AreEqual(XLAlignVertEnum.Center, sheet[0, 6].Style.AlignVert);
@@ -121,7 +121,7 @@ namespace ExcelHelper.Tests
                         Assert.AreEqual((double)5, sheet[1, 1].Value);
                         Assert.AreEqual((double)6, sheet[1, 2].Value);
                         Assert.AreEqual(123.456, sheet[1, 3].Value);
-                        Assert.AreEqual(@"$#,##0.00;($#,##0.00)", sheet[1, 3].Style.Format);
+                        Assert.AreEqual("$#,##0.00;($#,##0.00)", sheet[1, 3].Style.Format);
                         Assert.AreEqual("bfb9c599-bc9e-4f97-ae59-25f2ca09cfdf", sheet[1, 4].Value);
                         Assert.AreEqual("true", sheet[1, 5].Value);
                         Assert.AreEqual("false", sheet[1, 6].Value);
@@ -260,7 +260,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("true", sheet[row, 4].Value);
             Assert.AreEqual(12.34, sheet[row, 5].Value);
             Assert.AreEqual(date, sheet[row, 6].Value);
-            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[row, 6].Style.Format);
+            Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
             Assert.AreEqual(null, sheet[row, 7].Value);
             Assert.AreEqual("1+2", sheet[row, 8].Formula);
             Assert.AreEqual(null, sheet[row, 8].Value);
@@ -274,7 +274,7 @@ namespace ExcelHelper.Tests
             Assert.AreEqual("false", sheet[row, 4].Value);
             Assert.AreEqual(43.21, sheet[row, 5].Value);
             Assert.AreEqual(yesterday, sheet[row, 6].Value);
-            Assert.AreEqual(@"m\/D\/YYYY\ H:mm:ss\ AM/PM", sheet[row, 6].Style.Format);
+            Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
             Assert.AreEqual(null, sheet[row, 7].Value);
             Assert.AreEqual("not a formula", sheet[row, 8].Value);
         }

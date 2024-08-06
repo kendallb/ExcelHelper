@@ -3,11 +3,24 @@
     <ProjectGuid>{968A4E7C-B1E9-457E-B1F9-A774E68926C6}</ProjectGuid>
     <RootNamespace>ExcelHelper</RootNamespace>
     <AssemblyName>ExcelHelper</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
+    <PackageId>AMain.ExcelHelper</PackageId>
+    <Title>AMain.ExcelHelper</Title>
+    <Authors>Kendall Bennett</Authors>
+    <PackageLicenseExpression>MS-PL OR Apache-2.0</PackageLicenseExpression>
+    <Description>A library for reading and writing Excel files. Extremely fast, flexible, and easy to use. The primary purpose of this library is to support reading Excel files into Plain Old C# Objects (POCO's) with a high performance parser for converting the records from Excel intil C# objects. Supports reading and writing of custom class objects. Supports reading Excel files in all formats including the newer OpenXML formats as well as the older binary BIFF8 and BIFF5 formats using the awesome ExcelDataReader project. Supports writing XML files only in the OpenXML format using the awesome ClosedXML library.</Description>
+    <Copyright>Copyright (C) 2004 and later AMain.com, Inc.</Copyright>
+    <PackageProjectUrl>https://github.com/kendallb/ExcelHelper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kendallb/ExcelHelper</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 ClosedXML ExcelDataReader</PackageTags>
+    <PackageReleaseNotes>Release built with new NuGet tooling.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -44,5 +57,8 @@
     <PackageReference Include="System.IO.Packaging">
       <Version>5.0.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>

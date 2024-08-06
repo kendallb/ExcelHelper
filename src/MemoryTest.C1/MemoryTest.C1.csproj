@@ -3,7 +3,7 @@
     <ProjectGuid>{C7B6E41C-496B-433A-9198-34D744D3AE08}</ProjectGuid>
     <RootNamespace>MemoryTest</RootNamespace>
     <AssemblyName>MemoryTest.C1</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

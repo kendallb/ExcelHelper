@@ -12,9 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
 		..\LICENSE.txt = ..\LICENSE.txt
-		..\pack.bat = ..\pack.bat
 		..\README.md = ..\README.md
-		..\pack-c1.bat = ..\pack-c1.bat
+		..\scripts\build.cmd = ..\scripts\build.cmd
+		..\scripts\push.cmd = ..\scripts\push.cmd
+		..\scripts\release.cmd = ..\scripts\release.cmd
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryTest", "MemoryTest\MemoryTest.csproj", "{56A74FB1-FD9E-4F3B-8F57-50FB6C4633EA}"

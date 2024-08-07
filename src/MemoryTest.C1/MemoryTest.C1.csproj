@@ -3,7 +3,7 @@
     <ProjectGuid>{C7B6E41C-496B-433A-9198-34D744D3AE08}</ProjectGuid>
     <RootNamespace>MemoryTest</RootNamespace>
     <AssemblyName>MemoryTest.C1</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -20,11 +20,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExcelHelper.C1\ExcelHelper.C1.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="C1.C1Excel.4, Version=4.0.20202.438, Culture=neutral, PublicKeyToken=79882d576c6336da">
-      <HintPath>..\..\..\..\snap\ExternalAssemblies\ExcelHelper\C1.C1Excel.4.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\MemoryTest\Program.cs">

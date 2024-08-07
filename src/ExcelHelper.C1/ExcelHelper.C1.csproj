@@ -3,7 +3,6 @@
   <PropertyGroup>
     <ProjectGuid>{C4E9F9E4-FE67-4372-AA28-1A68043B693B}</ProjectGuid>
     <RootNamespace>ExcelHelper</RootNamespace>
-    <TargetFramework>net462</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -21,6 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 C1.C1Excel</PackageTags>
     <PackageReleaseNotes>Initial release using the commercial Mescius component.</PackageReleaseNotes>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>

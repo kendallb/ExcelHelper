@@ -3,7 +3,7 @@
     <ProjectGuid>{71990549-0C5F-44A2-BAC4-2068B37843B9}</ProjectGuid>
     <RootNamespace>ExcelHelper.Tests</RootNamespace>
     <AssemblyName>ExcelHelper.Tests.C1</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>

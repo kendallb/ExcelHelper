@@ -9,6 +9,7 @@
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -19,8 +20,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new CharConverter();
-            Assert.AreEqual(true, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(char), converter.ConvertedType);
+            ClassicAssert.AreEqual(true, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(char), converter.ConvertedType);
         }
 
         [Test]
@@ -30,8 +31,8 @@ namespace ExcelHelper.Tests.TypeConversion
             var typeConverterOptions = new TypeConverterOptions {
                 CultureInfo = CultureInfo.CurrentCulture
             };
-            Assert.AreEqual('a', converter.ConvertFromExcel(typeConverterOptions, "a"));
-            Assert.AreEqual('a', converter.ConvertFromExcel(typeConverterOptions, " a "));
+            ClassicAssert.AreEqual('a', converter.ConvertFromExcel(typeConverterOptions, "a"));
+            ClassicAssert.AreEqual('a', converter.ConvertFromExcel(typeConverterOptions, " a "));
 
             try {
                 converter.ConvertFromExcel(typeConverterOptions, "");

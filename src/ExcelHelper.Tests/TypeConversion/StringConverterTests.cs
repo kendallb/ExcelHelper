@@ -9,6 +9,7 @@
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -19,8 +20,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new StringConverter();
-            Assert.AreEqual(true, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(string), converter.ConvertedType);
+            ClassicAssert.AreEqual(true, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(string), converter.ConvertedType);
         }
 
         [Test]
@@ -31,8 +32,8 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture,
             };
 
-            Assert.AreEqual("123", converter.ConvertToExcel(typeConverterOptions, "123"));
-            Assert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual("123", converter.ConvertToExcel(typeConverterOptions, "123"));
+            ClassicAssert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
         }
 
         [Test]
@@ -43,10 +44,10 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture,
             };
 
-            Assert.AreEqual("12.3", converter.ConvertFromExcel(typeConverterOptions, 12.3));
-            Assert.AreEqual("123", converter.ConvertFromExcel(typeConverterOptions, "123"));
-            Assert.AreEqual("123", converter.ConvertFromExcel(typeConverterOptions, " 123 "));
-            Assert.AreEqual("", converter.ConvertFromExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual("12.3", converter.ConvertFromExcel(typeConverterOptions, 12.3));
+            ClassicAssert.AreEqual("123", converter.ConvertFromExcel(typeConverterOptions, "123"));
+            ClassicAssert.AreEqual("123", converter.ConvertFromExcel(typeConverterOptions, " 123 "));
+            ClassicAssert.AreEqual("", converter.ConvertFromExcel(typeConverterOptions, null));
         }
     }
 }

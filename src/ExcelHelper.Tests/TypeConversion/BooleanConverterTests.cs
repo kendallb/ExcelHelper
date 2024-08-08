@@ -9,6 +9,7 @@
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -19,8 +20,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new BooleanConverter();
-            Assert.AreEqual(false, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(bool), converter.ConvertedType);
+            ClassicAssert.AreEqual(false, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(bool), converter.ConvertedType);
         }
 
         [Test]
@@ -32,16 +33,16 @@ namespace ExcelHelper.Tests.TypeConversion
             };
 
             // Valid conversions with default formatting
-            Assert.AreEqual("true", converter.ConvertToExcel(typeConverterOptions, true));
-            Assert.AreEqual("false", converter.ConvertToExcel(typeConverterOptions, false));
+            ClassicAssert.AreEqual("true", converter.ConvertToExcel(typeConverterOptions, true));
+            ClassicAssert.AreEqual("false", converter.ConvertToExcel(typeConverterOptions, false));
 
             // Valid conversions with non-default formatting as numbers
             typeConverterOptions.BooleanTrueValues.Clear();
             typeConverterOptions.BooleanTrueValues.Add("1");
             typeConverterOptions.BooleanFalseValues.Clear();
             typeConverterOptions.BooleanFalseValues.Add("0");
-            Assert.AreEqual(1, converter.ConvertToExcel(typeConverterOptions, true));
-            Assert.AreEqual(0, converter.ConvertToExcel(typeConverterOptions, false));
+            ClassicAssert.AreEqual(1, converter.ConvertToExcel(typeConverterOptions, true));
+            ClassicAssert.AreEqual(0, converter.ConvertToExcel(typeConverterOptions, false));
         }
 
         [Test]
@@ -52,34 +53,34 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture,
             };
 
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, true));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "true"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "True"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "TRUE"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, 1.0));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "1"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "yes"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "YES"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "y"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "Y"));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " true "));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " yes "));
-            Assert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " y "));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, true));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "true"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "True"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "TRUE"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, 1.0));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "1"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "yes"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "YES"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "y"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, "Y"));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " true "));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " yes "));
+            ClassicAssert.IsTrue((bool)converter.ConvertFromExcel(typeConverterOptions, " y "));
 
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, false));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "false"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "False"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "FALSE"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, 0.0));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "0"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "no"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "NO"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "n"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "N"));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " false "));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " 0 "));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " no "));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " n "));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, false));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "false"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "False"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "FALSE"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, 0.0));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "0"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "no"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "NO"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "n"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, "N"));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " false "));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " 0 "));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " no "));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, " n "));
 
             try {
                 converter.ConvertFromExcel(typeConverterOptions, null);
@@ -98,8 +99,8 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture,
                 BooleanFalseValues = { "", "no", "false", "n" },
             };
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, ""));
-            Assert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, null));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, ""));
+            ClassicAssert.IsFalse((bool)converter.ConvertFromExcel(typeConverterOptions, null));
         }
     }
 }

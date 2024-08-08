@@ -9,6 +9,7 @@
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -19,8 +20,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new UInt16Converter();
-            Assert.AreEqual(true, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(ushort), converter.ConvertedType);
+            ClassicAssert.AreEqual(true, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(ushort), converter.ConvertedType);
         }
 
         [Test]
@@ -31,13 +32,13 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, (double)123));
-            Assert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, "123"));
-            Assert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, " 123 "));
-            Assert.AreEqual((ushort)0, converter.ConvertFromExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, (double)123));
+            ClassicAssert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, "123"));
+            ClassicAssert.AreEqual((ushort)123, converter.ConvertFromExcel(typeConverterOptions, " 123 "));
+            ClassicAssert.AreEqual((ushort)0, converter.ConvertFromExcel(typeConverterOptions, null));
 
             typeConverterOptions.NumberStyle = NumberStyles.HexNumber;
-            Assert.AreEqual((ushort)0x123, converter.ConvertFromExcel(typeConverterOptions, "123"));
+            ClassicAssert.AreEqual((ushort)0x123, converter.ConvertFromExcel(typeConverterOptions, "123"));
 
             try {
                 converter.ConvertFromExcel(typeConverterOptions, "");

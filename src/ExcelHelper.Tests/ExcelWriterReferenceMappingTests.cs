@@ -11,6 +11,8 @@ using System.IO;
 using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace ExcelHelper.Tests
@@ -50,22 +52,22 @@ namespace ExcelHelper.Tests
                         var sheet = book.Worksheets.Worksheet(1);
 
                         // Check the header row
-                        Assert.AreEqual("AId", sheet.Cell(1, 1).Value);
-                        Assert.AreEqual("BId", sheet.Cell(1, 2).Value);
-                        Assert.AreEqual("CId", sheet.Cell(1, 3).Value);
-                        Assert.AreEqual("DId", sheet.Cell(1, 4).Value);
+                        ClassicAssert.AreEqual("AId", sheet.Cell(1, 1).Value);
+                        ClassicAssert.AreEqual("BId", sheet.Cell(1, 2).Value);
+                        ClassicAssert.AreEqual("CId", sheet.Cell(1, 3).Value);
+                        ClassicAssert.AreEqual("DId", sheet.Cell(1, 4).Value);
 
                         // Check the first record
-                        Assert.AreEqual("a1", sheet.Cell(2, 1).Value);
-                        Assert.AreEqual("b1", sheet.Cell(2, 2).Value);
-                        Assert.AreEqual("c1", sheet.Cell(2, 3).Value);
-                        Assert.AreEqual("d1", sheet.Cell(2, 4).Value);
+                        ClassicAssert.AreEqual("a1", sheet.Cell(2, 1).Value);
+                        ClassicAssert.AreEqual("b1", sheet.Cell(2, 2).Value);
+                        ClassicAssert.AreEqual("c1", sheet.Cell(2, 3).Value);
+                        ClassicAssert.AreEqual("d1", sheet.Cell(2, 4).Value);
 
                         // Check the second record
-                        Assert.AreEqual("a2", sheet.Cell(3, 1).Value);
-                        Assert.AreEqual("b2", sheet.Cell(3, 2).Value);
-                        Assert.AreEqual("c2", sheet.Cell(3, 3).Value);
-                        Assert.AreEqual("d2", sheet.Cell(3, 4).Value);
+                        ClassicAssert.AreEqual("a2", sheet.Cell(3, 1).Value);
+                        ClassicAssert.AreEqual("b2", sheet.Cell(3, 2).Value);
+                        ClassicAssert.AreEqual("c2", sheet.Cell(3, 3).Value);
+                        ClassicAssert.AreEqual("d2", sheet.Cell(3, 4).Value);
                     }
                 }
             }
@@ -91,16 +93,16 @@ namespace ExcelHelper.Tests
                         var sheet = book.Worksheets.Worksheet(1);
 
                         // Check the header row
-                        Assert.AreEqual("AId", sheet.Cell(1, 1).Value);
-                        Assert.AreEqual("BId", sheet.Cell(1, 2).Value);
-                        Assert.AreEqual("CId", sheet.Cell(1, 3).Value);
-                        Assert.AreEqual("DId", sheet.Cell(1, 4).Value);
+                        ClassicAssert.AreEqual("AId", sheet.Cell(1, 1).Value);
+                        ClassicAssert.AreEqual("BId", sheet.Cell(1, 2).Value);
+                        ClassicAssert.AreEqual("CId", sheet.Cell(1, 3).Value);
+                        ClassicAssert.AreEqual("DId", sheet.Cell(1, 4).Value);
 
                         // Check the first record
-                        Assert.AreEqual("1", sheet.Cell(2, 1).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 2).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 3).Value);
-                        Assert.AreEqual("", sheet.Cell(2, 4).Value);
+                        ClassicAssert.AreEqual("1", sheet.Cell(2, 1).Value);
+                        ClassicAssert.AreEqual("", sheet.Cell(2, 2).Value);
+                        ClassicAssert.AreEqual("", sheet.Cell(2, 3).Value);
+                        ClassicAssert.AreEqual("", sheet.Cell(2, 4).Value);
                     }
                 }
             }

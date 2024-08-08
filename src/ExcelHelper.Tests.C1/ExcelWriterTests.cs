@@ -14,6 +14,8 @@ using C1.C1Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
 
@@ -77,66 +79,66 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Verify row and column styles
-                        Assert.AreEqual(FontStyle.Bold, sheet.Rows[1].Style.Font.Style);
-                        Assert.AreEqual(16.0, sheet.Rows[1].Style.Font.SizeInPoints);
-                        Assert.AreEqual(FontStyle.Italic, sheet.Columns[7].Style.Font.Style);
-                        Assert.AreEqual(24.0, sheet.Columns[7].Style.Font.SizeInPoints);
+                        ClassicAssert.AreEqual(FontStyle.Bold, sheet.Rows[1].Style.Font.Style);
+                        ClassicAssert.AreEqual(16.0, sheet.Rows[1].Style.Font.SizeInPoints);
+                        ClassicAssert.AreEqual(FontStyle.Italic, sheet.Columns[7].Style.Font.Style);
+                        ClassicAssert.AreEqual(24.0, sheet.Columns[7].Style.Font.SizeInPoints);
 
                         // Check some automatically sizes column widths
-                        Assert.AreEqual(2655, sheet.Columns[2].Width);
-                        Assert.AreEqual(5541, sheet.Columns[4].Width);
+                        ClassicAssert.AreEqual(2655, sheet.Columns[2].Width);
+                        ClassicAssert.AreEqual(5541, sheet.Columns[4].Width);
 
                         // Verify the overridden row and column sizes
-                        Assert.AreEqual(600, sheet.Rows[1].Height);
-                        Assert.AreEqual(495, sheet.Columns[1].Width);
-                        Assert.AreEqual(700, sheet.Columns[11].Width);
+                        ClassicAssert.AreEqual(600, sheet.Rows[1].Height);
+                        ClassicAssert.AreEqual(495, sheet.Columns[1].Width);
+                        ClassicAssert.AreEqual(700, sheet.Columns[11].Width);
 
                         // Verify first row
-                        Assert.AreEqual("one", sheet[0, 0].Value);
-                        Assert.AreEqual("", sheet[0, 0].Style.Format);
-                        Assert.AreEqual("one, two", sheet[0, 1].Value);
-                        Assert.AreEqual(FontStyle.Bold, sheet[0, 1].Style.Font.Style);
-                        Assert.AreEqual("one \"two\" three", sheet[0, 2].Value);
-                        Assert.AreEqual(18.0, sheet[0, 2].Style.Font.SizeInPoints);
-                        Assert.AreEqual(" one ", sheet[0, 3].Value);
-                        Assert.AreEqual("Times New Roman", sheet[0, 3].Style.Font.Name);
-                        Assert.AreEqual(date, sheet[0, 4].Value);
-                        Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[0, 4].Style.Format);
-                        Assert.AreEqual(date, sheet[0, 5].Value);
-                        Assert.AreEqual("m/D/YYYY", sheet[0, 5].Style.Format);
-                        Assert.AreEqual(date, sheet[0, 6].Value);
-                        Assert.AreEqual("DDDD, mmmm D, YYYY", sheet[0, 6].Style.Format);
-                        Assert.AreEqual(FontStyle.Bold, sheet[0, 6].Style.Font.Style);
-                        Assert.AreEqual(XLAlignHorzEnum.Right, sheet[0, 6].Style.AlignHorz);
-                        Assert.AreEqual(XLAlignVertEnum.Center, sheet[0, 6].Style.AlignVert);
-                        Assert.AreEqual((double)1, sheet[0, 7].Value);
-                        Assert.AreEqual((double)2, sheet[0, 8].Value);
-                        Assert.AreEqual((double)3, sheet[0, 9].Value);
-                        Assert.AreEqual("1+2", sheet[0, 10].Formula);
-                        Assert.AreEqual(null, sheet[0, 10].Value);
+                        ClassicAssert.AreEqual("one", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("", sheet[0, 0].Style.Format);
+                        ClassicAssert.AreEqual("one, two", sheet[0, 1].Value);
+                        ClassicAssert.AreEqual(FontStyle.Bold, sheet[0, 1].Style.Font.Style);
+                        ClassicAssert.AreEqual("one \"two\" three", sheet[0, 2].Value);
+                        ClassicAssert.AreEqual(18.0, sheet[0, 2].Style.Font.SizeInPoints);
+                        ClassicAssert.AreEqual(" one ", sheet[0, 3].Value);
+                        ClassicAssert.AreEqual("Times New Roman", sheet[0, 3].Style.Font.Name);
+                        ClassicAssert.AreEqual(date, sheet[0, 4].Value);
+                        ClassicAssert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[0, 4].Style.Format);
+                        ClassicAssert.AreEqual(date, sheet[0, 5].Value);
+                        ClassicAssert.AreEqual("m/D/YYYY", sheet[0, 5].Style.Format);
+                        ClassicAssert.AreEqual(date, sheet[0, 6].Value);
+                        ClassicAssert.AreEqual("DDDD, mmmm D, YYYY", sheet[0, 6].Style.Format);
+                        ClassicAssert.AreEqual(FontStyle.Bold, sheet[0, 6].Style.Font.Style);
+                        ClassicAssert.AreEqual(XLAlignHorzEnum.Right, sheet[0, 6].Style.AlignHorz);
+                        ClassicAssert.AreEqual(XLAlignVertEnum.Center, sheet[0, 6].Style.AlignVert);
+                        ClassicAssert.AreEqual((double)1, sheet[0, 7].Value);
+                        ClassicAssert.AreEqual((double)2, sheet[0, 8].Value);
+                        ClassicAssert.AreEqual((double)3, sheet[0, 9].Value);
+                        ClassicAssert.AreEqual("1+2", sheet[0, 10].Formula);
+                        ClassicAssert.AreEqual(null, sheet[0, 10].Value);
 
                         // Verify second row
-                        Assert.AreEqual((double)4, sheet[1, 0].Value);
-                        Assert.AreEqual("", sheet[1, 0].Style.Format);
-                        Assert.AreEqual((double)5, sheet[1, 1].Value);
-                        Assert.AreEqual((double)6, sheet[1, 2].Value);
-                        Assert.AreEqual(123.456, sheet[1, 3].Value);
-                        Assert.AreEqual("$#,##0.00;($#,##0.00)", sheet[1, 3].Style.Format);
-                        Assert.AreEqual("bfb9c599-bc9e-4f97-ae59-25f2ca09cfdf", sheet[1, 4].Value);
-                        Assert.AreEqual("true", sheet[1, 5].Value);
-                        Assert.AreEqual("false", sheet[1, 6].Value);
-                        Assert.AreEqual(null, sheet[1, 7].Value);
-                        Assert.AreEqual("01:02:03", sheet[1, 8].Value);
-                        Assert.AreEqual("", sheet[1, 8].Style.Format);
-                        Assert.AreEqual("01:02:03", sheet[1, 9].Value);
-                        Assert.AreEqual("", sheet[1, 9].Style.Format);
-                        Assert.AreEqual("2*3", sheet[1, 10].Formula);
-                        Assert.AreEqual(null, sheet[1, 10].Value);
+                        ClassicAssert.AreEqual((double)4, sheet[1, 0].Value);
+                        ClassicAssert.AreEqual("", sheet[1, 0].Style.Format);
+                        ClassicAssert.AreEqual((double)5, sheet[1, 1].Value);
+                        ClassicAssert.AreEqual((double)6, sheet[1, 2].Value);
+                        ClassicAssert.AreEqual(123.456, sheet[1, 3].Value);
+                        ClassicAssert.AreEqual("$#,##0.00;($#,##0.00)", sheet[1, 3].Style.Format);
+                        ClassicAssert.AreEqual("bfb9c599-bc9e-4f97-ae59-25f2ca09cfdf", sheet[1, 4].Value);
+                        ClassicAssert.AreEqual("true", sheet[1, 5].Value);
+                        ClassicAssert.AreEqual("false", sheet[1, 6].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 7].Value);
+                        ClassicAssert.AreEqual("01:02:03", sheet[1, 8].Value);
+                        ClassicAssert.AreEqual("", sheet[1, 8].Style.Format);
+                        ClassicAssert.AreEqual("01:02:03", sheet[1, 9].Value);
+                        ClassicAssert.AreEqual("", sheet[1, 9].Style.Format);
+                        ClassicAssert.AreEqual("2*3", sheet[1, 10].Formula);
+                        ClassicAssert.AreEqual(null, sheet[1, 10].Value);
 
                         // Verify third sheet
-                        Assert.AreEqual(3, book.Sheets.Count);
+                        ClassicAssert.AreEqual(3, book.Sheets.Count);
                         sheet = book.Sheets[2];
-                        Assert.AreEqual("third sheet", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("third sheet", sheet[0, 0].Value);
                     }
                 }
             }
@@ -161,7 +163,7 @@ namespace ExcelHelper.Tests
 
                         // Verify 66K rows
                         for (var i = 0; i < 66000; i++) {
-                            Assert.AreEqual(i.ToString(), sheet[i, 0].Value);
+                            ClassicAssert.AreEqual(i.ToString(), sheet[i, 0].Value);
                         }
                     }
                 }
@@ -213,7 +215,7 @@ namespace ExcelHelper.Tests
                         book.Load(stream, FileFormat.OpenXml);
                         var sheet = book.Sheets[0];
                         CheckRecords(sheet, date, yesterday);
-                        Assert.AreEqual(3, book.Sheets.Count);
+                        ClassicAssert.AreEqual(3, book.Sheets.Count);
                         sheet = book.Sheets[2];
                         CheckRecords(sheet, date, yesterday, false);
                     }
@@ -237,46 +239,46 @@ namespace ExcelHelper.Tests
             var row = 0;
             if (checkHeader) {
                 // Check the header is bold
-                Assert.AreEqual(FontStyle.Bold, sheet.Rows[0].Style.Font.Style);
+                ClassicAssert.AreEqual(FontStyle.Bold, sheet.Rows[0].Style.Font.Style);
 
                 // Check the header row
-                Assert.AreEqual("FirstColumn", sheet[row, 0].Value);
-                Assert.AreEqual("Int Column", sheet[row, 1].Value);
-                Assert.AreEqual("StringColumn", sheet[row, 2].Value);
-                Assert.AreEqual("TypeConvertedColumn", sheet[row, 3].Value);
-                Assert.AreEqual("BoolColumn", sheet[row, 4].Value);
-                Assert.AreEqual("DoubleColumn", sheet[row, 5].Value);
-                Assert.AreEqual("DateTimeColumn", sheet[row, 6].Value);
-                Assert.AreEqual("NullStringColumn", sheet[row, 7].Value);
-                Assert.AreEqual("FormulaColumn", sheet[row, 8].Value);
+                ClassicAssert.AreEqual("FirstColumn", sheet[row, 0].Value);
+                ClassicAssert.AreEqual("Int Column", sheet[row, 1].Value);
+                ClassicAssert.AreEqual("StringColumn", sheet[row, 2].Value);
+                ClassicAssert.AreEqual("TypeConvertedColumn", sheet[row, 3].Value);
+                ClassicAssert.AreEqual("BoolColumn", sheet[row, 4].Value);
+                ClassicAssert.AreEqual("DoubleColumn", sheet[row, 5].Value);
+                ClassicAssert.AreEqual("DateTimeColumn", sheet[row, 6].Value);
+                ClassicAssert.AreEqual("NullStringColumn", sheet[row, 7].Value);
+                ClassicAssert.AreEqual("FormulaColumn", sheet[row, 8].Value);
                 row++;
             }
 
             // Check the first record
-            Assert.AreEqual("first column", sheet[row, 0].Value);
-            Assert.AreEqual((double)1, sheet[row, 1].Value);
-            Assert.AreEqual("string column", sheet[row, 2].Value);
-            Assert.AreEqual("test", sheet[row, 3].Value);
-            Assert.AreEqual("true", sheet[row, 4].Value);
-            Assert.AreEqual(12.34, sheet[row, 5].Value);
-            Assert.AreEqual(date, sheet[row, 6].Value);
-            Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
-            Assert.AreEqual(null, sheet[row, 7].Value);
-            Assert.AreEqual("1+2", sheet[row, 8].Formula);
-            Assert.AreEqual(null, sheet[row, 8].Value);
+            ClassicAssert.AreEqual("first column", sheet[row, 0].Value);
+            ClassicAssert.AreEqual((double)1, sheet[row, 1].Value);
+            ClassicAssert.AreEqual("string column", sheet[row, 2].Value);
+            ClassicAssert.AreEqual("test", sheet[row, 3].Value);
+            ClassicAssert.AreEqual("true", sheet[row, 4].Value);
+            ClassicAssert.AreEqual(12.34, sheet[row, 5].Value);
+            ClassicAssert.AreEqual(date, sheet[row, 6].Value);
+            ClassicAssert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
+            ClassicAssert.AreEqual(null, sheet[row, 7].Value);
+            ClassicAssert.AreEqual("1+2", sheet[row, 8].Formula);
+            ClassicAssert.AreEqual(null, sheet[row, 8].Value);
             row++;
 
             // Check the second record
-            Assert.AreEqual("first column 2", sheet[row, 0].Value);
-            Assert.AreEqual((double)2, sheet[row, 1].Value);
-            Assert.AreEqual("string column 2", sheet[row, 2].Value);
-            Assert.AreEqual("test", sheet[row, 3].Value);
-            Assert.AreEqual("false", sheet[row, 4].Value);
-            Assert.AreEqual(43.21, sheet[row, 5].Value);
-            Assert.AreEqual(yesterday, sheet[row, 6].Value);
-            Assert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
-            Assert.AreEqual(null, sheet[row, 7].Value);
-            Assert.AreEqual("not a formula", sheet[row, 8].Value);
+            ClassicAssert.AreEqual("first column 2", sheet[row, 0].Value);
+            ClassicAssert.AreEqual((double)2, sheet[row, 1].Value);
+            ClassicAssert.AreEqual("string column 2", sheet[row, 2].Value);
+            ClassicAssert.AreEqual("test", sheet[row, 3].Value);
+            ClassicAssert.AreEqual("false", sheet[row, 4].Value);
+            ClassicAssert.AreEqual(43.21, sheet[row, 5].Value);
+            ClassicAssert.AreEqual(yesterday, sheet[row, 6].Value);
+            ClassicAssert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[row, 6].Style.Format);
+            ClassicAssert.AreEqual(null, sheet[row, 7].Value);
+            ClassicAssert.AreEqual("not a formula", sheet[row, 8].Value);
         }
 
         [Test]
@@ -304,16 +306,16 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("Int Column", sheet[0, 0].Value);
-                        Assert.AreEqual("StringColumn", sheet[0, 1].Value);
-                        Assert.AreEqual("FirstColumn", sheet[0, 2].Value);
-                        Assert.AreEqual("TypeConvertedColumn", sheet[0, 3].Value);
+                        ClassicAssert.AreEqual("Int Column", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("StringColumn", sheet[0, 1].Value);
+                        ClassicAssert.AreEqual("FirstColumn", sheet[0, 2].Value);
+                        ClassicAssert.AreEqual("TypeConvertedColumn", sheet[0, 3].Value);
 
                         // Check the first record
-                        Assert.AreEqual((double)1, sheet[1, 0].Value);
-                        Assert.AreEqual("string column", sheet[1, 1].Value);
-                        Assert.AreEqual("first column", sheet[1, 2].Value);
-                        Assert.AreEqual("test", sheet[1, 3].Value);
+                        ClassicAssert.AreEqual((double)1, sheet[1, 0].Value);
+                        ClassicAssert.AreEqual("string column", sheet[1, 1].Value);
+                        ClassicAssert.AreEqual("first column", sheet[1, 2].Value);
+                        ClassicAssert.AreEqual("test", sheet[1, 3].Value);
                     }
                 }
             }
@@ -356,42 +358,42 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("FirstName", sheet[0, 0].Value);
-                        Assert.AreEqual("LastName", sheet[0, 1].Value);
-                        Assert.AreEqual("HomeStreet", sheet[0, 2].Value);
-                        Assert.AreEqual("HomeCity", sheet[0, 3].Value);
-                        Assert.AreEqual("HomeState", sheet[0, 4].Value);
-                        Assert.AreEqual("HomeZip", sheet[0, 5].Value);
-                        Assert.AreEqual("HomeID", sheet[0, 6].Value);
-                        Assert.AreEqual("WorkStreet", sheet[0, 7].Value);
-                        Assert.AreEqual("WorkCity", sheet[0, 8].Value);
-                        Assert.AreEqual("WorkState", sheet[0, 9].Value);
-                        Assert.AreEqual("WorkZip", sheet[0, 10].Value);
-                        Assert.AreEqual("WorkID", sheet[0, 11].Value);
-                        Assert.AreEqual("NullStreet", sheet[0, 12].Value);
-                        Assert.AreEqual("NullCity", sheet[0, 13].Value);
-                        Assert.AreEqual("NullState", sheet[0, 14].Value);
-                        Assert.AreEqual("NullZip", sheet[0, 15].Value);
-                        Assert.AreEqual("NullID", sheet[0, 16].Value);
+                        ClassicAssert.AreEqual("FirstName", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("LastName", sheet[0, 1].Value);
+                        ClassicAssert.AreEqual("HomeStreet", sheet[0, 2].Value);
+                        ClassicAssert.AreEqual("HomeCity", sheet[0, 3].Value);
+                        ClassicAssert.AreEqual("HomeState", sheet[0, 4].Value);
+                        ClassicAssert.AreEqual("HomeZip", sheet[0, 5].Value);
+                        ClassicAssert.AreEqual("HomeID", sheet[0, 6].Value);
+                        ClassicAssert.AreEqual("WorkStreet", sheet[0, 7].Value);
+                        ClassicAssert.AreEqual("WorkCity", sheet[0, 8].Value);
+                        ClassicAssert.AreEqual("WorkState", sheet[0, 9].Value);
+                        ClassicAssert.AreEqual("WorkZip", sheet[0, 10].Value);
+                        ClassicAssert.AreEqual("WorkID", sheet[0, 11].Value);
+                        ClassicAssert.AreEqual("NullStreet", sheet[0, 12].Value);
+                        ClassicAssert.AreEqual("NullCity", sheet[0, 13].Value);
+                        ClassicAssert.AreEqual("NullState", sheet[0, 14].Value);
+                        ClassicAssert.AreEqual("NullZip", sheet[0, 15].Value);
+                        ClassicAssert.AreEqual("NullID", sheet[0, 16].Value);
 
                         // Check the record
-                        Assert.AreEqual("First Name", sheet[1, 0].Value);
-                        Assert.AreEqual("Last Name", sheet[1, 1].Value);
-                        Assert.AreEqual("Home Street", sheet[1, 2].Value);
-                        Assert.AreEqual("Home City", sheet[1, 3].Value);
-                        Assert.AreEqual("Home State", sheet[1, 4].Value);
-                        Assert.AreEqual("Home Zip", sheet[1, 5].Value);
-                        Assert.AreEqual(2.0, sheet[1, 6].Value);
-                        Assert.AreEqual("Work Street", sheet[1, 7].Value);
-                        Assert.AreEqual("Work City", sheet[1, 8].Value);
-                        Assert.AreEqual("Work State", sheet[1, 9].Value);
-                        Assert.AreEqual("Work Zip", sheet[1, 10].Value);
-                        Assert.AreEqual(3.0, sheet[1, 11].Value);
-                        Assert.AreEqual(null, sheet[1, 12].Value);
-                        Assert.AreEqual(null, sheet[1, 13].Value);
-                        Assert.AreEqual(null, sheet[1, 14].Value);
-                        Assert.AreEqual(null, sheet[1, 15].Value);
-                        Assert.AreEqual(0.0, sheet[1, 16].Value);
+                        ClassicAssert.AreEqual("First Name", sheet[1, 0].Value);
+                        ClassicAssert.AreEqual("Last Name", sheet[1, 1].Value);
+                        ClassicAssert.AreEqual("Home Street", sheet[1, 2].Value);
+                        ClassicAssert.AreEqual("Home City", sheet[1, 3].Value);
+                        ClassicAssert.AreEqual("Home State", sheet[1, 4].Value);
+                        ClassicAssert.AreEqual("Home Zip", sheet[1, 5].Value);
+                        ClassicAssert.AreEqual(2.0, sheet[1, 6].Value);
+                        ClassicAssert.AreEqual("Work Street", sheet[1, 7].Value);
+                        ClassicAssert.AreEqual("Work City", sheet[1, 8].Value);
+                        ClassicAssert.AreEqual("Work State", sheet[1, 9].Value);
+                        ClassicAssert.AreEqual("Work Zip", sheet[1, 10].Value);
+                        ClassicAssert.AreEqual(3.0, sheet[1, 11].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 12].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 13].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 14].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 15].Value);
+                        ClassicAssert.AreEqual(0.0, sheet[1, 16].Value);
                     }
                 }
             }
@@ -415,10 +417,10 @@ namespace ExcelHelper.Tests
                     using (var book = new C1XLBook()) {
                         book.Load(stream, FileFormat.OpenXml);
                         var sheet = book.Sheets[0];
-                        Assert.AreEqual("ID", sheet[0, 0].Value);
-                        Assert.AreEqual(null, sheet[0, 1].Value);
-                        Assert.AreEqual((double)1, sheet[1, 0].Value);
-                        Assert.AreEqual(null, sheet[1, 1].Value);
+                        ClassicAssert.AreEqual("ID", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual(null, sheet[0, 1].Value);
+                        ClassicAssert.AreEqual((double)1, sheet[1, 0].Value);
+                        ClassicAssert.AreEqual(null, sheet[1, 1].Value);
                     }
                 }
             }
@@ -450,16 +452,16 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("int1", sheet[0, 0].Value);
-                        Assert.AreEqual("string1", sheet[0, 1].Value);
+                        ClassicAssert.AreEqual("int1", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("string1", sheet[0, 1].Value);
 
                         // Check the first record
-                        Assert.AreEqual((double)1, sheet[1, 0].Value);
-                        Assert.AreEqual("one", sheet[1, 1].Value);
+                        ClassicAssert.AreEqual((double)1, sheet[1, 0].Value);
+                        ClassicAssert.AreEqual("one", sheet[1, 1].Value);
 
                         // Check the second record
-                        Assert.AreEqual((double)2, sheet[2, 0].Value);
-                        Assert.AreEqual("two", sheet[2, 1].Value);
+                        ClassicAssert.AreEqual((double)2, sheet[2, 0].Value);
+                        ClassicAssert.AreEqual("two", sheet[2, 1].Value);
                     }
                 }
             }
@@ -488,14 +490,14 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Check the header row
-                        Assert.AreEqual("ColumnName", sheet[0, 0].Value);
-                        Assert.AreEqual("ColumnName", sheet[0, 1].Value);
-                        Assert.AreEqual("ColumnName", sheet[0, 2].Value);
+                        ClassicAssert.AreEqual("ColumnName", sheet[0, 0].Value);
+                        ClassicAssert.AreEqual("ColumnName", sheet[0, 1].Value);
+                        ClassicAssert.AreEqual("ColumnName", sheet[0, 2].Value);
 
                         // Check the first record
-                        Assert.AreEqual("1", sheet[1, 0].Value);
-                        Assert.AreEqual("2", sheet[1, 1].Value);
-                        Assert.AreEqual("3", sheet[1, 2].Value);
+                        ClassicAssert.AreEqual("1", sheet[1, 0].Value);
+                        ClassicAssert.AreEqual("2", sheet[1, 1].Value);
+                        ClassicAssert.AreEqual("3", sheet[1, 2].Value);
                     }
                 }
             }

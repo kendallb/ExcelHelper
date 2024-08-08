@@ -9,6 +9,7 @@
 using System.IO;
 using ExcelHelper.Configuration;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests
 {
@@ -21,7 +22,7 @@ namespace ExcelHelper.Tests
             using (var stream = new MemoryStream()) {
                 var config = new ExcelConfiguration();
                 using (var excel = new ExcelWriter(stream, config)) {
-                    Assert.AreSame(config, excel.Configuration);
+                    ClassicAssert.AreSame(config, excel.Configuration);
                 }
             }
         }

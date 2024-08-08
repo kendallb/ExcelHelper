@@ -9,6 +9,7 @@
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -19,8 +20,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new NullableConverter(typeof(decimal?));
-            Assert.AreEqual(true, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(decimal?), converter.ConvertedType);
+            ClassicAssert.AreEqual(true, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(decimal?), converter.ConvertedType);
         }
 
         [Test]
@@ -31,8 +32,8 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual(12.3m, converter.ConvertToExcel(typeConverterOptions, (decimal?)12.3m));
-            Assert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual(12.3m, converter.ConvertToExcel(typeConverterOptions, (decimal?)12.3m));
+            ClassicAssert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
         }
 
         [Test]
@@ -43,11 +44,11 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, 12.3));
-            Assert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, "12.3"));
-            Assert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, "12.3"));
-            Assert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, " 12.3 "));
-            Assert.AreEqual(null, converter.ConvertFromExcel(typeConverterOptions, ""));
+            ClassicAssert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, 12.3));
+            ClassicAssert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, "12.3"));
+            ClassicAssert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, "12.3"));
+            ClassicAssert.AreEqual((decimal?)12.3m, converter.ConvertFromExcel(typeConverterOptions, " 12.3 "));
+            ClassicAssert.AreEqual(null, converter.ConvertFromExcel(typeConverterOptions, ""));
         }
     }
 }

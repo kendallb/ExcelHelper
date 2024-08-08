@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable UnusedMember.Local
 
 namespace ExcelHelper.Tests.TypeConversion
@@ -39,7 +41,7 @@ namespace ExcelHelper.Tests.TypeConversion
         //    TypeConverterFactory.AddConverter<TestKnownClass>(new TestKnownConverter());
         //    var converter = TypeConverterFactory.GetConverter<TestKnownClass>();
 
-        //    Assert.IsInstanceOf<TestKnownConverter>(converter);
+        //    ClassicAssert.IsInstanceOf<TestKnownConverter>(converter);
         //}
 
         //[Test]
@@ -54,8 +56,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(bool));
 
-            Assert.IsInstanceOf<BooleanConverter>(converter);
-            Assert.IsFalse(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<BooleanConverter>(converter);
+            ClassicAssert.IsFalse(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -63,8 +65,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(byte));
 
-            Assert.IsInstanceOf<ByteConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<ByteConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -72,8 +74,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(char));
 
-            Assert.IsInstanceOf<CharConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<CharConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -81,8 +83,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(DateTime));
 
-            Assert.IsInstanceOf<DateTimeConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<DateTimeConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -90,8 +92,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(decimal));
 
-            Assert.IsInstanceOf<DecimalConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<DecimalConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -99,8 +101,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(double));
 
-            Assert.IsInstanceOf<DoubleConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<DoubleConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -108,8 +110,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(float));
 
-            Assert.IsInstanceOf<SingleConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<SingleConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -117,8 +119,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(Guid));
 
-            Assert.IsInstanceOf<GuidConverter>(converter);
-            Assert.IsFalse(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<GuidConverter>(converter);
+            ClassicAssert.IsFalse(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -126,8 +128,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(short));
 
-            Assert.IsInstanceOf<Int16Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<Int16Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -135,8 +137,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(int));
 
-            Assert.IsInstanceOf<Int32Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<Int32Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -144,8 +146,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(long));
 
-            Assert.IsInstanceOf<Int64Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<Int64Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -153,8 +155,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(int?));
 
-            Assert.IsInstanceOf<NullableConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<NullableConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -162,8 +164,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(sbyte));
 
-            Assert.IsInstanceOf<SByteConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<SByteConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -171,8 +173,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(string));
 
-            Assert.IsInstanceOf<StringConverter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<StringConverter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -180,8 +182,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(TimeSpan));
 
-            Assert.IsInstanceOf<TimeSpanConverter>(converter);
-            Assert.IsFalse(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<TimeSpanConverter>(converter);
+            ClassicAssert.IsFalse(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -189,8 +191,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(ushort));
 
-            Assert.IsInstanceOf<UInt16Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<UInt16Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -198,8 +200,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(uint));
 
-            Assert.IsInstanceOf<UInt32Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<UInt32Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -207,8 +209,8 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(ulong));
 
-            Assert.IsInstanceOf<UInt64Converter>(converter);
-            Assert.IsTrue(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<UInt64Converter>(converter);
+            ClassicAssert.IsTrue(converter.AcceptsNativeType);
         }
 
         [Test]
@@ -216,36 +218,36 @@ namespace ExcelHelper.Tests.TypeConversion
         {
             var converter = TypeConverterFactory.GetConverter(typeof(TestEnum));
 
-            Assert.IsInstanceOf<EnumConverter>(converter);
-            Assert.IsFalse(converter.AcceptsNativeType);
+            ClassicAssert.IsInstanceOf<EnumConverter>(converter);
+            ClassicAssert.IsFalse(converter.AcceptsNativeType);
         }
 
         [Test]
         public void GetConverterForEnumerableTypesTest()
         {
             var converter = TypeConverterFactory.GetConverter(typeof(IEnumerable));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(IList));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(List<int>));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(ICollection));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(Collection<int>));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(IDictionary));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(Dictionary<int, string>));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
             converter = TypeConverterFactory.GetConverter(typeof(Array));
-            Assert.IsInstanceOf<EnumerableConverter>(converter);
+            ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
         }
 
         //[Test]
@@ -253,13 +255,13 @@ namespace ExcelHelper.Tests.TypeConversion
         //{
         //    TypeConverterFactory.AddConverter<List<string>>(new TestListConverter());
         //    var converter = TypeConverterFactory.GetConverter(typeof(List<string>));
-        //    Assert.IsInstanceOf<TestListConverter>(converter);
+        //    ClassicAssert.IsInstanceOf<TestListConverter>(converter);
 
         //    converter = TypeConverterFactory.GetConverter(typeof(List<int>));
-        //    Assert.IsInstanceOf<EnumerableConverter>(converter);
+        //    ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
 
         //    converter = TypeConverterFactory.GetConverter(typeof(Array));
-        //    Assert.IsInstanceOf<EnumerableConverter>(converter);
+        //    ClassicAssert.IsInstanceOf<EnumerableConverter>(converter);
         //}
 
         private class TestListConverter : DefaultTypeConverter

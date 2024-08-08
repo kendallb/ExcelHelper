@@ -7,6 +7,7 @@
  */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests
 {
@@ -18,12 +19,12 @@ namespace ExcelHelper.Tests
         {
             var test = ReflectionHelper.CreateInstance<Test>();
 
-            Assert.IsNotNull(test);
-            Assert.AreEqual("name", Test.Name);
+            ClassicAssert.IsNotNull(test);
+            ClassicAssert.AreEqual("name", Test.Name);
 
             test = (Test)ReflectionHelper.CreateInstance(typeof(Test));
-            Assert.IsNotNull(test);
-            Assert.AreEqual("name", Test.Name);
+            ClassicAssert.IsNotNull(test);
+            ClassicAssert.AreEqual("name", Test.Name);
         }
 
         private class Test

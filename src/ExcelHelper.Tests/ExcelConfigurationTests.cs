@@ -9,6 +9,8 @@
 using System;
 using ExcelHelper.Configuration;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace ExcelHelper.Tests
@@ -22,7 +24,7 @@ namespace ExcelHelper.Tests
             var config = new ExcelConfiguration();
             config.RegisterClassMap<TestClassMappings>();
 
-            Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
+            ClassicAssert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
         [Test]
@@ -31,7 +33,7 @@ namespace ExcelHelper.Tests
             var config = new ExcelConfiguration();
             config.RegisterClassMap<TestClassMappings>();
 
-            Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
+            ClassicAssert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
         [Test]
@@ -40,7 +42,7 @@ namespace ExcelHelper.Tests
             var config = new ExcelConfiguration();
             config.RegisterClassMap(typeof(TestClassMappings));
 
-            Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
+            ClassicAssert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
         [Test]
@@ -49,7 +51,7 @@ namespace ExcelHelper.Tests
             var config = new ExcelConfiguration();
             config.RegisterClassMap(new TestClassMappings());
 
-            Assert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
+            ClassicAssert.AreEqual(2, config.Maps[typeof(TestClass)].PropertyMaps.Count);
         }
 
         [Test]
@@ -57,9 +59,9 @@ namespace ExcelHelper.Tests
         {
             var config = new ExcelConfiguration();
 
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
             config.RegisterClassMap<TestClassMappings>();
-            Assert.IsNotNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
         [Test]
@@ -67,9 +69,9 @@ namespace ExcelHelper.Tests
         {
             var config = new ExcelConfiguration();
 
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
             config.RegisterClassMap(typeof(TestClassMappings));
-            Assert.IsNotNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
         [Test]
@@ -77,9 +79,9 @@ namespace ExcelHelper.Tests
         {
             var config = new ExcelConfiguration();
 
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
             config.RegisterClassMap(new TestClassMappings());
-            Assert.IsNotNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(TestClass)]);
         }
 
         [Test]
@@ -87,12 +89,12 @@ namespace ExcelHelper.Tests
         {
             var config = new ExcelConfiguration();
 
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
             config.RegisterClassMap<TestClassMappings>();
-            Assert.IsNotNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(TestClass)]);
 
             config.UnregisterClassMap<TestClassMappings>();
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
         }
 
         [Test]
@@ -100,12 +102,12 @@ namespace ExcelHelper.Tests
         {
             var config = new ExcelConfiguration();
 
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
             config.RegisterClassMap(typeof(TestClassMappings));
-            Assert.IsNotNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(TestClass)]);
 
             config.UnregisterClassMap(typeof(TestClassMappings));
-            Assert.IsNull(config.Maps[typeof(TestClass)]);
+            ClassicAssert.IsNull(config.Maps[typeof(TestClass)]);
         }
 
         [Test]

@@ -10,6 +10,7 @@ using System;
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -20,8 +21,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new GuidConverter();
-            Assert.AreEqual(false, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(Guid), converter.ConvertedType);
+            ClassicAssert.AreEqual(false, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(Guid), converter.ConvertedType);
         }
 
         [Test]
@@ -32,8 +33,8 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual("79f1a554-babd-41a1-8caf-185250a1fc21", converter.ConvertToExcel(typeConverterOptions, new Guid("79f1a554-babd-41a1-8caf-185250a1fc21")));
-            Assert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual("79f1a554-babd-41a1-8caf-185250a1fc21", converter.ConvertToExcel(typeConverterOptions, new Guid("79f1a554-babd-41a1-8caf-185250a1fc21")));
+            ClassicAssert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
         }
 
         [Test]
@@ -45,8 +46,8 @@ namespace ExcelHelper.Tests.TypeConversion
             };
 
             var guid = new Guid("79f1a554-babd-41a1-8caf-185250a1fc21");
-            Assert.AreEqual(guid, converter.ConvertFromExcel(typeConverterOptions, "79f1a554-babd-41a1-8caf-185250a1fc21"));
-            Assert.AreEqual(guid, converter.ConvertFromExcel(typeConverterOptions, " 79f1a554-babd-41a1-8caf-185250a1fc21 "));
+            ClassicAssert.AreEqual(guid, converter.ConvertFromExcel(typeConverterOptions, "79f1a554-babd-41a1-8caf-185250a1fc21"));
+            ClassicAssert.AreEqual(guid, converter.ConvertFromExcel(typeConverterOptions, " 79f1a554-babd-41a1-8caf-185250a1fc21 "));
 
             try {
                 converter.ConvertFromExcel(typeConverterOptions, null);

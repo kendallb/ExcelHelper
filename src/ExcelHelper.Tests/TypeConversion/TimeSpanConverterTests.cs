@@ -10,6 +10,7 @@ using System;
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -20,8 +21,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new TimeSpanConverter();
-            Assert.AreEqual(false, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(TimeSpan), converter.ConvertedType);
+            ClassicAssert.AreEqual(false, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(TimeSpan), converter.ConvertedType);
         }
 
         [Test]
@@ -36,11 +37,11 @@ namespace ExcelHelper.Tests.TypeConversion
             var timeSpan = new TimeSpan(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
 
             // Valid conversions.
-            Assert.AreEqual(timeSpan.ToString(), converter.ConvertToExcel(typeConverterOptions, timeSpan));
+            ClassicAssert.AreEqual(timeSpan.ToString(), converter.ConvertToExcel(typeConverterOptions, timeSpan));
 
             // Invalid conversions.
-            Assert.AreEqual("1", converter.ConvertToExcel(typeConverterOptions, 1));
-            Assert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
+            ClassicAssert.AreEqual("1", converter.ConvertToExcel(typeConverterOptions, 1));
+            ClassicAssert.AreEqual(null, converter.ConvertToExcel(typeConverterOptions, null));
         }
 
         [Test]
@@ -56,8 +57,8 @@ namespace ExcelHelper.Tests.TypeConversion
             var timeString = timeSpan.ToString();
 
             // Valid conversions.
-            Assert.AreEqual(timeString, converter.ConvertFromExcel(typeConverterOptions, timeSpan.ToString()).ToString());
-            Assert.AreEqual(timeString, converter.ConvertFromExcel(typeConverterOptions, " " + timeSpan + " ").ToString());
+            ClassicAssert.AreEqual(timeString, converter.ConvertFromExcel(typeConverterOptions, timeSpan.ToString()).ToString());
+            ClassicAssert.AreEqual(timeString, converter.ConvertFromExcel(typeConverterOptions, " " + timeSpan + " ").ToString());
 
             // Invalid conversions.
             try {

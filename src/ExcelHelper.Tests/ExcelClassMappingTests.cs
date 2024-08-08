@@ -11,6 +11,7 @@ using System.Linq;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable UnusedMember.Local
@@ -27,19 +28,19 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingDefaultClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.AreEqual("GuidColumn", map.PropertyMaps[0].Data.Names.FirstOrDefault());
-            Assert.AreEqual(0, map.PropertyMaps[0].Data.Index);
-            Assert.AreEqual(typeof(GuidConverter), map.PropertyMaps[0].Data.TypeConverter.GetType());
+            ClassicAssert.AreEqual("GuidColumn", map.PropertyMaps[0].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual(0, map.PropertyMaps[0].Data.Index);
+            ClassicAssert.AreEqual(typeof(GuidConverter), map.PropertyMaps[0].Data.TypeConverter.GetType());
 
-            Assert.AreEqual("IntColumn", map.PropertyMaps[1].Data.Names.FirstOrDefault());
-            Assert.AreEqual(1, map.PropertyMaps[1].Data.Index);
-            Assert.AreEqual(typeof(Int32Converter), map.PropertyMaps[1].Data.TypeConverter.GetType());
+            ClassicAssert.AreEqual("IntColumn", map.PropertyMaps[1].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual(1, map.PropertyMaps[1].Data.Index);
+            ClassicAssert.AreEqual(typeof(Int32Converter), map.PropertyMaps[1].Data.TypeConverter.GetType());
 
-            Assert.AreEqual("StringColumn", map.PropertyMaps[2].Data.Names.FirstOrDefault());
-            Assert.AreEqual(2, map.PropertyMaps[2].Data.Index);
-            Assert.AreEqual(typeof(StringConverter), map.PropertyMaps[2].Data.TypeConverter.GetType());
+            ClassicAssert.AreEqual("StringColumn", map.PropertyMaps[2].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual(2, map.PropertyMaps[2].Data.Index);
+            ClassicAssert.AreEqual(typeof(StringConverter), map.PropertyMaps[2].Data.TypeConverter.GetType());
         }
 
         [Test]
@@ -47,11 +48,11 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingByNameClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.AreEqual("GuidColumn", map.PropertyMaps[0].Data.Names.FirstOrDefault());
-            Assert.AreEqual("IntColumn", map.PropertyMaps[1].Data.Names.FirstOrDefault());
-            Assert.AreEqual("StringColumn", map.PropertyMaps[2].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("GuidColumn", map.PropertyMaps[0].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("IntColumn", map.PropertyMaps[1].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("StringColumn", map.PropertyMaps[2].Data.Names.FirstOrDefault());
         }
 
         [Test]
@@ -59,11 +60,11 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingNameClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.AreEqual("Guid Column", map.PropertyMaps[0].Data.Names.FirstOrDefault());
-            Assert.AreEqual("Int Column", map.PropertyMaps[1].Data.Names.FirstOrDefault());
-            Assert.AreEqual("String Column", map.PropertyMaps[2].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("Guid Column", map.PropertyMaps[0].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("Int Column", map.PropertyMaps[1].Data.Names.FirstOrDefault());
+            ClassicAssert.AreEqual("String Column", map.PropertyMaps[2].Data.Names.FirstOrDefault());
         }
 
         [Test]
@@ -71,11 +72,11 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingIndexClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.AreEqual(2, map.PropertyMaps[0].Data.Index);
-            Assert.AreEqual(3, map.PropertyMaps[1].Data.Index);
-            Assert.AreEqual(1, map.PropertyMaps[2].Data.Index);
+            ClassicAssert.AreEqual(2, map.PropertyMaps[0].Data.Index);
+            ClassicAssert.AreEqual(3, map.PropertyMaps[1].Data.Index);
+            ClassicAssert.AreEqual(1, map.PropertyMaps[2].Data.Index);
         }
 
         [Test]
@@ -83,11 +84,11 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingIngoreClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.IsTrue(map.PropertyMaps[0].Data.Ignore);
-            Assert.IsFalse(map.PropertyMaps[1].Data.Ignore);
-            Assert.IsTrue(map.PropertyMaps[2].Data.Ignore);
+            ClassicAssert.IsTrue(map.PropertyMaps[0].Data.Ignore);
+            ClassicAssert.IsFalse(map.PropertyMaps[1].Data.Ignore);
+            ClassicAssert.IsTrue(map.PropertyMaps[2].Data.Ignore);
         }
 
         [Test]
@@ -95,11 +96,11 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingTypeConverterClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.IsInstanceOf<Int16Converter>(map.PropertyMaps[0].Data.TypeConverter);
-            Assert.IsInstanceOf<StringConverter>(map.PropertyMaps[1].Data.TypeConverter);
-            Assert.IsInstanceOf<Int64Converter>(map.PropertyMaps[2].Data.TypeConverter);
+            ClassicAssert.IsInstanceOf<Int16Converter>(map.PropertyMaps[0].Data.TypeConverter);
+            ClassicAssert.IsInstanceOf<StringConverter>(map.PropertyMaps[1].Data.TypeConverter);
+            ClassicAssert.IsInstanceOf<Int64Converter>(map.PropertyMaps[2].Data.TypeConverter);
         }
 
         [Test]
@@ -107,23 +108,23 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingMultipleNamesClass();
 
-            Assert.AreEqual(3, map.PropertyMaps.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps.Count);
 
-            Assert.AreEqual(3, map.PropertyMaps[0].Data.Names.Count);
-            Assert.AreEqual(3, map.PropertyMaps[1].Data.Names.Count);
-            Assert.AreEqual(3, map.PropertyMaps[2].Data.Names.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps[0].Data.Names.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps[1].Data.Names.Count);
+            ClassicAssert.AreEqual(3, map.PropertyMaps[2].Data.Names.Count);
 
-            Assert.AreEqual("guid1", map.PropertyMaps[0].Data.Names[0]);
-            Assert.AreEqual("guid2", map.PropertyMaps[0].Data.Names[1]);
-            Assert.AreEqual("guid3", map.PropertyMaps[0].Data.Names[2]);
+            ClassicAssert.AreEqual("guid1", map.PropertyMaps[0].Data.Names[0]);
+            ClassicAssert.AreEqual("guid2", map.PropertyMaps[0].Data.Names[1]);
+            ClassicAssert.AreEqual("guid3", map.PropertyMaps[0].Data.Names[2]);
 
-            Assert.AreEqual("int1", map.PropertyMaps[1].Data.Names[0]);
-            Assert.AreEqual("int2", map.PropertyMaps[1].Data.Names[1]);
-            Assert.AreEqual("int3", map.PropertyMaps[1].Data.Names[2]);
+            ClassicAssert.AreEqual("int1", map.PropertyMaps[1].Data.Names[0]);
+            ClassicAssert.AreEqual("int2", map.PropertyMaps[1].Data.Names[1]);
+            ClassicAssert.AreEqual("int3", map.PropertyMaps[1].Data.Names[2]);
 
-            Assert.AreEqual("string1", map.PropertyMaps[2].Data.Names[0]);
-            Assert.AreEqual("string2", map.PropertyMaps[2].Data.Names[1]);
-            Assert.AreEqual("string3", map.PropertyMaps[2].Data.Names[2]);
+            ClassicAssert.AreEqual("string1", map.PropertyMaps[2].Data.Names[0]);
+            ClassicAssert.AreEqual("string2", map.PropertyMaps[2].Data.Names[1]);
+            ClassicAssert.AreEqual("string3", map.PropertyMaps[2].Data.Names[2]);
         }
 
         [Test]
@@ -131,7 +132,7 @@ namespace ExcelHelper.Tests
         {
             var map = new TestMappingConstructorClass();
 
-            Assert.IsNotNull(map.Constructor);
+            ClassicAssert.IsNotNull(map.Constructor);
         }
 
         [Test]
@@ -141,8 +142,8 @@ namespace ExcelHelper.Tests
             config.RegisterClassMap<AMap>();
             config.RegisterClassMap<BMap>();
 
-            Assert.IsNotNull(config.Maps[typeof(A)]);
-            Assert.IsNotNull(config.Maps[typeof(B)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(A)]);
+            ClassicAssert.IsNotNull(config.Maps[typeof(B)]);
         }
 
         [Test]
@@ -152,7 +153,7 @@ namespace ExcelHelper.Tests
             config.RegisterClassMap<AMap>();
             config.Maps[typeof(A)].PropertyMap<A>(m => m.AId).Ignore();
 
-            Assert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.Ignore);
+            ClassicAssert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.Ignore);
         }
 
         [Test]
@@ -162,7 +163,7 @@ namespace ExcelHelper.Tests
             config.RegisterClassMap<AMap>();
             config.Maps[typeof(A)].PropertyMap<A>(m => m.AId).WriteOnly();
 
-            Assert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.WriteOnly);
+            ClassicAssert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.WriteOnly);
         }
 
         [Test]
@@ -172,7 +173,7 @@ namespace ExcelHelper.Tests
             config.RegisterClassMap<AMap>();
             config.Maps[typeof(A)].PropertyMap<A>(m => m.AId).OptionalRead();
 
-            Assert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.OptionalRead);
+            ClassicAssert.AreEqual(true, config.Maps[typeof(A)].PropertyMaps[0].Data.OptionalRead);
         }
 
         private class A

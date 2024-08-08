@@ -14,6 +14,8 @@ using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable ClassNeverInstantiated.Local
@@ -72,82 +74,82 @@ namespace ExcelHelper.Tests
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     // Check the column and row counts are correct
-                    Assert.AreEqual(14, excel.TotalColumns);
+                    ClassicAssert.AreEqual(14, excel.TotalColumns);
 
                     // Test all number conversions
                     if (!excel.ReadRow()) {
                         throw new ArgumentException();
                     }
-                    Assert.AreEqual((sbyte)n, excel.GetColumn<sbyte>(0));
-                    Assert.AreEqual((short)n, excel.GetColumn<short>(0));
-                    Assert.AreEqual((int)n, excel.GetColumn<int>(0));
-                    Assert.AreEqual((long)n, excel.GetColumn<long>(0));
-                    Assert.AreEqual((byte)n, excel.GetColumn<byte>(0));
-                    Assert.AreEqual((ushort)n, excel.GetColumn<ushort>(0));
-                    Assert.AreEqual((uint)n, excel.GetColumn<uint>(0));
-                    Assert.AreEqual((ulong)n, excel.GetColumn<ulong>(0));
-                    Assert.AreEqual((float)n, excel.GetColumn<float>(0));
-                    Assert.AreEqual(n, excel.GetColumn<double>(0));
-                    Assert.AreEqual((decimal)n, excel.GetColumn<decimal>(0));
-                    Assert.AreEqual(n.ToString(), excel.GetColumn<string>(0));
+                    ClassicAssert.AreEqual((sbyte)n, excel.GetColumn<sbyte>(0));
+                    ClassicAssert.AreEqual((short)n, excel.GetColumn<short>(0));
+                    ClassicAssert.AreEqual((int)n, excel.GetColumn<int>(0));
+                    ClassicAssert.AreEqual((long)n, excel.GetColumn<long>(0));
+                    ClassicAssert.AreEqual((byte)n, excel.GetColumn<byte>(0));
+                    ClassicAssert.AreEqual((ushort)n, excel.GetColumn<ushort>(0));
+                    ClassicAssert.AreEqual((uint)n, excel.GetColumn<uint>(0));
+                    ClassicAssert.AreEqual((ulong)n, excel.GetColumn<ulong>(0));
+                    ClassicAssert.AreEqual((float)n, excel.GetColumn<float>(0));
+                    ClassicAssert.AreEqual(n, excel.GetColumn<double>(0));
+                    ClassicAssert.AreEqual((decimal)n, excel.GetColumn<decimal>(0));
+                    ClassicAssert.AreEqual(n.ToString(), excel.GetColumn<string>(0));
 
                     // Test all number conversions with a string cell
-                    Assert.AreEqual((sbyte)nsi, excel.GetColumn<sbyte>(1));
-                    Assert.AreEqual((short)nsi, excel.GetColumn<short>(1));
-                    Assert.AreEqual(nsi, excel.GetColumn<int>(1));
-                    Assert.AreEqual(nsi, excel.GetColumn<long>(1));
-                    Assert.AreEqual((byte)nsi, excel.GetColumn<byte>(1));
-                    Assert.AreEqual((ushort)nsi, excel.GetColumn<ushort>(1));
-                    Assert.AreEqual((uint)nsi, excel.GetColumn<uint>(1));
-                    Assert.AreEqual((ulong)nsi, excel.GetColumn<ulong>(1));
-                    Assert.AreEqual((float)ns, excel.GetColumn<float>(2));
-                    Assert.AreEqual(ns, excel.GetColumn<double>(2));
-                    Assert.AreEqual((decimal)ns, excel.GetColumn<decimal>(2));
-                    Assert.AreEqual(nsi.ToString(), excel.GetColumn<string>(1));
-                    Assert.AreEqual(ns.ToString(), excel.GetColumn<string>(2));
+                    ClassicAssert.AreEqual((sbyte)nsi, excel.GetColumn<sbyte>(1));
+                    ClassicAssert.AreEqual((short)nsi, excel.GetColumn<short>(1));
+                    ClassicAssert.AreEqual(nsi, excel.GetColumn<int>(1));
+                    ClassicAssert.AreEqual(nsi, excel.GetColumn<long>(1));
+                    ClassicAssert.AreEqual((byte)nsi, excel.GetColumn<byte>(1));
+                    ClassicAssert.AreEqual((ushort)nsi, excel.GetColumn<ushort>(1));
+                    ClassicAssert.AreEqual((uint)nsi, excel.GetColumn<uint>(1));
+                    ClassicAssert.AreEqual((ulong)nsi, excel.GetColumn<ulong>(1));
+                    ClassicAssert.AreEqual((float)ns, excel.GetColumn<float>(2));
+                    ClassicAssert.AreEqual(ns, excel.GetColumn<double>(2));
+                    ClassicAssert.AreEqual((decimal)ns, excel.GetColumn<decimal>(2));
+                    ClassicAssert.AreEqual(nsi.ToString(), excel.GetColumn<string>(1));
+                    ClassicAssert.AreEqual(ns.ToString(), excel.GetColumn<string>(2));
 
                     // Test dates
-                    Assert.AreEqual(d, excel.GetColumn<DateTime>(3));
-                    Assert.AreEqual(d, excel.GetColumn<DateTime>(4));
+                    ClassicAssert.AreEqual(d, excel.GetColumn<DateTime>(3));
+                    ClassicAssert.AreEqual(d, excel.GetColumn<DateTime>(4));
 
                     // Test boolean
-                    Assert.AreEqual(true, excel.GetColumn<bool>(5));
-                    Assert.AreEqual("True", excel.GetColumn<string>(5));
-                    Assert.AreEqual(true, excel.GetColumn<bool>(6));
-                    Assert.AreEqual("true", excel.GetColumn<string>(6));
-                    Assert.AreEqual(true, excel.GetColumn<bool>(7));
-                    Assert.AreEqual("yes", excel.GetColumn<string>(7));
+                    ClassicAssert.AreEqual(true, excel.GetColumn<bool>(5));
+                    ClassicAssert.AreEqual("True", excel.GetColumn<string>(5));
+                    ClassicAssert.AreEqual(true, excel.GetColumn<bool>(6));
+                    ClassicAssert.AreEqual("true", excel.GetColumn<string>(6));
+                    ClassicAssert.AreEqual(true, excel.GetColumn<bool>(7));
+                    ClassicAssert.AreEqual("yes", excel.GetColumn<string>(7));
 
                     // Test character
-                    Assert.AreEqual('c', excel.GetColumn<char>(8));
-                    Assert.AreEqual("c", excel.GetColumn<string>(8));
+                    ClassicAssert.AreEqual('c', excel.GetColumn<char>(8));
+                    ClassicAssert.AreEqual("c", excel.GetColumn<string>(8));
 
                     // Test null
-                    Assert.AreEqual("", excel.GetColumn<string>(9));
-                    Assert.AreEqual(null, excel.GetColumn<int?>(9));
-                    Assert.AreEqual(DateTime.MinValue, excel.GetColumn<DateTime>(9));
+                    ClassicAssert.AreEqual("", excel.GetColumn<string>(9));
+                    ClassicAssert.AreEqual(null, excel.GetColumn<int?>(9));
+                    ClassicAssert.AreEqual(DateTime.MinValue, excel.GetColumn<DateTime>(9));
 
                     // Test guid
-                    Assert.AreEqual(guid, excel.GetColumn<Guid>(10));
-                    Assert.AreEqual(guid.ToString(), excel.GetColumn<string>(10));
+                    ClassicAssert.AreEqual(guid, excel.GetColumn<Guid>(10));
+                    ClassicAssert.AreEqual(guid.ToString(), excel.GetColumn<string>(10));
 
                     // Test TimeSpan
-                    Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(11));
+                    ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(11));
                     // TODO: This won't work until ExcelDataReader is changed to natively parse TimeSpans
                     //Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(11));
-                    Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(12));
-                    Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(12));
-                    Assert.AreEqual(ts, excel.GetColumn<TimeSpan>(13));
-                    Assert.AreEqual(ts.ToString(), excel.GetColumn<string>(13));
+                    ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(12));
+                    ClassicAssert.AreEqual(ts.ToString(), excel.GetColumn<string>(12));
+                    ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(13));
+                    ClassicAssert.AreEqual(ts.ToString(), excel.GetColumn<string>(13));
 
                     // Test the third sheet
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     if (!excel.ReadRow()) {
                         throw new ArgumentException();
                     }
-                    Assert.AreEqual("third sheet", excel.GetColumn<string>(0));
+                    ClassicAssert.AreEqual("third sheet", excel.GetColumn<string>(0));
                 }
             }
         }
@@ -169,14 +171,14 @@ namespace ExcelHelper.Tests
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     // Check the column and row counts are correct
-                    Assert.AreEqual(1, excel.TotalColumns);
+                    ClassicAssert.AreEqual(1, excel.TotalColumns);
 
                     // Verify 66K rows
                     for (var i = 0; i < 66000; i++) {
                         if (!excel.ReadRow()) {
                             throw new ArgumentException();
                         }
-                        Assert.AreEqual(i, excel.GetColumn<int>(0));
+                        ClassicAssert.AreEqual(i, excel.GetColumn<int>(0));
                     }
                 }
             }
@@ -230,9 +232,9 @@ namespace ExcelHelper.Tests
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date);
                 }
             }
@@ -261,9 +263,9 @@ namespace ExcelHelper.Tests
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
                 }
             }
@@ -293,9 +295,9 @@ namespace ExcelHelper.Tests
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     excel.SkipRows(2);
                     ValidateRecords(excel, guid, date);
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date);
                 }
             }
@@ -326,11 +328,11 @@ namespace ExcelHelper.Tests
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date);
-                    Assert.AreEqual(excel.SheetName, "Test Sheet 1");
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.AreEqual(excel.SheetName, "Test Sheet 2");
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(excel.SheetName, "Test Sheet 1");
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.AreEqual(excel.SheetName, "Test Sheet 2");
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date);
                 }
             }
@@ -359,9 +361,9 @@ namespace ExcelHelper.Tests
                 using (var excel = new ExcelReader(stream)) {
                     excel.Configuration.RegisterClassMap<TestRecordMap>();
                     ValidateRecords(excel, guid, date, "optional");
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date, "optional");
                 }
             }
@@ -391,9 +393,9 @@ namespace ExcelHelper.Tests
                     excel.Configuration.WillThrowOnMissingHeader = false;
                     excel.Configuration.RegisterClassMap<TestRecordMapMissingField>();
                     ValidateRecords(excel, guid, date);
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecords(excel, guid, date);
                 }
             }
@@ -493,41 +495,41 @@ namespace ExcelHelper.Tests
 
             // Make sure we got two records
             var records = excel.GetRecords<TestRecord>().ToList();
-            Assert.AreEqual(2, records.Count);
+            ClassicAssert.AreEqual(2, records.Count);
 
             // Verify the records are what we expect
             for (var i = 1; i <= records.Count; i++) {
                 var record = records[i - 1];
-                Assert.AreEqual(i, record.FirstColumn);
-                Assert.AreEqual(i * 2, record.IntColumn);
-                Assert.AreEqual("string column " + i, record.StringColumn);
-                Assert.AreEqual("test", record.TypeConvertedColumn);
-                Assert.AreEqual(guid, record.GuidColumn);
-                Assert.AreEqual(0, record.NoMatchingField);
-                Assert.AreEqual(i == 1, record.BoolColumn);
-                Assert.AreEqual(i * 3.0, record.DoubleColumn);
-                Assert.AreEqual(date.AddDays(i), record.DateTimeColumn);
-                Assert.AreEqual("", record.NullStringColumn);
-                Assert.AreEqual(optionalReadValue, record.OptionalReadColumn);
+                ClassicAssert.AreEqual(i, record.FirstColumn);
+                ClassicAssert.AreEqual(i * 2, record.IntColumn);
+                ClassicAssert.AreEqual("string column " + i, record.StringColumn);
+                ClassicAssert.AreEqual("test", record.TypeConvertedColumn);
+                ClassicAssert.AreEqual(guid, record.GuidColumn);
+                ClassicAssert.AreEqual(0, record.NoMatchingField);
+                ClassicAssert.AreEqual(i == 1, record.BoolColumn);
+                ClassicAssert.AreEqual(i * 3.0, record.DoubleColumn);
+                ClassicAssert.AreEqual(date.AddDays(i), record.DateTimeColumn);
+                ClassicAssert.AreEqual("", record.NullStringColumn);
+                ClassicAssert.AreEqual(optionalReadValue, record.OptionalReadColumn);
             }
 
             // Validate the mapped columns
             var columns = excel.GetImportedColumns();
 
             // Make sure we have the column count we expect
-            Assert.AreEqual(optionalReadValue == null ? 9 : 10, columns.Count);
-            Assert.AreEqual("TestRecord", columns[0].DeclaringType.Name);
-            Assert.AreEqual("IntColumn", columns[0].Name);
-            Assert.AreEqual("FirstColumn", columns[1].Name);
-            Assert.AreEqual("StringColumn", columns[2].Name);
-            Assert.AreEqual("TypeConvertedColumn", columns[3].Name);
-            Assert.AreEqual("GuidColumn", columns[4].Name);
-            Assert.AreEqual("BoolColumn", columns[5].Name);
-            Assert.AreEqual("DoubleColumn", columns[6].Name);
-            Assert.AreEqual("DateTimeColumn", columns[7].Name);
-            Assert.AreEqual("NullStringColumn", columns[8].Name);
+            ClassicAssert.AreEqual(optionalReadValue == null ? 9 : 10, columns.Count);
+            ClassicAssert.AreEqual("TestRecord", columns[0].DeclaringType.Name);
+            ClassicAssert.AreEqual("IntColumn", columns[0].Name);
+            ClassicAssert.AreEqual("FirstColumn", columns[1].Name);
+            ClassicAssert.AreEqual("StringColumn", columns[2].Name);
+            ClassicAssert.AreEqual("TypeConvertedColumn", columns[3].Name);
+            ClassicAssert.AreEqual("GuidColumn", columns[4].Name);
+            ClassicAssert.AreEqual("BoolColumn", columns[5].Name);
+            ClassicAssert.AreEqual("DoubleColumn", columns[6].Name);
+            ClassicAssert.AreEqual("DateTimeColumn", columns[7].Name);
+            ClassicAssert.AreEqual("NullStringColumn", columns[8].Name);
             if (optionalReadValue != null) {
-                Assert.AreEqual("OptionalReadColumn", columns[9].Name);
+                ClassicAssert.AreEqual("OptionalReadColumn", columns[9].Name);
             }
         }
 
@@ -574,18 +576,18 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<Person>().ToList();
 
                     // Make sure we got our record
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual("First Name", record.FirstName);
-                    Assert.AreEqual("Last Name", record.LastName);
-                    Assert.AreEqual("Home Street", record.HomeAddress.Street);
-                    Assert.AreEqual("Home City", record.HomeAddress.City);
-                    Assert.AreEqual("Home State", record.HomeAddress.State);
-                    Assert.AreEqual("Home Zip", record.HomeAddress.Zip);
-                    Assert.AreEqual("Work Street", record.WorkAddress.Street);
-                    Assert.AreEqual("Work City", record.WorkAddress.City);
-                    Assert.AreEqual("Work State", record.WorkAddress.State);
-                    Assert.AreEqual("Work Zip", record.WorkAddress.Zip);
+                    ClassicAssert.AreEqual("First Name", record.FirstName);
+                    ClassicAssert.AreEqual("Last Name", record.LastName);
+                    ClassicAssert.AreEqual("Home Street", record.HomeAddress.Street);
+                    ClassicAssert.AreEqual("Home City", record.HomeAddress.City);
+                    ClassicAssert.AreEqual("Home State", record.HomeAddress.State);
+                    ClassicAssert.AreEqual("Home Zip", record.HomeAddress.Zip);
+                    ClassicAssert.AreEqual("Work Street", record.WorkAddress.Street);
+                    ClassicAssert.AreEqual("Work City", record.WorkAddress.City);
+                    ClassicAssert.AreEqual("Work State", record.WorkAddress.State);
+                    ClassicAssert.AreEqual("Work Zip", record.WorkAddress.Zip);
                 }
             }
         }
@@ -614,7 +616,7 @@ namespace ExcelHelper.Tests
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
                     } catch (ExcelReaderException ex) {
-                        Assert.AreEqual("Field 'IntColumn' does not exist in the Excel file.", ex.Message);
+                        ClassicAssert.AreEqual("Field 'IntColumn' does not exist in the Excel file.", ex.Message);
                     }
                 }
             }
@@ -649,11 +651,11 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecordDuplicateHeaderNames>().ToList();
 
                     // Make sure we got the correct data
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual("one", record.Column1);
-                    Assert.AreEqual("two", record.Column2);
-                    Assert.AreEqual("three", record.Column3);
+                    ClassicAssert.AreEqual("one", record.Column1);
+                    ClassicAssert.AreEqual("two", record.Column2);
+                    ClassicAssert.AreEqual("three", record.Column3);
                 }
             }
         }
@@ -689,11 +691,11 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<MultipleNamesClass>().ToList();
 
                     // Make sure we got the correct data
-                    Assert.AreEqual(2, records.Count);
-                    Assert.AreEqual(1, records[0].IntColumn);
-                    Assert.AreEqual("one", records[0].StringColumn);
-                    Assert.AreEqual(2, records[1].IntColumn);
-                    Assert.AreEqual("two", records[1].StringColumn);
+                    ClassicAssert.AreEqual(2, records.Count);
+                    ClassicAssert.AreEqual(1, records[0].IntColumn);
+                    ClassicAssert.AreEqual("one", records[0].StringColumn);
+                    ClassicAssert.AreEqual(2, records[1].IntColumn);
+                    ClassicAssert.AreEqual("two", records[1].StringColumn);
                 }
             }
         }
@@ -715,7 +717,7 @@ namespace ExcelHelper.Tests
                         excel.GetRecords<TestRecord>().ToList();
                         Assert.Fail();
                     } catch (ExcelReaderException ex) {
-                        Assert.AreEqual("No header record was found.", ex.Message);
+                        ClassicAssert.AreEqual("No header record was found.", ex.Message);
                     }
                 }
             }
@@ -757,18 +759,18 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestNullable>().ToList();
 
                     // Make sure we got two records
-                    Assert.AreEqual(2, records.Count);
+                    ClassicAssert.AreEqual(2, records.Count);
 
                     // Verify the records are what we expect
                     var record = records[0];
-                    Assert.AreEqual("string", record.StringColumn);
-                    Assert.AreEqual(null, record.IntColumn);
-                    Assert.AreEqual(null, record.GuidColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(null, record.IntColumn);
+                    ClassicAssert.AreEqual(null, record.GuidColumn);
 
                     record = records[1];
-                    Assert.AreEqual("", record.StringColumn);
-                    Assert.AreEqual(2, record.IntColumn);
-                    Assert.AreEqual(guid, record.GuidColumn);
+                    ClassicAssert.AreEqual("", record.StringColumn);
+                    ClassicAssert.AreEqual(2, record.IntColumn);
+                    ClassicAssert.AreEqual(guid, record.GuidColumn);
                 }
             }
         }
@@ -801,10 +803,10 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecord>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual("string", record.StringColumn);
-                    Assert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
                 }
             }
         }
@@ -837,10 +839,10 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecord>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual("string", record.StringColumn);
-                    Assert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
                 }
             }
         }
@@ -874,10 +876,10 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecord>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual(1, record.IntColumn);
-                    Assert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
                 }
             }
         }
@@ -913,13 +915,13 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestDefaultValues>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(2, records.Count);
+                    ClassicAssert.AreEqual(2, records.Count);
                     var record = records[0];
-                    Assert.AreEqual(-1, record.IntColumn);
-                    Assert.AreEqual("some string", record.StringColumn);
+                    ClassicAssert.AreEqual(-1, record.IntColumn);
+                    ClassicAssert.AreEqual("some string", record.StringColumn);
                     record = records[1];
-                    Assert.AreEqual(1, record.IntColumn);
-                    Assert.AreEqual("default string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual("default string", record.StringColumn);
                 }
             }
         }
@@ -957,12 +959,12 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestBoolean>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(10, records.Count);
+                    ClassicAssert.AreEqual(10, records.Count);
                     for (var i = 0; i < 5; i++) {
-                        Assert.AreEqual(true, records[i].BoolColumn);
+                        ClassicAssert.AreEqual(true, records[i].BoolColumn);
                     }
                     for (var i = 5; i < 10; i++) {
-                        Assert.AreEqual(false, records[i].BoolColumn);
+                        ClassicAssert.AreEqual(false, records[i].BoolColumn);
                     }
                 }
             }
@@ -1019,42 +1021,42 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecord>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual("string", record.StringColumn);
-                    Assert.AreEqual(1, record.IntColumn);
-                    Assert.AreEqual(true, record.BoolColumn);
-                    Assert.AreEqual(date, record.DateTimeColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual(true, record.BoolColumn);
+                    ClassicAssert.AreEqual(date, record.DateTimeColumn);
 
                     // Check we got the information we need about the parse errors
-                    Assert.AreEqual(2, allDetails.Count);
+                    ClassicAssert.AreEqual(2, allDetails.Count);
                     var details = allDetails[0];
-                    Assert.AreEqual(2, details.Row);
-                    Assert.AreEqual(3, details.Column);
-                    Assert.AreEqual("BoolColumn", details.FieldName);
-                    Assert.AreEqual("bullshit", details.FieldValue);
+                    ClassicAssert.AreEqual(2, details.Row);
+                    ClassicAssert.AreEqual(3, details.Column);
+                    ClassicAssert.AreEqual("BoolColumn", details.FieldName);
+                    ClassicAssert.AreEqual("bullshit", details.FieldValue);
                     details = allDetails[1];
-                    Assert.AreEqual(3, details.Row);
-                    Assert.AreEqual(4, details.Column);
-                    Assert.AreEqual("DateTimeColumn", details.FieldName);
-                    Assert.AreEqual("bullshit", details.FieldValue);
+                    ClassicAssert.AreEqual(3, details.Row);
+                    ClassicAssert.AreEqual(4, details.Column);
+                    ClassicAssert.AreEqual("DateTimeColumn", details.FieldName);
+                    ClassicAssert.AreEqual("bullshit", details.FieldValue);
 
                     // Check the exception details are what we expect
-                    Assert.AreEqual(2, exceptions.Count);
+                    ClassicAssert.AreEqual(2, exceptions.Count);
                     var message =
                         @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
                         @"Row: '2' (1 based)" + "\r\n" +
                         @"Column: '3' (1 based)" + "\r\n" +
                         @"Field Name: 'BoolColumn'" + "\r\n" +
                         @"Field Value: 'bullshit'" + "\r\n";
-                    Assert.AreEqual(message, exceptions[0].Data["ExcelHelper"]);
+                    ClassicAssert.AreEqual(message, exceptions[0].Data["ExcelHelper"]);
                     message =
                         @"Type: 'ExcelHelper.Tests.ExcelReaderTests+TestRecord'" + "\r\n" +
                         @"Row: '3' (1 based)" + "\r\n" +
                         @"Column: '4' (1 based)" + "\r\n" +
                         @"Field Name: 'DateTimeColumn'" + "\r\n" +
                         @"Field Value: 'bullshit'" + "\r\n";
-                    Assert.AreEqual(message, exceptions[1].Data["ExcelHelper"]);
+                    ClassicAssert.AreEqual(message, exceptions[1].Data["ExcelHelper"]);
                 }
             }
         }
@@ -1085,10 +1087,10 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestStruct>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual(1, record.ID);
-                    Assert.AreEqual("a name", record.Name);
+                    ClassicAssert.AreEqual(1, record.ID);
+                    ClassicAssert.AreEqual("a name", record.Name);
                 }
             }
         }
@@ -1121,10 +1123,10 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<TestRecord>().ToList();
 
                     // Verify the records are what we expect
-                    Assert.AreEqual(1, records.Count);
+                    ClassicAssert.AreEqual(1, records.Count);
                     var record = records[0];
-                    Assert.AreEqual(1, record.IntColumn);
-                    Assert.AreEqual("string", record.StringColumn);
+                    ClassicAssert.AreEqual(1, record.IntColumn);
+                    ClassicAssert.AreEqual("string", record.StringColumn);
                 }
             }
         }
@@ -1152,9 +1154,9 @@ namespace ExcelHelper.Tests
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     ValidateRecordsAsDictionary(excel, guid, date);
-                    Assert.AreEqual(3, excel.TotalSheets);
-                    Assert.IsTrue(excel.ChangeSheet(2));
-                    Assert.IsFalse(excel.ChangeSheet(3));
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
                     ValidateRecordsAsDictionary(excel, guid, date);
                 }
             }
@@ -1173,20 +1175,20 @@ namespace ExcelHelper.Tests
         {
             // Make sure we got two records
             var records = excel.GetRecordsAsDictionary().ToList();
-            Assert.AreEqual(2, records.Count);
+            ClassicAssert.AreEqual(2, records.Count);
 
             // Verify the records are what we expect
             for (var i = 1; i <= records.Count; i++) {
                 var record = records[i - 1];
-                Assert.AreEqual(i.ToString(), record["FirstColumn"]);
-                Assert.AreEqual((i * 2).ToString(), record["IntColumn"]);
-                Assert.AreEqual("string column " + i, record["String Column"]);
-                Assert.AreEqual("converts to test", record["TypeConvertedColumn"]);
-                Assert.AreEqual(guid.ToString(), record["GuidColumn"]);
-                Assert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
-                Assert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
-                Assert.AreEqual(date.AddDays(i).ToString("o"), record["DateTimeColumn"]);
-                Assert.AreEqual("", record["NullStringColumn"]);
+                ClassicAssert.AreEqual(i.ToString(), record["FirstColumn"]);
+                ClassicAssert.AreEqual((i * 2).ToString(), record["IntColumn"]);
+                ClassicAssert.AreEqual("string column " + i, record["String Column"]);
+                ClassicAssert.AreEqual("converts to test", record["TypeConvertedColumn"]);
+                ClassicAssert.AreEqual(guid.ToString(), record["GuidColumn"]);
+                ClassicAssert.AreEqual((i == 1).ToString().ToUpperInvariant(), record["BoolColumn"]);
+                ClassicAssert.AreEqual((i * 3.0).ToString(), record["DoubleColumn"]);
+                ClassicAssert.AreEqual(date.AddDays(i).ToString("o"), record["DateTimeColumn"]);
+                ClassicAssert.AreEqual("", record["NullStringColumn"]);
             }
         }
 

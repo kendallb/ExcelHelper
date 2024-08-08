@@ -10,6 +10,7 @@ using System;
 using System.Globalization;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests.TypeConversion
 {
@@ -20,8 +21,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new DateTimeConverter();
-            Assert.AreEqual(true, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(DateTime), converter.ConvertedType);
+            ClassicAssert.AreEqual(true, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(DateTime), converter.ConvertedType);
         }
 
         [Test]
@@ -36,17 +37,17 @@ namespace ExcelHelper.Tests.TypeConversion
             var dateString = dateTime.ToString();
 
             // Valid conversions.
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime).ToString());
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToOADate()).ToString());
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToString()).ToString());
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToString("o")).ToString());
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, " " + dateTime + " ").ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime).ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToOADate()).ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToString()).ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, dateTime.ToString("o")).ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, " " + dateTime + " ").ToString());
 
             // Empty conversions.
             dateTime = DateTime.MinValue;
             dateString = dateTime.ToString();
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, " ").ToString());
-            Assert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, null).ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, " ").ToString());
+            ClassicAssert.AreEqual(dateString, converter.ConvertFromExcel(typeConverterOptions, null).ToString());
 
             // Invalid conversions.
             try {
@@ -67,13 +68,13 @@ namespace ExcelHelper.Tests.TypeConversion
             };
 
             var val = (DateTime)cmConverter.ConvertFromString("");
-            Assert.AreEqual(DateTime.MinValue, val);
+            ClassicAssert.AreEqual(DateTime.MinValue, val);
 
             val = (DateTime)converter.ConvertFromExcel(typeConverterOptions, "");
-            Assert.AreEqual(DateTime.MinValue, val);
+            ClassicAssert.AreEqual(DateTime.MinValue, val);
 
             val = (DateTime)converter.ConvertFromExcel(typeConverterOptions, null);
-            Assert.AreEqual(DateTime.MinValue, val);
+            ClassicAssert.AreEqual(DateTime.MinValue, val);
 
             try {
                 cmConverter.ConvertFromString("blah");

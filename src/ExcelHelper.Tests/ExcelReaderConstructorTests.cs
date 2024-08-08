@@ -10,6 +10,7 @@ using System.IO;
 using ClosedXML.Excel;
 using ExcelHelper.Configuration;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace ExcelHelper.Tests
 {
@@ -29,7 +30,7 @@ namespace ExcelHelper.Tests
                 stream.Position = 0;
                 var config = new ExcelConfiguration();
                 using (var excel = new ExcelReader(stream, config)) {
-                    Assert.AreSame(config, excel.Configuration);
+                    ClassicAssert.AreSame(config, excel.Configuration);
                 }
             }
         }

@@ -10,6 +10,8 @@ using System;
 using System.Globalization;
 using NUnit.Framework;
 using ExcelHelper.TypeConversion;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable ObjectCreationAsStatement
 
 namespace ExcelHelper.Tests.TypeConversion
@@ -24,7 +26,7 @@ namespace ExcelHelper.Tests.TypeConversion
                 new EnumConverter(typeof(string));
                 Assert.Fail();
             } catch (ArgumentException ex) {
-                Assert.AreEqual("'System.String' is not an Enum.", ex.Message);
+                ClassicAssert.AreEqual("'System.String' is not an Enum.", ex.Message);
             }
         }
 
@@ -32,8 +34,8 @@ namespace ExcelHelper.Tests.TypeConversion
         public void PropertiesTest()
         {
             var converter = new EnumConverter(typeof(TestEnum));
-            Assert.AreEqual(false, converter.AcceptsNativeType);
-            Assert.AreEqual(typeof(TestEnum), converter.ConvertedType);
+            ClassicAssert.AreEqual(false, converter.AcceptsNativeType);
+            ClassicAssert.AreEqual(typeof(TestEnum), converter.ConvertedType);
         }
 
         [Test]
@@ -44,10 +46,10 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual("None", converter.ConvertToExcel(typeConverterOptions, (TestEnum)0));
-            Assert.AreEqual("None", converter.ConvertToExcel(typeConverterOptions, TestEnum.None));
-            Assert.AreEqual("One", converter.ConvertToExcel(typeConverterOptions, (TestEnum)1));
-            Assert.AreEqual("One", converter.ConvertToExcel(typeConverterOptions, TestEnum.One));
+            ClassicAssert.AreEqual("None", converter.ConvertToExcel(typeConverterOptions, (TestEnum)0));
+            ClassicAssert.AreEqual("None", converter.ConvertToExcel(typeConverterOptions, TestEnum.None));
+            ClassicAssert.AreEqual("One", converter.ConvertToExcel(typeConverterOptions, (TestEnum)1));
+            ClassicAssert.AreEqual("One", converter.ConvertToExcel(typeConverterOptions, TestEnum.One));
         }
 
         [Test]
@@ -58,17 +60,17 @@ namespace ExcelHelper.Tests.TypeConversion
                 CultureInfo = CultureInfo.CurrentCulture
             };
 
-            Assert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "One"));
-            Assert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "one"));
-            Assert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "1"));
+            ClassicAssert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "One"));
+            ClassicAssert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "one"));
+            ClassicAssert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, "1"));
             try {
-                Assert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, ""));
+                ClassicAssert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, ""));
                 Assert.Fail();
             } catch (ExcelTypeConverterException) {
             }
 
             try {
-                Assert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, null));
+                ClassicAssert.AreEqual(TestEnum.One, converter.ConvertFromExcel(typeConverterOptions, null));
                 Assert.Fail();
             } catch (ExcelTypeConverterException) {
             }

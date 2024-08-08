@@ -11,6 +11,8 @@ using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
 using ExcelHelper.Configuration;
+using NUnit.Framework.Legacy;
+
 // ReSharper disable ClassNeverInstantiated.Local
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
@@ -56,14 +58,14 @@ namespace ExcelHelper.Tests
                     var records = excel.GetRecords<A>().ToList();
 
                     // Make sure we got our records
-                    Assert.AreEqual(2, records.Count);
+                    ClassicAssert.AreEqual(2, records.Count);
                     for (var i = 0; i < records.Count; i++) {
                         var rowId = i + 1;
                         var row = records[i];
-                        Assert.AreEqual("a" + rowId, row.Id);
-                        Assert.AreEqual("b" + rowId, row.B.Id);
-                        Assert.AreEqual("c" + rowId, row.B.C.Id);
-                        Assert.AreEqual("d" + rowId, row.B.C.D.Id);
+                        ClassicAssert.AreEqual("a" + rowId, row.Id);
+                        ClassicAssert.AreEqual("b" + rowId, row.B.Id);
+                        ClassicAssert.AreEqual("c" + rowId, row.B.C.Id);
+                        ClassicAssert.AreEqual("d" + rowId, row.B.C.D.Id);
                     }
                 }
             }

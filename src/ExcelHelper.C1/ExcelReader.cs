@@ -269,6 +269,12 @@ namespace ExcelHelper
         /// <returns>True if record is empty, false if not</returns>
         private bool IsEmptyRecord()
         {
+            // If the entire row is hidden, we consider this an empty record and skip over it
+            if (!_sheet.Rows[_row].Visible) {
+                return true;
+            }
+
+            // Now check the contents of the row to see if it is all empty cells
             for (var i = 0; i < _columnCount; i++) {
                 var o = _sheet[_row, i].Value;
                 if (o != null) {

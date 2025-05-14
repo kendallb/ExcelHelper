@@ -132,7 +132,6 @@ namespace ExcelHelper
             return _reader.Read();
         }
 
-
         /// <summary>
         /// Format a cell as a string before we pass to the type converter, so any formatting done in Excel
         /// is properly applied to the string result that is then sent to the users parser.
@@ -254,17 +253,27 @@ namespace ExcelHelper
         /// <returns>True if record is empty, false if not</returns>
         private bool IsEmptyRecord()
         {
+            // If the entire row is hidden, we consider this an empty record and skip over it. With ExcelDataReader
+            // the row height is set to 0 if the row is hidden.
+            if (_reader.RowHeight == 0) {
+                return true;
+            }
+
+            // Now check the contents of the row to see if it is all empty cells
             for (var i = 0; i < _columnCount; i++) {
-                var o = _reader.GetValue(i);
-                if (o != null) {
-                    if (o.GetType() == typeof(string)) {
-                        // Make sure string fields are not empty strings
-                        if (!string.IsNullOrEmpty((string)o)) {
+                // Make sure this cell is not hidden as consider that empty
+                if (!_reader.GetCellStyle(i).Hidden) {
+                    var o = _reader.GetValue(i);
+                    if (o != null) {
+                        if (o.GetType() == typeof(string)) {
+                            // Make sure string fields are not empty strings
+                            if (!string.IsNullOrEmpty((string)o)) {
+                                return false;
+                            }
+                        } else {
+                            // Non-null, non-string fields are not empty
                             return false;
                         }
-                    } else {
-                        // Non-null, non-string fields are not empty
-                        return false;
                     }
                 }
             }

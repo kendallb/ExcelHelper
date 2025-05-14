@@ -272,6 +272,37 @@ namespace ExcelHelper.Tests
         }
 
         [Test]
+        public void GetRecordsWithHiddenRowTest()
+        {
+            using (var stream = new MemoryStream()) {
+                // Create some test data to parse
+                var date = DateTime.Today;
+                var guid = Guid.NewGuid();
+                using (var book = new XLWorkbook()) {
+                    var sheet = book.AddWorksheet("Sheet 1");
+                    WriteRecords(sheet, guid, date, includeHiddenRow: true);
+                    book.AddWorksheet("Sheet 2");
+                    sheet = book.AddWorksheet("Sheet 3");
+                    WriteRecords(sheet, guid, date, includeHiddenRow: true);
+
+                    // Save it to the stream
+                    book.SaveAs(stream);
+                }
+
+                // Now parse the Excel file
+                stream.Position = 0;
+                using (var excel = new ExcelReader(stream)) {
+                    excel.Configuration.RegisterClassMap<TestRecordMap>();
+                    ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
+                    ClassicAssert.AreEqual(3, excel.TotalSheets);
+                    ClassicAssert.IsTrue(excel.ChangeSheet(2));
+                    ClassicAssert.IsFalse(excel.ChangeSheet(3));
+                    ValidateRecords(excel, guid, date, ignoreEmptyRows: true);
+                }
+            }
+        }
+
+        [Test]
         public void SkipRowsTest()
         {
             using (var stream = new MemoryStream()) {
@@ -410,13 +441,15 @@ namespace ExcelHelper.Tests
         /// <param name="optionalReadValue">Value to put into the optional read column, null to not include it</param>
         /// <param name="firstRow">The first row number</param>
         /// <param name="includeBlankRow">True to include a blank row</param>
+        /// <param name="includeHiddenRow">True to include a hidden row</param>
         private static void WriteRecords(
             IXLWorksheet sheet,
             Guid guid,
             DateTime date,
             string optionalReadValue = null,
             int firstRow = 0,
-            bool includeBlankRow = false)
+            bool includeBlankRow = false,
+            bool includeHiddenRow = false)
         {
             // Write the header fields
             var row = firstRow + 1;
@@ -451,6 +484,23 @@ namespace ExcelHelper.Tests
             // Include a blank row in the middle
             if (includeBlankRow) {
                 row++;
+            }
+
+            // Include a hidden row in the middle
+            if (includeHiddenRow) {
+                row++;
+                sheet.Row(row).Style.Protection.Hidden = true;
+                sheet.Cell(row, 2).SetValue("hidden");
+                sheet.Cell(row, 3).SetValue(2 * 2);
+                sheet.Cell(row, 4).SetValue("hidden 2");
+                sheet.Cell(row, 5).SetValue(guid.ToString());
+                sheet.Cell(row, 6).SetValue(false);
+                sheet.Cell(row, 7).SetValue(2 * 3.0);
+                sheet.Cell(row, 8).SetValue(date.AddDays(2));
+                sheet.Cell(row, 9).SetValue((object)null);
+                if (optionalReadValue != null) {
+                    sheet.Cell(row, 10).SetValue(optionalReadValue);
+                }
             }
 
             // Write the second record

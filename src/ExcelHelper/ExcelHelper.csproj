@@ -20,7 +20,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 ClosedXML ExcelDataReader</PackageTags>
-    <PackageReleaseNotes>Release built with new NuGet tooling.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for skipping hidden rows.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>

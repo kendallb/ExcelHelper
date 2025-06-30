@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,7 +28,7 @@ namespace ExcelHelper
         private readonly Stream _stream;
         private XLWorkbook _book;
         private IXLWorksheet _sheet;
-        private Font _defaultFont;
+        private ExcelFont _defaultFont;
         private int _row;
         private int _col;
         private readonly Dictionary<Type, Delegate> _typeActions = new Dictionary<Type, Delegate>();
@@ -66,24 +65,24 @@ namespace ExcelHelper
             ChangeSheet(0);
 
             // Set the default font to Calibri 11, which is the default in newer versions of office
-            DefaultFont = new Font("Calibri", 11, FontStyle.Regular);
+            DefaultFont = new ExcelFont("Calibri", 11, ExcelFontStyle.Regular);
         }
 
         /// <summary>
         /// Gets or sets the default font for the Excel file
         /// </summary>
-        public Font DefaultFont
+        public ExcelFont DefaultFont
         {
             get => _defaultFont;
             set
             {
                 var font = _book.Style.Font;
-                font.Bold = value.Bold;
-                font.Italic = value.Italic;
-                font.Underline = value.Underline ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
-                font.Strikethrough = value.Strikeout;
-                font.FontSize = value.SizeInPoints;
-                font.FontName = value.Name;
+                font.Bold = (value.Style & ExcelFontStyle.Bold) != 0;
+                font.Italic = (value.Style & ExcelFontStyle.Italic) != 0;
+                font.Underline = (value.Style & ExcelFontStyle.Underline) != 0 ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
+                font.Strikethrough = (value.Style & ExcelFontStyle.Strikeout) != 0;
+                font.FontSize = value.FontSize;
+                font.FontName = value.FontName;
                 _defaultFont = value;
             }
         }
@@ -103,7 +102,7 @@ namespace ExcelHelper
             IXLStyle cellStyle,
             string numberFormat,
             string dateFormat,
-            FontStyle? fontStyle,
+            ExcelFontStyle? fontStyle,
             float? fontSize,
             string fontName,
             ExcelAlignHorizontal? horizontalAlign,
@@ -122,12 +121,12 @@ namespace ExcelHelper
                 var defaultFont = _defaultFont;
                 var style = fontStyle ?? defaultFont.Style;
                 var font = cellStyle.Font;
-                font.Bold = (style & FontStyle.Bold) != 0;
-                font.Italic = (style & FontStyle.Italic) != 0;
-                font.Underline = (style & FontStyle.Underline) != 0 ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
-                font.Strikethrough = (style & FontStyle.Strikeout) != 0;
-                font.FontSize = fontSize ?? defaultFont.SizeInPoints;
-                font.FontName = fontName ?? defaultFont.Name;
+                font.Bold = (style & ExcelFontStyle.Bold) != 0;
+                font.Italic = (style & ExcelFontStyle.Italic) != 0;
+                font.Underline = (style & ExcelFontStyle.Underline) != 0 ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
+                font.Strikethrough = (style & ExcelFontStyle.Strikeout) != 0;
+                font.FontSize = fontSize ?? defaultFont.FontSize;
+                font.FontName = fontName ?? defaultFont.FontName;
             }
 
             // Apply the horizontal alignment if defined
@@ -217,7 +216,7 @@ namespace ExcelHelper
             T field,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -276,7 +275,7 @@ namespace ExcelHelper
             int col,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -302,7 +301,7 @@ namespace ExcelHelper
             int row,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -616,7 +615,6 @@ namespace ExcelHelper
 
             // Clean up and dispose of everything. We do it during the dispose as it makes it easier for us to measure the memory usage
             _book?.Dispose();
-            _defaultFont?.Dispose();
             _sheet = null;
             _book = null;
             _disposed = true;

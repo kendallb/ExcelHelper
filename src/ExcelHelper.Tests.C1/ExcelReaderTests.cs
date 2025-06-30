@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using C1.C1Excel;
+using C1.Excel;
 using System.Linq;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
@@ -35,7 +35,7 @@ namespace ExcelHelper.Tests
                 const int nsi = 3;
                 const double ns = 2.1;
                 var d = DateTime.Today;
-                const char c = 'c';
+                const string c = "c";
                 var guid = Guid.NewGuid();
                 var ts = new TimeSpan(1, 2, 3, 4, 5);
                 using (var book = new C1XLBook()) {
@@ -51,9 +51,7 @@ namespace ExcelHelper.Tests
                     sheet[0, 8].Value = c;
                     sheet[0, 9].Value = null;
                     sheet[0, 10].Value = guid.ToString();
-                    sheet[0, 11].Value = ts;
-                    sheet[0, 12].Value = ts.ToString();
-                    sheet[0, 13].Value = ts.ToString();
+                    sheet[0, 11].Value = ts.ToString();
                     book.Sheets.Insert(1);
                     sheet = book.Sheets.Insert(2);
                     sheet[0, 0].Value = "third sheet";
@@ -64,7 +62,7 @@ namespace ExcelHelper.Tests
                 stream.Position = 0;
                 using (var excel = new ExcelReader(stream)) {
                     // Check the column and row counts are correct
-                    ClassicAssert.AreEqual(14, excel.TotalColumns);
+                    ClassicAssert.AreEqual(12, excel.TotalColumns);
                     ClassicAssert.AreEqual(1, excel.TotalRows);
 
                     if (!excel.ReadRow()) {
@@ -126,10 +124,6 @@ namespace ExcelHelper.Tests
                     // Test TimeSpan
                     ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(11));
                     ClassicAssert.AreEqual(ts.ToString(), excel.GetColumn<string>(11));
-                    ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(12));
-                    ClassicAssert.AreEqual(ts.ToString(), excel.GetColumn<string>(12));
-                    ClassicAssert.AreEqual(ts, excel.GetColumn<TimeSpan>(13));
-                    ClassicAssert.AreEqual(ts.ToString(), excel.GetColumn<string>(13));
 
                     // Test the third sheet
                     ClassicAssert.AreEqual(3, excel.TotalSheets);

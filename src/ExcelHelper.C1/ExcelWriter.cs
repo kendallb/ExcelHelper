@@ -14,7 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using C1.C1Excel;
+using C1.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 
@@ -31,6 +31,7 @@ namespace ExcelHelper
         private C1XLBook _book;
         private XLSheet _sheet;
         private Graphics _graphics;
+        private ExcelFont _defaultFont;
         private int _row;
         private int _col;
         private float[] _colWidths;
@@ -72,16 +73,28 @@ namespace ExcelHelper
             }
 
             // Set the default font to Calibri 11, which is the default in newer versions of office
-            DefaultFont = new Font("Calibri", 11, FontStyle.Regular);
+            DefaultFont = new ExcelFont("Calibri", 11, ExcelFontStyle.Regular);
         }
 
         /// <summary>
         /// Gets or sets the default font for the Excel file
         /// </summary>
-        public Font DefaultFont
+        public ExcelFont DefaultFont
         {
-            get => _book.DefaultFont;
-            set => _book.DefaultFont = value;
+            get => _defaultFont;
+            set
+            {
+                _defaultFont = value;
+                _book.DefaultFont = new XLFont(
+                    value.FontName,
+                    value.FontSize,
+                    (value.Style & ExcelFontStyle.Bold) != 0,
+                    (value.Style & ExcelFontStyle.Italic) != 0,
+                    (value.Style & ExcelFontStyle.Strikeout) != 0,
+                    XLFontScript.None,
+                    (value.Style & ExcelFontStyle.Underline) != 0 ? XLUnderlineStyle.Single : XLUnderlineStyle.None,
+                    value.Color);
+            }
         }
 
         /// <summary>
@@ -97,7 +110,7 @@ namespace ExcelHelper
         private void UpdateStyle(
             ref XLStyle cellStyle,
             string format,
-            FontStyle? fontStyle,
+            ExcelFontStyle? fontStyle,
             float? fontSize,
             string fontName,
             ExcelAlignHorizontal? horizontalAlign,
@@ -116,11 +129,19 @@ namespace ExcelHelper
                 if (cellStyle == null) {
                     cellStyle = new XLStyle(_book);
                 }
-                var defaultFont = _book.DefaultFont;
-                var name = fontName ?? defaultFont.Name;
-                var size = fontSize ?? defaultFont.SizeInPoints;
+                var defaultFont = DefaultFont;
+                var name = fontName ?? defaultFont.FontName;
+                var size = fontSize ?? defaultFont.FontSize;
                 var style = fontStyle ?? defaultFont.Style;
-                cellStyle.Font = new Font(name, size, style);
+                cellStyle.Font = new XLFont(
+                    name,
+                    size,
+                    (style & ExcelFontStyle.Bold) != 0,
+                    (style & ExcelFontStyle.Italic) != 0,
+                    (style & ExcelFontStyle.Strikeout) != 0,
+                    XLFontScript.None,
+                    (style & ExcelFontStyle.Underline) != 0 ? XLUnderlineStyle.Single : XLUnderlineStyle.None,
+                    defaultFont.Color);
             }
 
             // Apply the horizontal alignment if defined
@@ -130,22 +151,22 @@ namespace ExcelHelper
                 }
                 switch (horizontalAlign) {
                     case ExcelAlignHorizontal.General:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.General;
+                        cellStyle.AlignHorz = XLAlignHorz.General;
                         break;
                     case ExcelAlignHorizontal.Left:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.Left;
+                        cellStyle.AlignHorz = XLAlignHorz.Left;
                         break;
                     case ExcelAlignHorizontal.Center:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.Center;
+                        cellStyle.AlignHorz = XLAlignHorz.Center;
                         break;
                     case ExcelAlignHorizontal.Right:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.Right;
+                        cellStyle.AlignHorz = XLAlignHorz.Right;
                         break;
                     case ExcelAlignHorizontal.Fill:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.Fill;
+                        cellStyle.AlignHorz = XLAlignHorz.Fill;
                         break;
                     case ExcelAlignHorizontal.Justify:
-                        cellStyle.AlignHorz = XLAlignHorzEnum.Justify;
+                        cellStyle.AlignHorz = XLAlignHorz.Justify;
                         break;
                 }
             }
@@ -157,16 +178,16 @@ namespace ExcelHelper
                 }
                 switch (verticalAlign) {
                     case ExcelAlignVertical.Top:
-                        cellStyle.AlignVert = XLAlignVertEnum.Top;
+                        cellStyle.AlignVert = XLAlignVert.Top;
                         break;
                     case ExcelAlignVertical.Center:
-                        cellStyle.AlignVert = XLAlignVertEnum.Center;
+                        cellStyle.AlignVert = XLAlignVert.Center;
                         break;
                     case ExcelAlignVertical.Bottom:
-                        cellStyle.AlignVert = XLAlignVertEnum.Bottom;
+                        cellStyle.AlignVert = XLAlignVert.Bottom;
                         break;
                     case ExcelAlignVertical.Justify:
-                        cellStyle.AlignVert = XLAlignVertEnum.Justify;
+                        cellStyle.AlignVert = XLAlignVert.Justify;
                         break;
                 }
             }
@@ -214,7 +235,7 @@ namespace ExcelHelper
             T field,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -296,7 +317,7 @@ namespace ExcelHelper
             int col,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -324,7 +345,7 @@ namespace ExcelHelper
             int row,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -388,13 +409,28 @@ namespace ExcelHelper
                     if (style?.Font != null) {
                         font = style.Font;
                     }
+                    var fontStyle = FontStyle.Regular;
+                    if (font.Bold) {
+                        fontStyle |= FontStyle.Bold;
+                    }
+                    if (font.Italic) {
+                        fontStyle |= FontStyle.Italic;
+                    }
+                    if (font.Underline != XLUnderlineStyle.None) {
+                        fontStyle |= FontStyle.Underline;
+                    }
+                    if (font.Strikeout) {
+                        fontStyle |= FontStyle.Strikeout;
+                    }
 
                     // Measure string (with a little tolerance)
-                    var size = _graphics.MeasureString(text + ".", font);
+                    using (var systemFont = new Font(font.FontName, font.FontSize, fontStyle)) {
+                        var size = _graphics.MeasureString(text + ".", systemFont);
 
-                    // Keep widest so far, capped to the maximum
-                    if (size.Width > _colWidths[i]) {
-                        _colWidths[i] = Math.Min(size.Width, maxWidth);
+                        // Keep widest so far, capped to the maximum
+                        if (size.Width > _colWidths[i]) {
+                            _colWidths[i] = Math.Min(size.Width, maxWidth);
+                        }
                     }
                 }
             }
@@ -558,8 +594,17 @@ namespace ExcelHelper
 
             // Set the style for the header to bold if desired
             if (_configuration.HeaderIsBold) {
+                var font = DefaultFont;
                 _sheet.Rows[_row].Style = new XLStyle(_book) {
-                    Font = new Font(_book.DefaultFont, FontStyle.Bold),
+                    Font = new XLFont(
+                        font.FontName,
+                        font.FontSize,
+                        true,
+                        (font.Style & ExcelFontStyle.Italic) != 0,
+                        (font.Style & ExcelFontStyle.Strikeout) != 0,
+                        XLFontScript.None,
+                        (font.Style & ExcelFontStyle.Underline) != 0 ? XLUnderlineStyle.Single : XLUnderlineStyle.None,
+                        font.Color)
                 };
             }
 

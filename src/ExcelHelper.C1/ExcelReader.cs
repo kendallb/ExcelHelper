@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Linq.Expressions;
-using C1.C1Excel;
+using C1.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 

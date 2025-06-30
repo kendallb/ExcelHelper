@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using C1.C1Excel;
+using C1.Excel;
 using ExcelHelper.Configuration;
 using ExcelHelper.TypeConversion;
 using NUnit.Framework;
@@ -30,18 +30,18 @@ namespace ExcelHelper.Tests
             using (var stream = new MemoryStream()) {
                 using (var excel = new ExcelWriter(stream)) {
                     // Set up our row and column formats first
-                    excel.SetRowFormat(1, fontStyle: FontStyle.Bold, fontSize: 16);
-                    excel.SetColumnFormat(7, fontStyle: FontStyle.Italic, fontSize: 24);
+                    excel.SetRowFormat(1, fontStyle: ExcelFontStyle.Bold, fontSize: 16);
+                    excel.SetColumnFormat(7, fontStyle: ExcelFontStyle.Italic, fontSize: 24);
 
                     var date = DateTime.Today;
                     var guid = new Guid("bfb9c599-bc9e-4f97-ae59-25f2ca09cfdf");
                     excel.WriteCell(0, 0, "one");
-                    excel.WriteCell(0, 1, "one, two", fontStyle: FontStyle.Bold);
+                    excel.WriteCell(0, 1, "one, two", fontStyle: ExcelFontStyle.Bold);
                     excel.WriteCell(0, 2, "one \"two\" three", fontSize: 18);
                     excel.WriteCell(0, 3, " one ", fontName: "Times");
                     excel.WriteCell(0, 4, date);
                     excel.WriteCell(0, 5, date, null, "d");
-                    excel.WriteCell(0, 6, date, null, "D", FontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Center);
+                    excel.WriteCell(0, 6, date, null, "D", ExcelFontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Center);
                     excel.WriteCell(0, 7, (byte)1);
                     excel.WriteCell(0, 8, (short)2);
                     excel.WriteCell(0, 9, 3);
@@ -79,12 +79,12 @@ namespace ExcelHelper.Tests
                         var sheet = book.Sheets[0];
 
                         // Verify row and column styles
-                        ClassicAssert.AreEqual(FontStyle.Bold, sheet.Rows[1].Style.Font.Style);
+                        ClassicAssert.AreEqual(true, sheet.Rows[1].Style.Font.Bold);
                         ClassicAssert.AreEqual(16.0, sheet.Rows[1].Style.Font.SizeInPoints);
-                        ClassicAssert.AreEqual(FontStyle.Italic, sheet.Columns[7].Style.Font.Style);
+                        ClassicAssert.AreEqual(true, sheet.Columns[7].Style.Font.Italic);
                         ClassicAssert.AreEqual(24.0, sheet.Columns[7].Style.Font.SizeInPoints);
 
-                        // Check some automatically sizes column widths
+                        // Check some automatically sized column widths
                         ClassicAssert.AreEqual(2655, sheet.Columns[2].Width);
                         ClassicAssert.AreEqual(5541, sheet.Columns[4].Width);
 
@@ -97,20 +97,20 @@ namespace ExcelHelper.Tests
                         ClassicAssert.AreEqual("one", sheet[0, 0].Value);
                         ClassicAssert.AreEqual("", sheet[0, 0].Style.Format);
                         ClassicAssert.AreEqual("one, two", sheet[0, 1].Value);
-                        ClassicAssert.AreEqual(FontStyle.Bold, sheet[0, 1].Style.Font.Style);
+                        ClassicAssert.AreEqual(true, sheet[0, 1].Style.Font.Bold);
                         ClassicAssert.AreEqual("one \"two\" three", sheet[0, 2].Value);
                         ClassicAssert.AreEqual(18.0, sheet[0, 2].Style.Font.SizeInPoints);
                         ClassicAssert.AreEqual(" one ", sheet[0, 3].Value);
-                        ClassicAssert.AreEqual("Times New Roman", sheet[0, 3].Style.Font.Name);
+                        ClassicAssert.AreEqual("Times", sheet[0, 3].Style.Font.FontName);
                         ClassicAssert.AreEqual(date, sheet[0, 4].Value);
                         ClassicAssert.AreEqual("m/D/YYYY H:mm:ss AM/PM", sheet[0, 4].Style.Format);
                         ClassicAssert.AreEqual(date, sheet[0, 5].Value);
                         ClassicAssert.AreEqual("m/D/YYYY", sheet[0, 5].Style.Format);
                         ClassicAssert.AreEqual(date, sheet[0, 6].Value);
                         ClassicAssert.AreEqual("DDDD, mmmm D, YYYY", sheet[0, 6].Style.Format);
-                        ClassicAssert.AreEqual(FontStyle.Bold, sheet[0, 6].Style.Font.Style);
-                        ClassicAssert.AreEqual(XLAlignHorzEnum.Right, sheet[0, 6].Style.AlignHorz);
-                        ClassicAssert.AreEqual(XLAlignVertEnum.Center, sheet[0, 6].Style.AlignVert);
+                        ClassicAssert.AreEqual(true, sheet[0, 6].Style.Font.Bold);
+                        ClassicAssert.AreEqual(XLAlignHorz.Right, sheet[0, 6].Style.AlignHorz);
+                        ClassicAssert.AreEqual(XLAlignVert.Center, sheet[0, 6].Style.AlignVert);
                         ClassicAssert.AreEqual((double)1, sheet[0, 7].Value);
                         ClassicAssert.AreEqual((double)2, sheet[0, 8].Value);
                         ClassicAssert.AreEqual((double)3, sheet[0, 9].Value);
@@ -239,7 +239,7 @@ namespace ExcelHelper.Tests
             var row = 0;
             if (checkHeader) {
                 // Check the header is bold
-                ClassicAssert.AreEqual(FontStyle.Bold, sheet.Rows[0].Style.Font.Style);
+                ClassicAssert.AreEqual(true, sheet.Rows[0].Style.Font.Bold);
 
                 // Check the header row
                 ClassicAssert.AreEqual("FirstColumn", sheet[row, 0].Value);

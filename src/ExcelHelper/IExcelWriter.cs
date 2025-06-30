@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using ExcelHelper.Configuration;
 
 namespace ExcelHelper
@@ -26,7 +25,7 @@ namespace ExcelHelper
         /// <summary>
         /// Gets or sets the default font for the Excel file
         /// </summary>
-        Font DefaultFont { get; set; }
+        ExcelFont DefaultFont { get; set; }
 
         /// <summary>
         /// Changes to using the passed in sheet. Note that changing to a new sheet automatically resets the
@@ -56,7 +55,7 @@ namespace ExcelHelper
             T field,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -78,7 +77,7 @@ namespace ExcelHelper
             int col,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,
@@ -100,7 +99,7 @@ namespace ExcelHelper
             int row,
             string numberFormat = null,
             string dateFormat = null,
-            FontStyle? fontStyle = null,
+            ExcelFontStyle? fontStyle = null,
             float? fontSize = null,
             string fontName = null,
             ExcelAlignHorizontal? horizontalAlign = null,

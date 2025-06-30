@@ -7,7 +7,7 @@
  */
 
 using System;
-using C1.C1Excel;
+using C1.Excel;
 using ExcelHelper.TypeConversion;
 
 namespace ExcelHelper

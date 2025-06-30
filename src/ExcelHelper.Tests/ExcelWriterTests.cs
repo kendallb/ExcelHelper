@@ -30,19 +30,19 @@ namespace ExcelHelper.Tests
             using (var stream = new MemoryStream()) {
                 using (var excel = new ExcelWriter(stream)) {
                     // Set up our row and column formats first
-                    excel.SetRowFormat(1, fontStyle: FontStyle.Bold, fontSize: 16);
-                    excel.SetColumnFormat(7, fontStyle: FontStyle.Italic, fontSize: 24);
+                    excel.SetRowFormat(1, fontStyle: ExcelFontStyle.Bold, fontSize: 16);
+                    excel.SetColumnFormat(7, fontStyle: ExcelFontStyle.Italic, fontSize: 24);
 
                     var date = DateTime.Parse("2017-10-16 03:05 PM");
                     var guid = new Guid("bfb9c599-bc9e-4f97-ae59-25f2ca09cfdf");
                     excel.WriteCell(0, 0, "one");
-                    excel.WriteCell(0, 1, "one, two", fontStyle: FontStyle.Bold);
+                    excel.WriteCell(0, 1, "one, two", fontStyle: ExcelFontStyle.Bold);
                     excel.WriteCell(0, 2, "one \"two\" three", fontSize: 18);
                     excel.WriteCell(0, 3, " one ", fontName: "Times New Roman");
                     excel.WriteCell(0, 4, date);
                     excel.WriteCell(0, 5, date, dateFormat: "M/d/yyyy h:mm:ss AM/PM");
                     excel.WriteCell(0, 6, date, dateFormat: "M/d/yyyy");
-                    excel.WriteCell(0, 7, date, dateFormat: "dddd, MMMM d, yyyy", fontStyle: FontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Bottom);
+                    excel.WriteCell(0, 7, date, dateFormat: "dddd, MMMM d, yyyy", fontStyle: ExcelFontStyle.Bold, horizontalAlign: ExcelAlignHorizontal.Right, verticalAlign: ExcelAlignVertical.Bottom);
                     excel.WriteCell(0, 8, (byte)1);
                     excel.WriteCell(0, 9, (short)2);
                     excel.WriteCell(0, 10, 3);

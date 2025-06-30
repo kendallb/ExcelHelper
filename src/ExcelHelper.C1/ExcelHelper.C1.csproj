@@ -18,7 +18,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 C1.C1Excel</PackageTags>
+    <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 C1.Excel</PackageTags>
     <PackageReleaseNotes>Added support for skipping hidden rows.</PackageReleaseNotes>
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
@@ -86,6 +86,12 @@
     </Compile>
     <Compile Include="..\ExcelHelper\ExcelFactory.cs">
       <Link>ExcelFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper\ExcelFont.cs">
+      <Link>ExcelFont.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelHelper\ExcelFontStyle.cs">
+      <Link>ExcelFontStyle.cs</Link>
     </Compile>
     <Compile Include="..\ExcelHelper\ExcelHelperException.cs">
       <Link>ExcelHelperException.cs</Link>
@@ -198,11 +204,11 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\"/>    
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="C1.C1Excel">
-      <Version>4.8.20241.664</Version>
-    </PackageReference>
+    <EmbeddedResource Include="ExcelHelper.C1.gclicx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ExcelHelper.C1.gclicx" />
+    <PackageReference Include="C1.Excel">
+      <Version>9.0.20251.144</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>

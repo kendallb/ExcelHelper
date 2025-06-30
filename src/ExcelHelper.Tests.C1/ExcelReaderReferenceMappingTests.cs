@@ -8,7 +8,7 @@
 
 using System.IO;
 using System.Linq;
-using C1.C1Excel;
+using C1.Excel;
 using NUnit.Framework;
 using ExcelHelper.Configuration;
 using NUnit.Framework.Legacy;

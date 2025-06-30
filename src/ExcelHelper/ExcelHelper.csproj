@@ -20,7 +20,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>Excel ExcelHelper Reading Writing OpenXML BIFF8 BIFF5 ClosedXML ExcelDataReader</PackageTags>
-    <PackageReleaseNotes>Added support for skipping hidden rows.</PackageReleaseNotes>
+    <PackageReleaseNotes>Migrated to new C1.Excel library package which required some font handling API changes</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>
